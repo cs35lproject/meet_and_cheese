@@ -1,25 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  RouterProvider
-} from 'react-router-dom';
-import Calendar from "./pages/Calendar"
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
+import Calendar from './pages/Calendar'
+import Meeting from './pages/Meeting'
 import './index.css';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Calendar />,
   },
   {
-    path: "/test",
-    element: <p>test</p>,
-  }
+    path: '/meeting',
+    element: <Meeting />,
+  },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>
