@@ -1,4 +1,4 @@
-import { GoogleLogin } from 'react-google-login';
+//import { GoogleLogin } from 'react-google-login';
 import { gapi } from 'gapi-script';
 import React from 'react';
 
@@ -26,14 +26,14 @@ export const Login = (props) => {
 
     return (
         <React.Fragment>
-            <GoogleLogin
+            {/* <GoogleLogin
                 clientId={clientId}
                 buttonText="Sign in with Google"
                 onSuccess={(res) => onSuccess(res, props.updateUserData)}
                 onFailure={onFailure}
                 cookiePolicy={'single_host_origin'}
                 isSignedIn={true}
-            />
+            /> */}
         </React.Fragment>
     );
 }

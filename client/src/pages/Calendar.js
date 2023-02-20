@@ -26,6 +26,8 @@ class Calendar extends React.Component {
     return (
       <React.Fragment>
         <a href="/meeting">Meeting Page</a>
+        <a href="/CalendarAPI">CalendarAPI</a>
+        <a href="/test">test</a>
 
         <p>Calendar page will contain an empty calendar which will be filled in when signed in</p>
 

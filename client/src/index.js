@@ -4,6 +4,8 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import Calendar from './pages/Calendar'
 import Meeting from './pages/Meeting'
+import CalendarAPI from './pages/CalendarAPI'
+import GoogleCalendar from './pages/test'
 import './index.css';
 
 const router = createBrowserRouter([
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
     path: '/meeting',
     element: <Meeting />,
   },
+  {
+    path: '/CalendarAPI',
+    element: <CalendarAPI />
+  },
+  {
+    path: '/test',
+    element: <GoogleCalendar />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
