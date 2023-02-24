@@ -11,6 +11,7 @@ const local = process.env.URL || "mongodb://localhost:27017/db1"
 
 // Connect to Mongoose
 mongoose.Promise = global.Promise;
+mongoose.set('strictQuery', false);
 mongoose.connect(local);
 
 // Middleware
