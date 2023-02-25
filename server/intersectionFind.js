@@ -22,9 +22,9 @@ const merge = intervals => {
     return result;
 };
 
-function intersectionFind(events, intersections){
+function intersectionFind(eventsResource, intersections){
 
-    //events is an array of events resources
+    //eventsResource is an array of events resources
     //See https://developers.google.com/calendar/api/v3/reference/events#resource
 
     //intersections is a nx2 array of the form [[start, end],.....]
@@ -38,7 +38,7 @@ function intersectionFind(events, intersections){
 
     //Format the events into a nx2 array of timestamps
     let events = [];
-    for (userEvent in events){
+    for (let userEvent of eventsResource){
         events.push([userEvent.start.datetime, userEvent.end.datetime]);
     }
 
