@@ -1,3 +1,4 @@
+
 //Classic leetcode merge intervals algorithm
 //See https://javascript.plainenglish.io/javascript-algorithms-merge-intervals-leetcode-98da240805bc
 const union = intervals => {
@@ -50,10 +51,17 @@ const intersection = (intervals1, intervals2) => {
         j++;
       }
     }
-      return intersection;
-  }
+    return intersection;
+}
 
-function intersectionFind(events, intersections){
+//Extract start and end times from google calendar events resource
+//Returns an nx2 array of the form [[start, end],.....]
+//See https://developers.google.com/calendar/api/v3/reference/events#resource
+const extractEvents = events => {
+    return events.map(event => [event.start.dateTime, event.end.dateTime])
+}
+
+const intersectionFind = (events, intersections) => {
 
     //events is an nx2 array of the form [[start, end],.....]
     //intersections is an nx2 array of the form [[start, end],.....]
@@ -87,4 +95,4 @@ function intersectionFind(events, intersections){
     return intersections;
 }
 
-module.exports = { intersection, intersectionFind };
+module.exports = { extractEvents, intersection, intersectionFind };
