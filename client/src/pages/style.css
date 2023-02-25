@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'Comfortaa';
+    src: url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap');
+}
+
+getstarted p {
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    color: #4D368C;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+h3 {
+    text-align: left;
+    color: #4D368C;
+    padding-left: 150px;
+}
+
+signin{
+    display: block;
+    width: 200%;
+    padding-left: 100px;
+}
+
+calendar {
+    width: 70%;
+    display: block;
+    color: black;
+    background-color: white;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+    border: 25px solid white;
+    border-radius: 2.5%;
+    /*box-shadow: 7px 7px 7px rgb(117, 117, 117);*/
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+
+.circle {
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    padding: 10px;
+    background: #FFD392;
+    border: 3px solid #FFD392;
+    color: #000;
+    text-align: center;
+    font: 32px Arial, sans-serif;
+    margin: 0 auto;
+  }
+
+.column {
+    float: left;
+    width: 33.33%;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+@media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }

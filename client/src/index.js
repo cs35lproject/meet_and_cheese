@@ -7,10 +7,17 @@ import Meeting from './pages/Meeting'
 import CalendarAPITestPage from './pages/CalendarAPITestPage'
 import './index.css';
 
+import Navbar from "./components/Navbar/Navbar"
+import GetStarted from './pages/GetStarted';
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Calendar />,
+  },
+  {
+    path: '/getstarted',
+    element: <GetStarted />,
   },
   {
     path: '/meeting',
@@ -24,6 +31,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <Navbar></Navbar>
     <RouterProvider router={router} />
   </React.StrictMode>
 );

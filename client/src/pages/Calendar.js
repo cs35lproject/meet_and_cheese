@@ -3,6 +3,11 @@ import React from 'react';
 import { Login } from '../components/Login';
 import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid' // plugin
+
+import './style.css'
+
 class Calendar extends React.Component {
 
   constructor() {
@@ -27,18 +32,27 @@ class Calendar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <a href="/meeting">Meeting Page</a>
-        <br />
+        <div>
+          <h1>Calendar page will contain an empty calendar which will be filled in when signed in</h1>
 
-        <p>Calendar page will contain an empty calendar which will be filled in when signed in</p>
-
-        <button onClick={handleAuthClick}>Sign in</button>
-        
-        <button onClick={this.showCalendars}>Show Calendars</button>
-
-        <Login updateUserData={this.updateUserData} />
-
+          <h3>firstName: {this.state.firstName}</h3>
+          <h3>lastName: {this.state.lastName}</h3>
+          <h3>gmail: {this.state.gmail}</h3>
+          <signin>
+            <Login updateUserData={this.updateUserData} />
+          </signin>
+        </div>
+        <calendar>
+          <div class="square"></div>
+          <FullCalendar
+            plugins={[ dayGridPlugin ]}
+            initialView="dayGridMonth"
+            height={700}
+            eventColor={'#378006'}
+          />
+        </calendar>
       </React.Fragment>
+      
     )
   }
 }
