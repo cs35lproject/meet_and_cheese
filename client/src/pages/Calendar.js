@@ -1,37 +1,40 @@
 import React from 'react';
 
-import {Login} from '../components/Login';
+import { Login } from '../components/Login';
+import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 
 class Calendar extends React.Component {
 
   constructor() {
     super();
     this.state = {
-      firstName : '',
-      lastName : '',
-      gmail : ''
+      calendarsData : null
     };
   }
 
-  updateUserData = (profileObj) => {
-    console.log(profileObj)
-    this.setState({
-      firstName : profileObj.givenName,
-      lastName : profileObj.familyName,
-      gmail : profileObj.email
-    });
+  componentDidMount = () => {
+    handleClientLoad(this.setCalendarsData);
   }
- 
+
+  setCalendarsData = (tempCalendarsData) => {
+    this.setState({calendarsData : tempCalendarsData})
+  }
+
+  showCalendars = () => {
+    console.log(this.state.calendarsData)
+  }
+
   render() {
     return (
       <React.Fragment>
         <a href="/meeting">Meeting Page</a>
+        <br />
 
         <p>Calendar page will contain an empty calendar which will be filled in when signed in</p>
 
-        <p>firstName: {this.state.firstName}</p>
-        <p>lastName: {this.state.lastName}</p>
-        <p>gmail: {this.state.gmail}</p>
+        <button onClick={handleAuthClick}>Sign in</button>
+        
+        <button onClick={this.showCalendars}>Show Calendars</button>
 
         <Login updateUserData={this.updateUserData} />
 
