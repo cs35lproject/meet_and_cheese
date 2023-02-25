@@ -1,6 +1,6 @@
 //Classic leetcode merge intervals algorithm
 //See https://javascript.plainenglish.io/javascript-algorithms-merge-intervals-leetcode-98da240805bc
-const merge = intervals => {
+const union = intervals => {
     if (intervals.length < 2) return intervals;
     
     intervals.sort((a, b) => a[0] - b[0]);
@@ -22,10 +22,36 @@ const merge = intervals => {
     return result;
 };
 
-function intersectionFind(eventsResource, intersections){
+//Find intersection of two arrays of time intervals
+//Courtesy of ChatGPT
+const intersection = (intervals1, intervals2) => {
+    intervals1.sort((a, b) => a[0] - b[0]);
+    intervals2.sort((a, b) => a[0] - b[0]);
+    
+    const intersection = [];
+    let i = 0, j = 0;
+  
+    while (i < intervals1.length && j < intervals2.length) {
+      const [start1, end1] = intervals1[i];
+      const [start2, end2] = intervals2[j];
+      
+      const intersectionStart = Math.max(start1, start2);
+      const intersectionEnd = Math.min(end1, end2);
+  
+      if (intersectionStart <= intersectionEnd) {
+        intersection.push([intersectionStart, intersectionEnd]);
+      }
+      
+      if (end1 < end2) {
+        i++;
+      } else {
+        j++;
+      }
+    }
+      return intersection;
+  }
 
-    //eventsResource is an array of events resources
-    //See https://developers.google.com/calendar/api/v3/reference/events#resource
+function intersectionFind(eventsResource, intersections){
 
     //intersections is a nx2 array of the form [[start, end],.....]
 
@@ -44,17 +70,22 @@ function intersectionFind(eventsResource, intersections){
 
     //Merge intervals
     //Handle the case where some events overlap eachother
-    events = merge(events);
+    events = union(events);
 
     //Find the new available times
     //Simply find the intervals in between the event intervals
+    let myintersections = []
     for (let i=0; i<events.length - 1; i++){
-        intersections.push([events[i][1], events[i+1][0]]);
+        myintersections.push([events[i][1], events[i+1][0]]);
     }
+
+    //Intersect intersections
+    //Find the intersection between current and previous free times
+    intersections = intersection(intersections, myintersections);
 
     //Merge intersections
     //Handle the case where some intersections overlap eachother
-    intersections = merge(intersections);
+    intersections = union(intersections);
 
     return intersections;
 }
