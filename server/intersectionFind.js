@@ -23,6 +23,8 @@ const union = intervals => {
 };
 
 //Find intersection of two arrays of time intervals
+//Can be used to filter events before running intersection find 
+//E.g. events = intersection(events, filter)
 //Courtesy of ChatGPT
 const intersection = (intervals1, intervals2) => {
     intervals1.sort((a, b) => a[0] - b[0]);
@@ -51,9 +53,10 @@ const intersection = (intervals1, intervals2) => {
       return intersection;
   }
 
-function intersectionFind(eventsResource, intersections){
+function intersectionFind(events, intersections){
 
-    //intersections is a nx2 array of the form [[start, end],.....]
+    //events is an nx2 array of the form [[start, end],.....]
+    //intersections is an nx2 array of the form [[start, end],.....]
 
     //Assume evenStarts and eventEnds are all relative to Unix epoch
     //I.e. no time zones etc
@@ -61,12 +64,6 @@ function intersectionFind(eventsResource, intersections){
     //Assume that all the events are in the relevant search area
     //If not, the algorithm will still work but will be slow
     //I.e. will find intersections that aren't relevant
-
-    //Format the events into a nx2 array of timestamps
-    let events = [];
-    for (let userEvent of eventsResource){
-        events.push([userEvent.start.datetime, userEvent.end.datetime]);
-    }
 
     //Merge intervals
     //Handle the case where some events overlap eachother
@@ -90,4 +87,4 @@ function intersectionFind(eventsResource, intersections){
     return intersections;
 }
 
-module.exports = { intersectionFind };
+module.exports = { intersection, intersectionFind };
