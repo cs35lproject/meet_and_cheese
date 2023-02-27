@@ -1,3 +1,9 @@
+/*******************************************************
+ *            COPYRIGHT 2023 YASSIN KORTAM             *
+ * USE OF THIS SOURCE CODE IS GOVERNED BY AN MIT-STYLE *
+ * LICENSE THAT CAN BE FOUND IN THE LICENSE FILE OR AT *
+ *        HTTPS://OPENSOURCE.ORG/LICENSES/MIT.         *
+ *******************************************************/
 
 //Classic leetcode merge intervals algorithm
 //See https://javascript.plainenglish.io/javascript-algorithms-merge-intervals-leetcode-98da240805bc
