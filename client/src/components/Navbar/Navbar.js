@@ -22,8 +22,9 @@ class Navbar extends React.Component {
         <a href = "/" class = "title"  > 
             Meet & Cheese
         </a>
-        <li> <a href="/">HOME / LOGIN</a></li>
+        <li> <a href="/addPeople">ADD PEOPLE</a></li>
         <li> <a href="/meeting">MEETING</a></li>
+        <li> <a href="/">HOME / LOGIN</a></li>
         <li> <a href="/getstarted">GET STARTED</a></li>
         </ul>
     )

@@ -9,6 +9,7 @@ import './index.css';
 
 import Navbar from "./components/Navbar/Navbar"
 import GetStarted from './pages/GetStarted';
+import AddPeople from './pages/AddPeople';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: '/meeting',
     element: <Meeting />,
+  },
+  {
+    path: '/addPeople',
+    element: <AddPeople />,
   },
   {
     path: '/CalendarAPI',
