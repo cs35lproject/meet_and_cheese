@@ -7,6 +7,18 @@ getstarted p {
     text-align: center;
 }
 
+addpeople p {
+  text-align: center;
+}
+
+choosedt p {
+  text-align: center;
+}
+
+meeting p {
+  text-align: center;
+}
+
 h1 {
     text-align: center;
     color: #4D368C;

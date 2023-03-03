@@ -10,7 +10,7 @@ class AddPeople extends React.Component {
         <p>These should be *centered* buttons and  also look better</p>
         <style>
         </style>
-        <getstarted>
+        <addpeople>
             <div class="row">
                 <div class="column">
                     <div class="circle"></div>
@@ -21,7 +21,7 @@ class AddPeople extends React.Component {
                     <h2>Meeting View</h2>
                 </div>
             </div>
-        </getstarted>
+        </addpeople>
         </React.Fragment>
     )
   }

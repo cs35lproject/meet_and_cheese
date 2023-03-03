@@ -8,7 +8,7 @@ class Meeting extends React.Component {
         <a href="/">Home</a>
         <p>Page containing full availability data from all meeting participants</p>
         <p>These should be *centered* buttons and  also look better</p>
-        <getstarted>
+        <meeting>
             <div class="row">
                 <div class="column">
                     <div class="circle"></div>
@@ -19,7 +19,7 @@ class Meeting extends React.Component {
                     <h2>Meeting View</h2>
                 </div>
             </div>
-        </getstarted>
+        </meeting>
       </React.Fragment>
     )
   }
