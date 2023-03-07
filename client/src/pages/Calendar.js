@@ -17,11 +17,12 @@ class Calendar extends React.Component {
   }
 
   setCalendarsData = (tempCalendarsData) => {
-    this.setState({calendarsData : tempCalendarsData})
+    console.log(tempCalendarsData);
+    this.setState({calendarsData : tempCalendarsData});
   }
 
   showCalendars = () => {
-    console.log(this.state.calendarsData)
+    console.log(this.state.calendarsData);
   }
 
   render() {
