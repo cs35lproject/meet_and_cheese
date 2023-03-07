@@ -4,7 +4,8 @@
     "description": "Course files for the MongoDB tutorials playlist on The Net Ninja YouTube channel.\r Each branch in this repository corresponds to the ending code of a particular video.",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon app.js"
+        "dev": "nodemon app.js",
+        "test": "mocha --recursive --exit"
     },
     "repository": {
         "type": "git",
@@ -18,6 +19,8 @@
     },
     "homepage": "https://github.com/iamshaunjp/mongodb-playlist#readme",
     "dependencies": {
+        "chai": "^4.3.7",
+        "chai-http": "^4.3.0",
         "cors": "^2.8.5",
         "cors-anywhere": "^0.4.4",
         "dotenv": "^16.0.3",
