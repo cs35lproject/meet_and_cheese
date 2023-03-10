@@ -5,6 +5,7 @@ import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
+import googleCalendarPlugin from '@fullcalendar/google-calendar'
 
 import './style.css'
 
@@ -46,7 +47,7 @@ class Calendar extends React.Component {
           <div class="square"></div>
           <FullCalendar
             plugins={[ dayGridPlugin ]}
-            initialView="dayGridMonth"
+            initialView="dayGridWeek"
             height={700}
             eventColor={'#378006'}
           />
