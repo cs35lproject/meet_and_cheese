@@ -6,7 +6,7 @@ class GetStarted extends React.Component {
     return (
       <React.Fragment>
         <getstarted>
-            <h1>Let's Start Meeting!</h1>
+            <h1>Find the best times to meet with everyone</h1>
 
             <div class="box_container">
                 <div class="box">
