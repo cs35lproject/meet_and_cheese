@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid' // plugin
+import googleCalendarPlugin from '@fullcalendar/google-calendar'
+
 const config = {
   "clientId": process.env.REACT_APP_CLIENT_ID,
   "apiKey": process.env.REACT_APP_API_KEY,
@@ -15,7 +19,13 @@ const CalendarAPITestPage = (props) => {
   const gapi = window.gapi;
   var tokenClient =  null;
   var onLoadCallback = null;
+  // declare a state variable fullCalendars and a function to update fullCalendars
+  // inital value of fullCalendars is null
+  // when setFullCalendars is called, update fullCalendars
   const [fullCalendars, setFullCalendars] = useState(null);
+  const [calendarEvents, setCalendarEvents] = useState([]);
+  const [auth, setAuth] = useState(false);
+  
 
   useEffect(() => {
     handleClientLoad();
@@ -83,6 +93,9 @@ const CalendarAPITestPage = (props) => {
     let tempCalendars = [];
     let curCalendar;
 
+    // keep track of calendar id's
+    let calendarIds = [];
+
     if (gapi) {
         gapi.client.calendar.calendarList.list()
         .then( ({ result }) => {
@@ -92,17 +105,30 @@ const CalendarAPITestPage = (props) => {
               curCalendar.name = calendar.summaryOverride ? calendar.summaryOverride : calendar.summary;
               // Set calendar ID
               curCalendar.id = calendar.id
+
+              // store calendar ID 
+              calendarIds.push(calendar.id);
       
               // Set events for calendar
               setEvents(curCalendar);
-      
+            
               console.log(curCalendar.name, curCalendar)
       
               // Save to list of calendars
               tempCalendars.push(curCalendar);
             })
-            setFullCalendars(tempCalendars);
           });
+            console.log("user google id: \n", config.clientId);
+            console.log("google api key: \n", config.apiKey);
+            setFullCalendars(tempCalendars);
+            setAuth(true);
+
+          setCalendarEvents({
+            googleCalendarId: 'en.usa#holiday@group.v.calendar.google.com'
+          });
+          console.log("calendar events:", calendarEvents);
+          console.log("calendar ids:", calendarIds);
+
           return tempCalendars;
     }
   }
@@ -132,13 +158,26 @@ const CalendarAPITestPage = (props) => {
       });
   };
 
+  
   return (
       <React.Fragment>
           <a href="/">Home</a>
 
         <button onClick={handleAuthClick}>auth</button>
 
+
           <br />
+          {auth && <FullCalendar
+            plugins={[ dayGridPlugin, googleCalendarPlugin ]}
+            initialView="dayGridWeek"
+            defaultView="agendaWeek"
+            height={700}
+            eventColor={'#378006'}
+            events={calendarEvents}
+            googleCalendarApiKey={config.apiKey}
+          />}
+
+
 
       </React.Fragment>
   );

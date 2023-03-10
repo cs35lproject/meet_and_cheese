@@ -56,11 +56,13 @@ calendar {
     text-align: center;
     font: 32px Arial, sans-serif;
     margin: 0 auto;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
 
 .column {
     float: left;
     width: 33.33%;
+    border: 1px solid white;
   }
   
   /* Clear floats after the columns */
