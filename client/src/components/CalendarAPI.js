@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 const config = {
   "clientId": process.env.REACT_APP_CLIENT_ID,
   "apiKey": process.env.REACT_APP_API_KEY,
@@ -71,6 +69,7 @@ const handleAuthClick = () => {
 
 const setCalendars = (calendarsData, daysAhead, maxResults) => {
     let tempCalendars = [];
+    let events = []
     let curCalendar;
     if (gapi) {
         gapi.client.calendar.calendarList.list()
@@ -82,16 +81,16 @@ const setCalendars = (calendarsData, daysAhead, maxResults) => {
                 // Set calendar ID
                 curCalendar.id = calendar.id
                 // Set events for calendar
-                setEvents(curCalendar, daysAhead, maxResults);
+                setEvents(curCalendar, events, daysAhead, maxResults);
                 // Save to list of calendars
                 tempCalendars.push(curCalendar);
             })
-            calendarsData(tempCalendars);
+            calendarsData(tempCalendars, events);
         });
     }
 }
 
-const setEvents = (calendar, givenDaysAhead, givenMaxResults) => {
+const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     let daysAhead = givenDaysAhead ? givenDaysAhead : 10;
     let maxResults = givenMaxResults ? givenMaxResults : 30;
 
@@ -112,7 +111,13 @@ const setEvents = (calendar, givenDaysAhead, givenMaxResults) => {
         orderBy: "startTime",
       })
       .then( (response) => {
-        calendar.events = response.result.items;
+        for (const key in response.result.items) {
+            let startTime = response.result.items[key].start.dateTime
+            let endTime = response.result.items[key].end.dateTime
+            let times = {"start" : startTime, "end" : endTime}
+            events.push(times)
+        }
+        calendar.events = Array.from(response.result.items)
     });
 };
 

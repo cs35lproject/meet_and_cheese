@@ -60,13 +60,10 @@ const intersection = (intervals1, intervals2) => {
     return intersection;
 }
 
-//Extract start and end times from google calendar events resource
-//Returns an nx2 array of the form [[start, end],.....]
-//See https://developers.google.com/calendar/api/v3/reference/events#resource
-const extractEvents = events => {
-    return events.map(event => [event.start.dateTime, event.end.dateTime])
-}
-
+// events & intersections both 2d arrays [start,end]
+// find intersection of all users by calling itself on every user's events
+// events: 
+// intersections: 
 const intersectionFind = (events, intersections) => {
 
     //events is an nx2 array of the form [[start, end],.....]
@@ -101,4 +98,4 @@ const intersectionFind = (events, intersections) => {
     return intersections;
 }
 
-module.exports = { extractEvents, intersection, intersectionFind };
+module.exports = { intersection, intersectionFind };

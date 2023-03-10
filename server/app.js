@@ -3,31 +3,28 @@ const app = express();
 const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 const cors = require('cors');
+var bodyParser = require("body-parser");
 
 // Configure .env variables
 dotenv.config({ path: '.env' });
-const port = process.env.PORT || 3000;
-const local = process.env.URL || "mongodb://localhost:27017/db1";
+const port = process.env.PORT || 7073;
+const local = process.env.URL || "mongodb://localhost:7073/db1";
 
 // Connect to Mongoose
 mongoose.Promise = global.Promise;
 mongoose.set('strictQuery', false);
 mongoose.connect(local);
 
-// // Test graphDB
-// const {db_additiveTest} = require('./graphDB');
-// (async () => { 
-//     await db_additiveTest(); 
-// })();
-
-// Middleware (None configured)
+// Middleware
 app.use(cors({
     origin: "*"
 }));
+app.use(bodyParser.json());
 
 // Routes
 app.use('/api/user', require('./routes/userRoute'));
 app.use('/api/event', require('./routes/eventRoute'));
+app.use('/api/testroute', require('./routes/testRoute'));
 
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`);
