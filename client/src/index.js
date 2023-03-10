@@ -5,6 +5,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import Calendar from './pages/Calendar'
 import Meeting from './pages/Meeting'
 import CalendarAPITestPage from './pages/CalendarAPITestPage'
+import { handleAuthClick, handleClientLoad } from './components/CalendarAPI';
 import './index.css';
 
 import Navbar from "./components/Navbar/Navbar"
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Navbar></Navbar>
+    <Navbar handleAuthClick = {handleAuthClick}/>
     <RouterProvider router={router} />
   </React.StrictMode>
 );

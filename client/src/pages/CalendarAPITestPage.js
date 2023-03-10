@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
+
+/*
+only need id to retrieve user from database
+id should be given by google
+*/
 
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
@@ -28,7 +34,7 @@ const CalendarAPITestPage = (props) => {
   
 
   useEffect(() => {
-    handleClientLoad();
+    
     }, []
   );
 
@@ -158,12 +164,129 @@ const CalendarAPITestPage = (props) => {
       });
   };
 
-  
+  const fetchGetReq = (url) => {
+    fetch(url, {method:"GET"})
+    .then( (res) => res.json())
+    .then( (data) => {
+      console.log(data)
+    })
+    .catch( (e) => {
+      console.log(e)
+    })
+  }
+
+  const fetchPostReq = (url, metadata) => {
+    console.log("called post req, metadata:")
+    console.log(metadata)
+    fetch(url, metadata)
+    .then( (res) => res.json())
+    .then( (data) => {
+      console.log(data)
+    })
+    .catch( (e) => {
+      console.log(e)
+    })
+  }
+
+  const getUserEvents = (user) => {
+    let id = "id2"
+    let url = `http://localhost:7073/api/user/userEvents/?id=${id}`
+    fetchGetReq(url)
+  }
+
+  const createUser = () => {
+    console.log("inside create user frontend")
+    let body = {
+      _id : "id2",
+      name : "name2",
+      email : "email2",
+      events : [[1,2],[3,4]]
+    }
+    let url = "http://localhost:7073/api/user/createUser"
+    const reqMetaData = {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {'Content-Type': 'application/json'}
+    }
+    fetchPostReq(url, reqMetaData)
+  }
+
+  const getTest = () => {
+    let url = "http://localhost:7073/api/testroute/getTest"
+    fetchGetReq(url)
+  }
+
+  const postTest = () => {
+    let body = {
+      "calendarID": "some id here",
+      "username": "some username here"
+    }
+
+    let url = "http://localhost:7073/api/testroute/postTest"
+    let metadata = {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {'Content-Type': 'application/json'}
+    }
+
+    fetchPostReq(url, metadata)
+  }
+
+  const sendToAPI = () => {
+    /*
+    sample userEvents:
+    http://localhost:7073/api/user/userEvents/?user=name
+    */
+    let url =     'http://localhost:7073/api/user/userEvents'
+    url =         'http://localhost:7073/api/user/createUser'
+    url = 'http://localhost:7073/api/user/userEvents/?user=name'
+
+    const body = {
+      _id : "id",
+      name : "name",
+      email : "email",
+      events : [[1,2],[3,4]]
+    }
+    //getUserEvents("name", body)
+  //   const requestMetadata = {
+  //       method: 'POST',
+  //       headers: {
+  //           'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(body)
+  //   };
+    
+    // fetch(url, {
+    //   method: 'GET',
+    // })
+    //     .then(res => res.json())
+    //     .then( (data) => {
+    //       console.log(data)
+    //     .catch( (e) => {
+    //       console.log("err:", e)
+    //     })
+    // });
+  }
+
   return (
       <React.Fragment>
-          <a href="/">Home</a>
 
-        <button onClick={handleAuthClick}>auth</button>
+        <div>
+        <a href="/">Home</a>
+
+<button onClick={handleAuthClick}>auth</button>
+
+<button onClick={sendToAPI}>send to api</button>
+
+<button onClick={createUser}>create user</button>
+<button onClick={getUserEvents}>get user events</button>
+        </div>
+        <div>
+          <button onClick={getTest}>test get</button>
+          <button onClick={postTest}>test post</button>
+        </div>
+
+        <button onClick={handleAuthClick}>Sign in</button>
 
 
           <br />

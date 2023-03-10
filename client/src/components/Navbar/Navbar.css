@@ -44,3 +44,7 @@ ul {
     text-decoration: underline;
     color: #8B78BF;
   }
+
+  .click {
+    cursor: pointer
+  }
