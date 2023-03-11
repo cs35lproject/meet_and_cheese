@@ -10,9 +10,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import Navbar from "../components/Navbar"
 
 import './style.css'
-import ReactDOM from 'react-dom';
 import Meeting from './Meeting';
-import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 
 class Calendar extends React.Component {
 
@@ -22,7 +20,6 @@ class Calendar extends React.Component {
       calendarsData : null,
       events : [],
       intersections : [],
-      eventsArray : [],
       minTime: '06:00:00',
       endTime: '22:00:00',
       meetingID : null,
@@ -59,7 +56,7 @@ class Calendar extends React.Component {
       if (data.meeting !== undefined) {
         this.setState({meetingID : data.meeting.meetingID, intersections : data.meeting.meeting.intersections, meetingMemberIDS : data.meeting.meeting.meetingMemberIDS})
         if (data.meeting.meetingID !== undefined) {
-          window.location = ('/meeting?id='+data.meeting.meetingID)
+          //window.location = ('/meeting?id='+data.meeting.meetingID)
         }
       }
     })
@@ -70,21 +67,7 @@ class Calendar extends React.Component {
 
   updateAvailability = async () => {
     await new Promise(r => setTimeout(r, 500));
-    let _events = [];
-    const timeNow = Date.now();
-    console.log("Time now: ", timeNow);
-    for (const start_end of this.state.intersections) {
-      // only dates STARTING from TODAY
-      // if end time is less than time now, get rid of the event
-      if (start_end[0] < timeNow) continue;
-      const _event = {
-        title: "Available",
-        start: start_end[0],
-        end: start_end[1],
-      };
-      _events.push(_event);
-    }
-    this.setState({ eventsArray: _events });
+
     /* 
     use this.state.new_intersection for unix timestamps to create calendar events to represent user's availability
     */
@@ -112,7 +95,7 @@ class Calendar extends React.Component {
   }
 
   render() {
-    if (this.state.intersections) {
+    if (this.state.intersections.length > 0) {
       return (
         <React.Fragment>
           <Meeting meetingID={this.state.meetingID} intersections={this.state.intersections} meetingMemberIDS={this.state.meetingMemberIDS} />

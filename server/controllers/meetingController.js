@@ -24,7 +24,8 @@ async function createMeeting(req, res) {
         }
     })
     console.log("meeting:", meeting)
-    await meeting.save()
+    res.send({ success: true, meeting: meeting })
+    //await meeting.save()
     .then(() => {
         res.send({ success: true, meeting: meeting })
     })
