@@ -19,8 +19,12 @@ class Calendar extends React.Component {
       calendarsData : null,
       events : [],
       intersections : [],
-      eventsArray : []
+      eventsArray : [],
+      minTime: '06:00:00',
+      endTime: '22:00:00'
     };
+    this.handleStartChange = this.handleStartChange.bind(this);
+    this.handleEndChange = this.handleEndChange.bind(this);
   }
 
   componentDidMount = () => {
@@ -61,11 +65,11 @@ class Calendar extends React.Component {
     for (const start_end of this.state.intersections) {
       // only dates STARTING from TODAY
       // if end time is less than time now, get rid of the event
-      if (start_end[1] < timeNow) continue;
+      if (start_end[0] < timeNow) continue;
       const _event = {
         title: "Available",
         start: start_end[0],
-        end: start_end[1]
+        end: start_end[1],
       };
       _events.push(_event);
     }
@@ -79,6 +83,7 @@ class Calendar extends React.Component {
     console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
   }
 
+  
   handleMouseEnter = (arg) => {
     arg.el.classList.add('event_hover'); // Add custom class on mouse enter
   }
@@ -87,16 +92,23 @@ class Calendar extends React.Component {
     arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
   }
 
-  handleEventResize = (arg) => {
-    const event = arg.event;
-    const start = event.start;
-    const end = event.end;
-    const duration = end - start;
-    const newStart = arg.start;
-    const newEnd = new Date(newStart.getTime() + duration);
-    event.setStart(newStart);
-    event.setEnd(newEnd);
+  handleStartChange(event) {
+    this.setState({ minTime: event.target.value });
   }
+
+  handleEndChange(event) {
+    this.setState({ endTime: event.target.value });
+  }
+  
+  handleEndClick(event) {
+    alert(`End time set to ${this.state.endTime}`);
+  }
+
+  handleStartClick(event) {
+    alert(`Start time set to ${this.state.minTime}`);
+  }
+  
+
 
   render() {
     return (
@@ -104,29 +116,47 @@ class Calendar extends React.Component {
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
-        <div>
 
+        <div>
+          <label htmlFor="start-time-input"></label>
+          <input
+            id="start-time-input"
+            type="time"
+            value={this.state.minTime}
+            onChange={this.handleStartChange}
+          />
+
+
+          <label htmlFor="end-time-input"></label>
+          <input
+            id="end-time-input"
+            type="time"
+            value={this.state.endTime}
+            onChange={this.handleEndChange}
+          />
         </div>
+
         <calendar>
           <div class="square"></div>
           <FullCalendar
-            plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin ]}
+            plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
             initialView="timeGridWeek"
             allDaySlot={false}
             eventColor={'#378006'}
             googleCalendarApiKey={config.apiKey}
             // auto gets rid of need for scrolling for contentHeight
-            contentHeight="auto" 
-            height="auto"
+            //contentHeight="auto" 
+            height={700}
             eventClick={this.handleEventClick}
             eventMouseEnter={this.handleMouseEnter}
             eventMouseLeave={this.handleMouseLeave}
             handleWindowResize={true}
-            slotMinTime="06:00:00"
-            slotMaxTime="22:00:00"
+            slotMinTime={this.state.minTime}
+            slotMaxTime={this.state.endTime}
             events ={this.state.eventsArray}
-            editable={true}
-            eventResize={this.handleEventResize}
+            //editable={true} // allows both resizing and dragging
+            eventDurationEditable={true}
+            eventResizableFromStart={true}
           />
         </calendar>
       </React.Fragment>
