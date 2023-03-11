@@ -135,39 +135,37 @@ class Meeting extends React.Component {
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
-        <div>
-      
-        <div class="box2">
-        <div className="circle"><p2>SHARE</p2></div>
-          <div className="rectangle2">
-            <h3>Users</h3>
-            {/* <p>placeholder</p> */}
+        <div class="box_container">
+          <div class="box">
+          <div className="circle"><p2>SHARE</p2></div>
+            <div className="rectangle2">
+              <h4>Users</h4>
+              {/* <p>placeholder</p> */}
+            </div>
           </div>
+          <calendar2>
+            <div class="square"></div>
+            <FullCalendar
+              plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin ]}
+              initialView="timeGridWeek"
+              allDaySlot={false}
+              eventColor={'#378006'}
+              googleCalendarApiKey={config.apiKey}
+              // auto gets rid of need for scrolling for contentHeight
+              contentHeight="auto" 
+              height="auto"
+              eventClick={this.handleEventClick}
+              eventMouseEnter={this.handleMouseEnter}
+              eventMouseLeave={this.handleMouseLeave}
+              handleWindowResize={true}
+              slotMinTime="06:00:00"
+              slotMaxTime="22:00:00"
+              events ={this.state.eventsArray}
+              editable={true}
+              eventResize={this.handleEventResize}
+            />
+          </calendar2>
         </div>
-
-        </div>
-        <calendar2>
-          <div class="square"></div>
-          <FullCalendar
-            plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin ]}
-            initialView="timeGridWeek"
-            allDaySlot={false}
-            eventColor={'#378006'}
-            googleCalendarApiKey={config.apiKey}
-            // auto gets rid of need for scrolling for contentHeight
-            contentHeight="auto" 
-            height="auto"
-            eventClick={this.handleEventClick}
-            eventMouseEnter={this.handleMouseEnter}
-            eventMouseLeave={this.handleMouseLeave}
-            handleWindowResize={true}
-            slotMinTime="06:00:00"
-            slotMaxTime="22:00:00"
-            events ={this.state.eventsArray}
-            editable={true}
-            eventResize={this.handleEventResize}
-          />
-        </calendar2>
       </React.Fragment>
       
     )
