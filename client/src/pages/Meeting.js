@@ -41,6 +41,7 @@ import './style.css'
 //   }
 // }
 
+
 class Meeting extends React.Component {
 
   constructor() {
@@ -135,9 +136,17 @@ class Meeting extends React.Component {
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
         <div>
+      
+        <div class="box2">
+        <div className="circle"><p2>SHARE</p2></div>
+          <div className="rectangle2">
+            <h3>Users</h3>
+            {/* <p>placeholder</p> */}
+          </div>
+        </div>
 
         </div>
-        <calendar>
+        <calendar2>
           <div class="square"></div>
           <FullCalendar
             plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin ]}
@@ -158,7 +167,7 @@ class Meeting extends React.Component {
             editable={true}
             eventResize={this.handleEventResize}
           />
-        </calendar>
+        </calendar2>
       </React.Fragment>
       
     )

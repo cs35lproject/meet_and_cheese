@@ -10,7 +10,7 @@ class GetStarted extends React.Component {
           <Navbar />
         </div>
         <getstarted>
-            <h1>Find the best times to meet with everyone</h1>
+            <h1>Find the best times to meet with everyone!</h1>
 
             <div class="box_container">
                 <div class="box">
