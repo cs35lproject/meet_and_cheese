@@ -10,6 +10,9 @@ import interactionPlugin from '@fullcalendar/interaction';
 import Navbar from "../components/Navbar"
 
 import './style.css'
+import ReactDOM from 'react-dom';
+import Meeting from './Meeting';
+import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 
 class Calendar extends React.Component {
 
@@ -21,7 +24,9 @@ class Calendar extends React.Component {
       intersections : [],
       eventsArray : [],
       minTime: '06:00:00',
-      endTime: '22:00:00'
+      endTime: '22:00:00',
+      meetingID : null,
+      meetingMemberIDS : null
     };
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
@@ -39,7 +44,8 @@ class Calendar extends React.Component {
 
   showCalendars = async () => {
     let events = this.state.events.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
-    let body = {"events":events}
+    console.log("this.state.calendardata:", this.state.calendarsData)
+    let body = {"_id" : "SECOND ID TEST", "events" : events}
     let url = process.env.REACT_APP_BACKEND
     let metadata = {
       method: "POST",
@@ -49,8 +55,13 @@ class Calendar extends React.Component {
     fetch(url, metadata)
     .then( (res) => res.json())
     .then( (data) => {
-      this.setState({intersections : data.new_intersection})
-      this.updateAvailability()
+      console.log("data:", data)
+      if (data.meeting !== undefined) {
+        this.setState({meetingID : data.meeting.meetingID, intersections : data.meeting.meeting.intersections, meetingMemberIDS : data.meeting.meeting.meetingMemberIDS})
+        if (data.meeting.meetingID !== undefined) {
+          window.location = ('/meeting?id='+data.meeting.meetingID)
+        }
+      }
     })
     .catch( (e) => {
       console.log(e)
@@ -99,20 +110,18 @@ class Calendar extends React.Component {
   handleEndChange(event) {
     this.setState({ endTime: event.target.value });
   }
-  
-  handleEndClick(event) {
-    alert(`End time set to ${this.state.endTime}`);
-  }
-
-  handleStartClick(event) {
-    alert(`Start time set to ${this.state.minTime}`);
-  }
-  
-
 
   render() {
-    return (
-      <React.Fragment>
+    if (this.state.intersections) {
+      return (
+        <React.Fragment>
+          <Meeting meetingID={this.state.meetingID} intersections={this.state.intersections} meetingMemberIDS={this.state.meetingMemberIDS} />
+        </React.Fragment>
+      )
+    }
+    else {
+      return (
+        <React.Fragment>
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
@@ -159,9 +168,11 @@ class Calendar extends React.Component {
             eventResizableFromStart={true}
           />
         </calendar>
-      </React.Fragment>
-      
-    )
+  
+        </React.Fragment>
+      )
+    }
+
   }
 }
 

@@ -24,7 +24,9 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api/user', require('./routes/userRoute'));
 app.use('/api/event', require('./routes/eventRoute'));
+
 app.use('/api/testroute', require('./routes/testRoute'));
+app.use('/api/meeting', require('./routes/meetingRoute'));
 
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`);

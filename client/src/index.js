@@ -4,7 +4,6 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import Calendar from './pages/Calendar'
 import Meeting from './pages/Meeting'
-import { handleAuthClick, handleClientLoad } from './components/CalendarAPI';
 import './index.css';
 
 import GetStarted from './pages/GetStarted';
