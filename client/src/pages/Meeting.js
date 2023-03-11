@@ -1,10 +1,16 @@
 import React from 'react';
 import './style.css';
 
+import Navbar from "../components/Navbar"
+
 class Meeting extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <div>
+          <Navbar/>
+        </div>
+
         <a href="/">Home</a>
         <p>Page containing full availability data from all meeting participants</p>
         <p>These should be *centered* buttons and  also look better</p>

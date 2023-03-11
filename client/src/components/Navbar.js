@@ -23,8 +23,7 @@ class Navbar extends React.Component {
             Meet & Cheese
         </a>
         <li> <a onClick={this.props.handleAuthClick} className="click">LOGIN</a></li>
-        <li> <a href="/addPeople">ADD PEOPLE</a></li>
-        <li> <a href="/meeting">MEETING</a></li>
+        <li> <a href="/meeting">MEETINGS</a></li>
         <li> <a href="/getstarted">GET STARTED</a></li>
         </ul>
     )

@@ -1,11 +1,13 @@
 import React from 'react';
 
-import { Login } from '../components/Login';
 import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
 
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import Navbar from "../components/Navbar"
 
 import './style.css'
 
@@ -16,7 +18,8 @@ class Calendar extends React.Component {
     this.state = {
       calendarsData : null,
       events : [],
-      intersections : []
+      intersections : [],
+      eventsArray : []
     };
   }
 
@@ -52,37 +55,78 @@ class Calendar extends React.Component {
 
   updateAvailability = async () => {
     await new Promise(r => setTimeout(r, 500));
+    let _events = [];
+    const timeNow = Date.now();
+    console.log("Time now: ", timeNow);
+    for (const start_end of this.state.intersections) {
+      // only dates STARTING from TODAY
+      // if end time is less than time now, get rid of the event
+      if (start_end[1] < timeNow) continue;
+      const _event = {
+        title: "Available",
+        start: start_end[0],
+        end: start_end[1]
+      };
+      _events.push(_event);
+    }
+    this.setState({ eventsArray: _events });
     /* 
     use this.state.new_intersection for unix timestamps to create calendar events to represent user's availability
     */
+  }
+
+  handleEventClick = (arg) => {
+    console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
+  }
+
+  handleMouseEnter = (arg) => {
+    arg.el.classList.add('event_hover'); // Add custom class on mouse enter
+  }
+
+  handleMouseLeave = (arg) => {
+    arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
+  }
+
+  handleEventResize = (arg) => {
+    const event = arg.event;
+    const start = event.start;
+    const end = event.end;
+    const duration = end - start;
+    const newStart = arg.start;
+    const newEnd = new Date(newStart.getTime() + duration);
+    event.setStart(newStart);
+    event.setEnd(newEnd);
   }
 
   render() {
     return (
       <React.Fragment>
         <div>
+          <Navbar handleAuthClick = {handleAuthClick}/>
+        </div>
+        <div>
 
-        <button onClick={handleAuthClick}>Sign in</button>
-        
-        <button onClick={this.showCalendars}>Show Calendars</button>
-
-        <button onClick={this.showIntersections}>Show Intersections</button>
-
-        <Login updateUserData={this.updateUserData} />
-
-          <signin>
-            <Login updateUserData={this.updateUserData} />
-          </signin>
         </div>
         <calendar>
           <div class="square"></div>
           <FullCalendar
-            plugins={[ dayGridPlugin, googleCalendarPlugin ]}
-            initialView="dayGridWeek"
-            height={700}
+            plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin ]}
+            initialView="timeGridWeek"
+            allDaySlot={false}
             eventColor={'#378006'}
             googleCalendarApiKey={config.apiKey}
-            events={{googleCalendarId: 'en.usa#holiday@group.v.calendar.google.com'}}
+            // auto gets rid of need for scrolling for contentHeight
+            contentHeight="auto" 
+            height="auto"
+            eventClick={this.handleEventClick}
+            eventMouseEnter={this.handleMouseEnter}
+            eventMouseLeave={this.handleMouseLeave}
+            handleWindowResize={true}
+            slotMinTime="06:00:00"
+            slotMaxTime="22:00:00"
+            events ={this.state.eventsArray}
+            editable={true}
+            eventResize={this.handleEventResize}
           />
         </calendar>
       </React.Fragment>

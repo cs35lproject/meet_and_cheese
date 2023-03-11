@@ -128,3 +128,7 @@ calendar {
       width: 100%;
     }
   }
+
+  .event_hover {
+    cursor: pointer;
+  }

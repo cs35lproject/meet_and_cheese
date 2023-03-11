@@ -8,9 +8,7 @@ import CalendarAPITestPage from './pages/CalendarAPITestPage'
 import { handleAuthClick, handleClientLoad } from './components/CalendarAPI';
 import './index.css';
 
-import Navbar from "./components/Navbar/Navbar"
 import GetStarted from './pages/GetStarted';
-import AddPeople from './pages/AddPeople';
 
 const router = createBrowserRouter([
   {
@@ -26,10 +24,6 @@ const router = createBrowserRouter([
     element: <Meeting />,
   },
   {
-    path: '/addPeople',
-    element: <AddPeople />,
-  },
-  {
     path: '/CalendarAPI',
     element: <CalendarAPITestPage />
   }
@@ -37,7 +31,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Navbar handleAuthClick = {handleAuthClick}/>
     <RouterProvider router={router} />
   </React.StrictMode>
 );
