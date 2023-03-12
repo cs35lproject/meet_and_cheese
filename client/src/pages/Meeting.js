@@ -1,67 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
 import './style.css';
 
-class Meeting extends React.Component {
+export default function Meeting() {
+    const { state } = useLocation()
+    const [searchParams] = useSearchParams();
+    const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
+    const [intersections, setIntersections] = useState(state ? state.intersections : null);
+    const [meetingMemberIDS, setMeetingMemberIDS] = useState(null);
+    const [eventsArray, setEventsArray] = useState([]);
+    const [minTime, setMinTime] = useState('06:00:00');
+    const [endTime, setEndTime] = useState('22:00:00');
+    const [savedEvents, setSavedEvents] = useState({});
 
-  constructor() {
-    super();
-    this.state = {
-      meetingID : [],
-      intersections : [],
-      meetingMemberIDS : [],
-      fullcalendarEvents : [],
-      savedEvents: {},// event_id : [start, end]
-      minTime: '06:00:00',
-      endTime: '22:00:00',
-    }
-    this.handleStartChange = this.handleStartChange.bind(this);
-    this.handleEndChange = this.handleEndChange.bind(this);
-  }
+    useEffect(() => {
+        loadValues()
+    }, [intersections])
 
-  componentDidMount() {
-    console.log("componentDidMount() inside Meeting.js, props", this.props)
-    
-    console.log("componentDidMount() Meeting.js")
-    this.loadValues()
-  }
+    useEffect(() => {
+        if (intersections === null) {
+            findMeeting()
+        } else {
+            loadValues()
+        }
+    }, []);
 
-  loadValues = async () => {
-    await new Promise(r => setTimeout(r, 100));
-    console.log("loadValues(), props:", this.state.props)
-    if (this.props.intersections) {
-      let _events = [];
-      const timeNow = Date.now();
-      console.log("Time now: ", timeNow);
-      for (const start_end of this.props.intersections) {
-        console.log("start_end:", start_end[0], start_end[1])
-        // only dates STARTING from TODAY
-        // if end time is less than time now, get rid of the event
-        if (start_end[0] < timeNow) continue;
-        const _event = {
-          title: "Available",
-          start: start_end[0],
-          end: start_end[1],
-          id: uuidv4(),
-          saved: false,
-        };
-        _events.push(_event);
-      }
-      this.setState({fullcalendarEvents: _events, intersections : this.props.intersections, meetingID : this.props.meetingID, meetingMemberIDS : this.props.meetingMemberIDS})
-    }
-  }
-
-  handleEventClick = (arg) => {
-    //console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title, " id: ", arg.event.id)
-    const saved_events = {...this.state.savedEvents };
+  const handleEventClick = (arg) => {
+    const saved_events = {...savedEvents };
     if (arg.event.extendedProps.saved) {
       console.log("unsaved");
       arg.event.setExtendedProp("saved", false);
@@ -74,70 +48,95 @@ class Meeting extends React.Component {
       arg.event.setProp("backgroundColor", "red");
       saved_events[arg.event.id] = [arg.event.start, arg.event.end];
     }
-    this.setState({ savedEvents: saved_events });
+    setSavedEvents(saved_events);
   }
 
-  handleMouseEnter = (arg) => {
+  const handleMouseEnter = (arg) => {
     arg.el.classList.add('event_hover'); // Add custom class on mouse enter
   }
 
-  handleMouseLeave = (arg) => {
+  const handleMouseLeave = (arg) => {
     arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
   }
 
-  handleStartChange(event) {
-    this.setState({ minTime: event.target.value });
+  const handleStartChange = (event) => {
+    setMinTime(event.target.value);
   }
 
-  handleEndChange(event) {
-    this.setState({ endTime: event.target.value });
+  const handleEndChange = (event) => {
+    setEndTime(event.target.value);
   }
 
-
-
-  checkData = () => {
-    console.log("this.state:", this.state)
-    return
-    console.log(this.state.intersections)
-    console.log(this.state.fullcalendarEvents)
-    console.log(this.props.intersections)
-  }
-
-  checkSavedEvents = () => {
-    console.log(this.savedEvents);
-    for (let event_id in this.state.savedEvents) {
-      //console.log("event id: ", event_id);
-      console.log("event data: ", this.state.savedEvents[event_id]);
+  const findMeeting = async () => {
+    const meetingID = searchParams.get("id");
+    let url = `${process.env.REACT_APP_GET_MEETING}?id=${meetingID}`
+    let metadata = { method: "GET" }
+    try {
+        const response = await fetch(url, metadata)
+        const data = await response.json()
+        if (data.meeting !== undefined) {
+            setMeetingID(data.meeting.meetingID);
+            setIntersections(data.meeting.meeting.intersections);
+            setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
+        }
+    } catch (error) {
+        console.log(error);
     }
   }
 
-  render() {
-    console.log("INSIDE MEETING ON NEW ADDITION, CALLED RENDER")
-    return (
-      <React.Fragment>
+  const loadValues = async () => {
+    await new Promise(r => setTimeout(r, 100));
+    if (intersections) {
+      let _events = [];
+      const timeNow = Date.now();
+      for (const start_end of intersections) {
+        if (start_end[0] < timeNow) continue;
+        const _event = {
+          title: "Available",
+          start: start_end[0],
+          end: start_end[1],
+          id: uuidv4(),
+          saved: false,
+        };
+        _events.push(_event);
+        setEventsArray(_events);
+        setMeetingID(meetingID);
+        setMeetingMemberIDS(meetingMemberIDS);
+      }
+    }
+  }
+
+  const checkSavedEvents = () => {
+    console.log(savedEvents);
+    for (let event_id in savedEvents) {
+      //console.log("event id: ", event_id);
+      console.log("event data: ", savedEvents[event_id]);
+    }
+  }
+
+  return (
+    <React.Fragment>
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
 
-        <button onClick={this.checkData}>check data</button>
-        <button onClick={this.checkSavedEvents}>check saved events</button>
+        <button onClick={checkSavedEvents}>check saved events</button>
 
         <div>
           <label htmlFor="start-time-input"></label>
           <input
             id="start-time-input"
             type="time"
-            value={this.state.minTime}
-            onChange={this.handleStartChange}
+            value={minTime}
+            onChange={handleStartChange}
           />
-
 
           <label htmlFor="end-time-input"></label>
           <input
             id="end-time-input"
             type="time"
-            value={this.state.endTime}
-            onChange={this.handleEndChange}
+            value={endTime}
+            onChange={handleEndChange}
           />
         </div>
 
@@ -152,23 +151,20 @@ class Meeting extends React.Component {
             // auto gets rid of need for scrolling for contentHeight
             //contentHeight="auto" 
             height={700}
-            eventClick={this.handleEventClick}
-            eventMouseEnter={this.handleMouseEnter}
-            eventMouseLeave={this.handleMouseLeave}
+            eventClick={handleEventClick}
+            eventMouseEnter={handleMouseEnter}
+            eventMouseLeave={handleMouseLeave}
             handleWindowResize={true}
-            slotMinTime={this.state.minTime}
-            slotMaxTime={this.state.endTime}
-            events ={this.state.fullcalendarEvents}
+            slotMinTime={minTime}
+            slotMaxTime={endTime}
+            events ={eventsArray}
             editable={true} // allows both resizing and dragging
             eventDurationEditable={true}
             eventResizableFromStart={true}
-            //eventDrop={this.handleEventDrop}
+            //eventDrop={handleEventDrop}
           />
         </calendar>
   
         </React.Fragment>
-    )
-  }
+  )
 }
-
-export default Meeting

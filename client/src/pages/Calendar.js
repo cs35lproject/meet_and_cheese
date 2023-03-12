@@ -1,96 +1,82 @@
-import React, { useEffect } from 'react';
-
-import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
-
-import { useNavigate } from 'react-router-dom'
-
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate, createSearchParams } from 'react-router-dom'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
+import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
 import './style.css'
 
-const CreateMeeting = (props) => {
-  const navigate = useNavigate()
-  useEffect(() => {
-    console.log("createMeeting props:", props)
-    navigate(`/meeting?id=${props.meetingID}`, {state: { meetingID : props.meetingID, intersections : props.intersections, meetingMemberIDS : props.meetingMemberIDS }})
-    console.log("Finished createMeeting")
-  })
-}
+const Calendar = () => {
+    const navigate = useNavigate()
+    const [calendarsData, setCalendarsData] = useState(null); // Contains all formatted calendar data. May be useful in future
+    const [eventsData, setEventsData] = useState(null);
+    const [intersections, setIntersections] = useState([]);
+    const [meetingID, setMeetingID] = useState(null);
+    const [meetingMemberIDS, setMeetingMemberIDS] = useState(null);
 
-class Calendar extends React.Component {
+    useEffect(() => {
+        handleClientLoad(updateCalendars);
+    }, [])
 
-  constructor() {
-    super();
-    this.state = {
-      calendarsData : null,
-      events : [],
-      intersections : [],
-      //minTime: '06:00:00',
-      //endTime: '22:00:00',
-      meetingID : null,
-      meetingMemberIDS : null
-    };
-  }
+    useEffect(() => {
+        if (eventsData !== null && calendarsData !== null && eventsData.length > 0) {
+            getIntersections(eventsData)
+        }
+    }, [eventsData, calendarsData])
 
-  componentDidMount = () => {
-    console.log("calling the old calendar.js")
-    handleClientLoad(this.setCalendarsData);
-  }
+    useEffect(() => {
+        if (intersections !== null && intersections.length > 0 && meetingID !== null) {
+            navigate({
+                pathname: "meeting",
+                search: createSearchParams({
+                    id: meetingID
+                }).toString()},{
+                state: { meetingID: meetingID, intersections: intersections, meetingMemberIDS: meetingMemberIDS }
+            })
+        }
+    }, [intersections])
 
-  setCalendarsData = async (tempCalendarsData, events) => {
-    this.setState({calendarsData : tempCalendarsData, events : events}) 
-    await new Promise(r => setTimeout(r, 500));
-    this.showCalendars()
-  }
-
-  showCalendars = async () => {
-    console.log("CALLING OLD CALENDAR")
-    let events = this.state.events.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
-    console.log("this.state.calendardata:", this.state.calendarsData)
-    let body = {"_id" : "SECOND ID TEST", "events" : events}
-    let url = process.env.REACT_APP_CREATE_MEETING
-    let metadata = {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {'Content-Type': 'application/json'}
+    const updateCalendars = async (calendars, events) => {
+        await new Promise(r => setTimeout(r, 500));
+        setCalendarsData(calendars)
+        setEventsData(events)
     }
-    fetch(url, metadata)
-    .then( (res) => res.json())
-    .then( (data) => {
-      console.log("data:", data)
-      if (data.meeting !== undefined) {
-        console.log("finding meetingMemberIDs:", data.meeting.meeting)
-        console.log("finding meetingMemberIDs:", Object.keys(data.meeting.meeting))
-        this.setState({meetingID : data.meeting.meetingID, intersections : data.meeting.meeting.intersections, meetingMemberIDS : data.meeting.meeting.meetingMemberIDS})
-      }
-    })
-    .catch( (e) => {
-      console.log(e)
-    })
-  }
 
-  render() {
-    if (this.state.meetingID !== null && this.state.intersections !== null && this.state.meetingMemberIDS !== null) {
-      console.log("calendar.js this.state:", this.state)
-      return (
-        <CreateMeeting meetingID={this.state.meetingID} intersections={this.state.intersections} meetingMemberIDS={this.state.meetingMemberIDS} />
-      )
+    const getIntersections = async (events) => {
+        let eventsArray = events.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
+        let body = {"_id" : "SECOND ID TEST", "events" : eventsArray}
+        let url = process.env.REACT_APP_CREATE_MEETING
+        let metadata = {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {'Content-Type': 'application/json'}
+        }
+        try {
+            const response = await fetch(url, metadata)
+            const data = await response.json()
+            if (data.meeting !== undefined) {
+                setMeetingID(data.meeting.meetingID);
+                setIntersections(data.meeting.meeting.intersections);
+                setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
-    else {
-      return (
+
+    return (
         <React.Fragment>
         <div>
-          <Navbar handleAuthClick = {handleAuthClick}/>
+            <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
 
         <calendar>
-          <div class="square"></div>
-          <FullCalendar
+            <div class="square"></div>
+            <FullCalendar
             plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
             initialView="timeGridWeek"
             allDaySlot={false}
@@ -98,16 +84,11 @@ class Calendar extends React.Component {
             googleCalendarApiKey={config.apiKey}
             height={700}
             handleWindowResize={true}
-            //slotMinTime={this.state.minTime}
-            //slotMaxTime={this.state.endTime}
           />
         </calendar>
-  
-        </React.Fragment>
-      )
-    }
 
-  }
-}
+        </React.Fragment>
+        )
+    }
 
 export default Calendar

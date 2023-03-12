@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
-import FCalendar from './pages/FCalendar'
-import FMeeting from './pages/FMeeting'
+import Calendar from './pages/Calendar'
+import Meeting from './pages/Meeting'
 import './index.css';
 
 import GetStarted from './pages/GetStarted';
@@ -11,7 +11,7 @@ import GetStarted from './pages/GetStarted';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <FCalendar />,
+    element: <Calendar />,
   },
   {
     path: '/getstarted',
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/meeting',
-    element: <FMeeting />,
+    element: <Meeting />,
   }
 ]);
 

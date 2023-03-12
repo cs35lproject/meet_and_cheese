@@ -24,21 +24,22 @@ async function createMeeting(req, res) {
         }
     })
     //console.log("meeting:", meeting)
-    //console.log("createMeeting SENDING BACK MEETING")
-    //res.send({ success: true, meeting: meeting })
-    await meeting.save()
-    .then(() => {
-        res.send({ success: true, meeting: meeting })
-    })
-    .catch((e) => {
-        console.log(e)
-        res.send({ success: false, error: `Could not save meeting object ${e}`, meeting: meeting })
-    })
+    console.log("createMeeting SENDING BACK MEETING")
+    res.send({ success: true, meeting: meeting })
+    // await meeting.save()
+    // .then(() => {
+    //     res.send({ success: true, meeting: meeting })
+    // })
+    // .catch((e) => {
+    //     console.log(e)
+    //     res.send({ success: false, error: `Could not save meeting object ${e}`, meeting: meeting })
+    // })
 }
 
 async function getMeeting(req, res) {
     if (req.query.id !== null) {
         console.log("Called getMeeting from backend, looking for id:", req.query.id)
+        res.send({ success: false, error: "Disabled for testing"})
         let meeting = await Meeting.findOne({meetingID : req.query.id})
         if (!meeting)
             return res.status(404).send({ success: false, error: `Meeting ${meetingID} does not exist` })
@@ -48,6 +49,5 @@ async function getMeeting(req, res) {
         res.send({ success: false, error: "Need to specify query id"})
     }
 }
-
 
 module.exports = { createMeeting, getMeeting };
