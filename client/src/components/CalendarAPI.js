@@ -43,12 +43,12 @@ const initGapiClient = () => {
         hosted_domain: config.hosted_domain,
     })
     .then( () => {
-    if (onLoadCallback) {
-        onLoadCallback();
-    }
+        if (onLoadCallback) {
+            onLoadCallback();
+        }
     })
     .catch( (e) => {
-    console.log(e);
+        console.log(e);
     });
 }
 
@@ -76,13 +76,9 @@ const setCalendars = (calendarsData, daysAhead, maxResults) => {
         .then( ({ result }) => {
             result.items.forEach((calendar) => {
                 curCalendar = {};
-                // Set calendar summary
                 curCalendar.name = calendar.summaryOverride ? calendar.summaryOverride : calendar.summary;
-                // Set calendar ID
                 curCalendar.id = calendar.id
-                // Set events for calendar
                 setEvents(curCalendar, events, daysAhead, maxResults);
-                // Save to list of calendars
                 tempCalendars.push(curCalendar);
             })
             calendarsData(tempCalendars, events);

@@ -51,10 +51,11 @@ class Calendar extends React.Component {
   }
 
   showCalendars = async () => {
+    console.log("CALLING OLD CALENDAR")
     let events = this.state.events.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
     console.log("this.state.calendardata:", this.state.calendarsData)
     let body = {"_id" : "SECOND ID TEST", "events" : events}
-    let url = process.env.REACT_APP_BACKEND
+    let url = process.env.REACT_APP_CREATE_MEETING
     let metadata = {
       method: "POST",
       body: JSON.stringify(body),

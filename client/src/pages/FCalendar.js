@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, createSearchParams } from 'react-router-dom'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
@@ -10,11 +10,10 @@ import { handleClientLoad, handleAuthClick, config } from '../components/Calenda
 import Navbar from "../components/Navbar"
 import './style.css'
 
-const Calendar = () => {
+const FCalendar = () => {
     const navigate = useNavigate()
-    const didMount = useRef(false);
-    const [calendarsData, setCalendarsData] = useState(null);
-    const [events, setEvents] = useState([]);
+    const [calendarsData, setCalendarsData] = useState(null); // Contains all formatted calendar data. May be useful in future
+    const [eventsData, setEventsData] = useState(null);
     const [intersections, setIntersections] = useState([]);
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
@@ -26,47 +25,53 @@ const Calendar = () => {
     }, [])
 
     useEffect(() => {
-        if (intersections !== null && intersections.length > 0)
-        navigate(`/meeting?id=${meetingID}`, {state: { meetingID : meetingID, intersections : intersections, meetingMemberIDS : meetingMemberIDS }})
+        if (eventsData !== null && calendarsData !== null && eventsData.length > 0) {
+            getIntersections(eventsData)
+        }
+    }, [eventsData, calendarsData])
+
+    useEffect(() => {
+        if (intersections !== null && intersections.length > 0 && meetingID !== null) {
+            navigate({
+                pathname: "meeting",
+                search: createSearchParams({
+                    id: meetingID
+                }).toString()},{
+                state: { meetingID: meetingID, intersections: intersections, meetingMemberIDS: meetingMemberIDS }
+            })
+        }
     }, [intersections])
 
-    const updateCalendars = async (calendars, tEvents) => {
-        setCalendarsData(calendars)
-        setEvents(tEvents)
+    const updateCalendars = async (calendars, events) => {
         await new Promise(r => setTimeout(r, 500));
-        showCalendars(tEvents)
+        setCalendarsData(calendars)
+        setEventsData(events)
     }
 
-    const showCalendars = async (tEvents) => {
-    await new Promise(r => setTimeout(r, 500));
-    let eventsArray = tEvents.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
-    console.log("calendarsData:", calendarsData)
-    let body = {"_id" : "SECOND ID TEST", "events" : eventsArray}
-    let url = process.env.REACT_APP_BACKEND
-    let metadata = {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {'Content-Type': 'application/json'}
-    }
-    try {
-        const response = await fetch(url, metadata)
-        const data = await response.json()
-        console.log("data:", data)
-        if (data.meeting !== undefined) {
-        console.log("finding meetingMemberIDs IN FCAL:", data.meeting.meeting)
-        console.log("finding meetingMemberIDs IN FCAL:", Object.keys(data.meeting.meeting))
-        setMeetingID(data.meeting.meetingID);
-        setIntersections(data.meeting.meeting.intersections);
-        setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
-        console.log("Finished setting, will now render FMeeting")
+    const getIntersections = async (events) => {
+        let eventsArray = events.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
+        let body = {"_id" : "SECOND ID TEST", "events" : eventsArray}
+        let url = process.env.REACT_APP_CREATE_MEETING
+        let metadata = {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {'Content-Type': 'application/json'}
         }
-    } catch (error) {
-        console.log(error);
-    }
+        try {
+            const response = await fetch(url, metadata)
+            const data = await response.json()
+            if (data.meeting !== undefined) {
+                setMeetingID(data.meeting.meetingID);
+                setIntersections(data.meeting.meeting.intersections);
+                setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleEventClick = (arg) => {
-    console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
+        console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
     }
 
     const handleMouseEnter = (arg) => {
@@ -85,18 +90,7 @@ const Calendar = () => {
         setEndTime(event.target.value)
     }
 
-    if (meetingID !== null && intersections.length > 0 && meetingMemberIDS !== undefined) {
-        console.log("Now rendering FMEETING")
-        console.log(meetingID)
-        console.log(intersections)
-        console.log(meetingMemberIDS)
-        navigate(`/meeting?id=${meetingID}`, {state: { meetingID : meetingID, intersections : intersections, meetingMemberIDS : meetingMemberIDS }})
-    }
-    else {
-        console.log("meetingID:", meetingID)
-        console.log("intersections:", intersections)
-
-        return (
+    return (
         <React.Fragment>
         <div>
             <Navbar handleAuthClick = {handleAuthClick}/>
@@ -149,7 +143,4 @@ const Calendar = () => {
         )
     }
 
-    }
-
-
-export default Calendar
+export default FCalendar

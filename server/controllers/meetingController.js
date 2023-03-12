@@ -23,24 +23,30 @@ async function createMeeting(req, res) {
             intersections : intersection,
         }
     })
-    console.log("meeting:", meeting)
-    console.log("CALLED NEW ONE")
-    res.send({ success: true, meeting: meeting })
-    // await meeting.save()
-    // .then(() => {
-    //     res.send({ success: true, meeting: meeting })
-    // })
-    // .catch((e) => {
-    //     console.log(e)
-    //     res.send({ success: false, error: `Could not save meeting object ${e}`, meeting: meeting })
-    // })
+    //console.log("meeting:", meeting)
+    //console.log("createMeeting SENDING BACK MEETING")
+    //res.send({ success: true, meeting: meeting })
+    await meeting.save()
+    .then(() => {
+        res.send({ success: true, meeting: meeting })
+    })
+    .catch((e) => {
+        console.log(e)
+        res.send({ success: false, error: `Could not save meeting object ${e}`, meeting: meeting })
+    })
 }
 
 async function getMeeting(req, res) {
-    let meeting = await Meeting.findOne({meetingID : req.body.meetingID})
-    if (!meeting)
-        return res.status(404).send({ success: false, error: `Meeting ${meetingID} does not exist` })
-    return res.send({ success: true, data: meeting })
+    if (req.query.id !== null) {
+        console.log("Called getMeeting from backend, looking for id:", req.query.id)
+        let meeting = await Meeting.findOne({meetingID : req.query.id})
+        if (!meeting)
+            return res.status(404).send({ success: false, error: `Meeting ${meetingID} does not exist` })
+        return res.send({ success: true, meeting: meeting })
+    }
+    else {
+        res.send({ success: false, error: "Need to specify query id"})
+    }
 }
 
 

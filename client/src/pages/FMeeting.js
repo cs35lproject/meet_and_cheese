@@ -5,7 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
@@ -13,6 +13,7 @@ import './style.css';
 
 export default function FMeeting(props) {
     const { state } = useLocation()
+    const [searchParams] = useSearchParams();
     const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
     const [intersections, setIntersections] = useState(state ? state.intersections : null);
     const [meetingMemberIDS, setMeetingMemberIDS] = useState(null);
@@ -40,28 +41,41 @@ export default function FMeeting(props) {
     arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
   }
 
-  const checkData = () => {
-    console.log("meetingID:", meetingID);
-    console.log("intersections:", intersections);
-    console.log("meetingMemberIDS:", meetingMemberIDS);
-    console.log("eventsArray:", eventsArray);
-    loadValues()
-  }
-
   useEffect(() => {
     loadValues()
+  }, [intersections])
+
+  useEffect(() => {
+    if (intersections === null) {
+        findMeeting()
+    } else {
+        loadValues()
+    }
   }, []);
+
+  const findMeeting = async () => {
+    const meetingID = searchParams.get("id");
+    let url = `${process.env.REACT_APP_GET_MEETING}?id=${meetingID}`
+    let metadata = { method: "GET" }
+    try {
+        const response = await fetch(url, metadata)
+        const data = await response.json()
+        if (data.meeting !== undefined) {
+            setMeetingID(data.meeting.meetingID);
+            setIntersections(data.meeting.meeting.intersections);
+            setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
 
   const loadValues = async () => {
     await new Promise(r => setTimeout(r, 100));
     if (intersections) {
       let _events = [];
       const timeNow = Date.now();
-      console.log("Time now: ", timeNow);
       for (const start_end of intersections) {
-        console.log("start_end:", start_end[0], start_end[1])
-        // only dates STARTING from TODAY
-        // if end time is less than time now, get rid of the event
         if (start_end[0] < timeNow) continue;
         const _event = {
           title: "Available",
@@ -70,7 +84,6 @@ export default function FMeeting(props) {
         };
         _events.push(_event);
         setEventsArray(_events);
-        setIntersections(intersections);
         setMeetingID(meetingID);
         setMeetingMemberIDS(meetingMemberIDS);
       }
@@ -81,8 +94,6 @@ export default function FMeeting(props) {
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
-
-        <button onClick={checkData}>check data</button>
 
         <div>
           <label htmlFor="start-time-input"></label>
