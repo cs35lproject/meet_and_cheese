@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useLocation, useSearchParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
 import './style.css';
 
-export default function FMeeting(props) {
+export default function FMeeting() {
     const { state } = useLocation()
     const [searchParams] = useSearchParams();
     const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
@@ -20,17 +20,35 @@ export default function FMeeting(props) {
     const [eventsArray, setEventsArray] = useState([]);
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
+    const [savedEvents, setSavedEvents] = useState({});
 
-  const handleStartChange = (event) => {
-    setMinTime(event.target.value);
-  }
+    useEffect(() => {
+        loadValues()
+    }, [intersections])
 
-  const handleEndChange = (event) => {
-    setEndTime(event.target.value);
-  }
+    useEffect(() => {
+        if (intersections === null) {
+            findMeeting()
+        } else {
+            loadValues()
+        }
+    }, []);
 
   const handleEventClick = (arg) => {
-    console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
+    const saved_events = {...savedEvents };
+    if (arg.event.extendedProps.saved) {
+      console.log("unsaved");
+      arg.event.setExtendedProp("saved", false);
+      arg.event.setProp("backgroundColor", "green");
+      delete saved_events[arg.event.id];
+    }
+    else {
+      console.log("saved")
+      arg.event.setExtendedProp("saved", true);
+      arg.event.setProp("backgroundColor", "red");
+      saved_events[arg.event.id] = [arg.event.start, arg.event.end];
+    }
+    setSavedEvents(saved_events);
   }
 
   const handleMouseEnter = (arg) => {
@@ -41,17 +59,13 @@ export default function FMeeting(props) {
     arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
   }
 
-  useEffect(() => {
-    loadValues()
-  }, [intersections])
+  const handleStartChange = (event) => {
+    setMinTime(event.target.value);
+  }
 
-  useEffect(() => {
-    if (intersections === null) {
-        findMeeting()
-    } else {
-        loadValues()
-    }
-  }, []);
+  const handleEndChange = (event) => {
+    setEndTime(event.target.value);
+  }
 
   const findMeeting = async () => {
     const meetingID = searchParams.get("id");
@@ -81,6 +95,8 @@ export default function FMeeting(props) {
           title: "Available",
           start: start_end[0],
           end: start_end[1],
+          id: uuidv4(),
+          saved: false,
         };
         _events.push(_event);
         setEventsArray(_events);
@@ -89,11 +105,22 @@ export default function FMeeting(props) {
       }
     }
   }
+
+  const checkSavedEvents = () => {
+    console.log(savedEvents);
+    for (let event_id in savedEvents) {
+      //console.log("event id: ", event_id);
+      console.log("event data: ", savedEvents[event_id]);
+    }
+  }
+
   return (
     <React.Fragment>
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
+
+        <button onClick={checkSavedEvents}>check saved events</button>
 
         <div>
           <label htmlFor="start-time-input"></label>
@@ -131,9 +158,10 @@ export default function FMeeting(props) {
             slotMinTime={minTime}
             slotMaxTime={endTime}
             events ={eventsArray}
-            //editable={true} // allows both resizing and dragging
+            editable={true} // allows both resizing and dragging
             eventDurationEditable={true}
             eventResizableFromStart={true}
+            //eventDrop={handleEventDrop}
           />
         </calendar>
   

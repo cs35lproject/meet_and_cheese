@@ -15,8 +15,6 @@ const FCalendar = () => {
     const [calendarsData, setCalendarsData] = useState(null); // Contains all formatted calendar data. May be useful in future
     const [eventsData, setEventsData] = useState(null);
     const [intersections, setIntersections] = useState([]);
-    const [minTime, setMinTime] = useState('06:00:00');
-    const [endTime, setEndTime] = useState('22:00:00');
     const [meetingID, setMeetingID] = useState(null);
     const [meetingMemberIDS, setMeetingMemberIDS] = useState(null);
 
@@ -70,49 +68,10 @@ const FCalendar = () => {
         }
     }
 
-    const handleEventClick = (arg) => {
-        console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
-    }
-
-    const handleMouseEnter = (arg) => {
-        arg.el.classList.add('event_hover'); // Add custom class on mouse enter
-    }
-
-    const handleMouseLeave = (arg) => {
-    arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
-    }
-
-    const handleStartChange = (event) => {
-        setMinTime(event.target.value)
-    }
-
-    const handleEndChange = (event) => {
-        setEndTime(event.target.value)
-    }
-
     return (
         <React.Fragment>
         <div>
             <Navbar handleAuthClick = {handleAuthClick}/>
-        </div>
-
-        <div>
-            <label htmlFor="start-time-input"></label>
-            <input
-            id="start-time-input"
-            type="time"
-            value={minTime}
-            onChange={handleStartChange}
-            />
-
-
-            <label htmlFor="end-time-input"></label>
-            <input
-            id="end-time-input"
-            type="time"
-            value={endTime}
-            onChange={handleEndChange}
-            />
         </div>
 
         <calendar>
@@ -123,20 +82,9 @@ const FCalendar = () => {
             allDaySlot={false}
             eventColor={'#378006'}
             googleCalendarApiKey={config.apiKey}
-            // auto gets rid of need for scrolling for contentHeight
-            //contentHeight="auto" 
             height={700}
-            eventClick={handleEventClick}
-            eventMouseEnter={handleMouseEnter}
-            eventMouseLeave={handleMouseLeave}
             handleWindowResize={true}
-            slotMinTime={minTime}
-            slotMaxTime={endTime}
-            events ={[]}
-            //editable={true} // allows both resizing and dragging
-            eventDurationEditable={true}
-            eventResizableFromStart={true}
-            />
+          />
         </calendar>
 
         </React.Fragment>

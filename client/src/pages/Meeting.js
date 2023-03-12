@@ -4,24 +4,11 @@ import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
 import './style.css';
-
-const withRouter = Meeting => props => {
-  const location = useLocation()
-  console.log("showMeeting location:", location)
-  console.log("showMeeting props:", props)
-  return (
-    <Meeting
-    {...props}
-    {...{location}}
-    />
-  )
-}
 
 class Meeting extends React.Component {
 
@@ -175,7 +162,7 @@ class Meeting extends React.Component {
             editable={true} // allows both resizing and dragging
             eventDurationEditable={true}
             eventResizableFromStart={true}
-            eventDrop={this.handleEventDrop}
+            //eventDrop={this.handleEventDrop}
           />
         </calendar>
   
