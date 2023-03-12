@@ -24,15 +24,16 @@ async function createMeeting(req, res) {
         }
     })
     console.log("meeting:", meeting)
+    console.log("CALLED NEW ONE")
     res.send({ success: true, meeting: meeting })
-    //await meeting.save()
-    .then(() => {
-        res.send({ success: true, meeting: meeting })
-    })
-    .catch((e) => {
-        console.log(e)
-        res.send({ success: false, error: `Could not save meeting object ${e}`, meeting: meeting })
-    })
+    // await meeting.save()
+    // .then(() => {
+    //     res.send({ success: true, meeting: meeting })
+    // })
+    // .catch((e) => {
+    //     console.log(e)
+    //     res.send({ success: false, error: `Could not save meeting object ${e}`, meeting: meeting })
+    // })
 }
 
 async function getMeeting(req, res) {

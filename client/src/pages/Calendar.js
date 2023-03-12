@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
+
+import { useNavigate } from 'react-router-dom'
 
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import Navbar from "../components/Navbar"
 
+import Navbar from "../components/Navbar"
 import './style.css'
-import Meeting from './Meeting';
+
+const CreateMeeting = (props) => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    console.log("createMeeting props:", props)
+    navigate(`/meeting?id=${props.meetingID}`, {state: { meetingID : props.meetingID, intersections : props.intersections, meetingMemberIDS : props.meetingMemberIDS }})
+    console.log("Finished createMeeting")
+  })
+}
 
 class Calendar extends React.Component {
 
@@ -30,6 +40,7 @@ class Calendar extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log("calling the old calendar.js")
     handleClientLoad(this.setCalendarsData);
   }
 
@@ -54,10 +65,9 @@ class Calendar extends React.Component {
     .then( (data) => {
       console.log("data:", data)
       if (data.meeting !== undefined) {
+        console.log("finding meetingMemberIDs:", data.meeting.meeting)
+        console.log("finding meetingMemberIDs:", Object.keys(data.meeting.meeting))
         this.setState({meetingID : data.meeting.meetingID, intersections : data.meeting.meeting.intersections, meetingMemberIDS : data.meeting.meeting.meetingMemberIDS})
-        if (data.meeting.meetingID !== undefined) {
-          //window.location = ('/meeting?id='+data.meeting.meetingID)
-        }
       }
     })
     .catch( (e) => {
@@ -95,11 +105,10 @@ class Calendar extends React.Component {
   }
 
   render() {
-    if (this.state.intersections.length > 0) {
+    if (this.state.meetingID !== null && this.state.intersections !== null && this.state.meetingMemberIDS !== null) {
+      console.log("calendar.js this.state:", this.state)
       return (
-        <React.Fragment>
-          <Meeting meetingID={this.state.meetingID} intersections={this.state.intersections} meetingMemberIDS={this.state.meetingMemberIDS} />
-        </React.Fragment>
+        <CreateMeeting meetingID={this.state.meetingID} intersections={this.state.intersections} meetingMemberIDS={this.state.meetingMemberIDS} />
       )
     }
     else {

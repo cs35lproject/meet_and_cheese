@@ -4,10 +4,23 @@ import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { useLocation } from 'react-router-dom';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
 import './style.css';
+
+const withRouter = Meeting => props => {
+  const location = useLocation()
+  console.log("showMeeting location:", location)
+  console.log("showMeeting props:", props)
+  return (
+    <Meeting
+    {...props}
+    {...{location}}
+    />
+  )
+}
 
 class Meeting extends React.Component {
 
@@ -26,12 +39,15 @@ class Meeting extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Called")
+    console.log("componentDidMount() inside Meeting.js, props", this.props)
+    
+    console.log("componentDidMount() Meeting.js")
     this.loadValues()
   }
 
   loadValues = async () => {
     await new Promise(r => setTimeout(r, 100));
+    console.log("loadValues(), props:", this.state.props)
     if (this.props.intersections) {
       let _events = [];
       const timeNow = Date.now();
@@ -73,12 +89,15 @@ class Meeting extends React.Component {
   }
 
   checkData = () => {
+    console.log("this.state:", this.state)
+    return
     console.log(this.state.intersections)
     console.log(this.state.eventsArray)
     console.log(this.props.intersections)
   }
 
   render() {
+    console.log("INSIDE MEETING ON NEW ADDITION, CALLED RENDER")
     return (
       <React.Fragment>
         <div>
