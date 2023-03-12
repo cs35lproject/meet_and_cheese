@@ -2,23 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
-import Calendar from './pages/Calendar'
-import Meeting from './pages/Meeting'
-import CalendarAPITestPage from './pages/CalendarAPITestPage'
+import FCalendar from './pages/FCalendar'
+import FMeeting from './pages/FMeeting'
 import './index.css';
+
+import GetStarted from './pages/GetStarted';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Calendar />,
+    element: <FCalendar />,
+  },
+  {
+    path: '/getstarted',
+    element: <GetStarted />,
   },
   {
     path: '/meeting',
-    element: <Meeting />,
-  },
-  {
-    path: '/CalendarAPI',
-    element: <CalendarAPITestPage />
+    element: <FMeeting />,
   }
 ]);
 

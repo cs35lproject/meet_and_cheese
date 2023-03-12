@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-
-const config = {
+export const config = {
   "clientId": process.env.REACT_APP_CLIENT_ID,
   "apiKey": process.env.REACT_APP_API_KEY,
   "scope": process.env.REACT_APP_SCOPE,
@@ -45,12 +43,12 @@ const initGapiClient = () => {
         hosted_domain: config.hosted_domain,
     })
     .then( () => {
-    if (onLoadCallback) {
-        onLoadCallback();
-    }
+        if (onLoadCallback) {
+            onLoadCallback();
+        }
     })
     .catch( (e) => {
-    console.log(e);
+        console.log(e);
     });
 }
 
@@ -71,27 +69,24 @@ const handleAuthClick = () => {
 
 const setCalendars = (calendarsData, daysAhead, maxResults) => {
     let tempCalendars = [];
+    let events = []
     let curCalendar;
     if (gapi) {
         gapi.client.calendar.calendarList.list()
         .then( ({ result }) => {
             result.items.forEach((calendar) => {
                 curCalendar = {};
-                // Set calendar summary
                 curCalendar.name = calendar.summaryOverride ? calendar.summaryOverride : calendar.summary;
-                // Set calendar ID
                 curCalendar.id = calendar.id
-                // Set events for calendar
-                setEvents(curCalendar, daysAhead, maxResults);
-                // Save to list of calendars
+                setEvents(curCalendar, events, daysAhead, maxResults);
                 tempCalendars.push(curCalendar);
             })
-            calendarsData(tempCalendars);
+            calendarsData(tempCalendars, events);
         });
     }
 }
 
-const setEvents = (calendar, givenDaysAhead, givenMaxResults) => {
+const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     let daysAhead = givenDaysAhead ? givenDaysAhead : 10;
     let maxResults = givenMaxResults ? givenMaxResults : 30;
 
@@ -112,7 +107,13 @@ const setEvents = (calendar, givenDaysAhead, givenMaxResults) => {
         orderBy: "startTime",
       })
       .then( (response) => {
-        calendar.events = response.result.items;
+        for (const key in response.result.items) {
+            let startTime = response.result.items[key].start.dateTime
+            let endTime = response.result.items[key].end.dateTime
+            let times = {"start" : startTime, "end" : endTime}
+            events.push(times)
+        }
+        calendar.events = Array.from(response.result.items)
     });
 };
 

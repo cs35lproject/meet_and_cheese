@@ -18,8 +18,15 @@ const readReq = async (req) => {
 async function createUser(req, res) {
     console.log("Called createUser");
 
-    const body = await readReq(req);
-    const user = body.user;
+    //const body = await readReq(req);
+    const body = req.body
+    //const user = body.user;
+    const user = body
+
+    console.log("body:")
+    console.log(body)
+    console.log("user:")
+    console.log(user)
 
     // Validate body
     if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
@@ -62,13 +69,19 @@ async function deleteUser(req, res) {
     }
 }
 
+// get user info given id
+// run intersection find on that with constraint [start,end] (like 8am-2pm)
+
 // route GET /api/users
 async function userEvents(req, res) {
     console.log("Called userEvents");
 
-    const user = req.query.user;
+    const user = req.query.id;
+
+    console.log(user)
 
     let userEvents = Array.from(await db_userEvents(user));
+    console.log("a")
     let usersEventsObjects = userEvents.map(event => ({
         constraint : JSON.parse(event.properties.constraint[0].value), 
         eventsObject : JSON.parse(event.properties.usersEvents[0].value)
