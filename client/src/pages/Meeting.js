@@ -5,6 +5,7 @@ import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useLocation } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
@@ -30,7 +31,8 @@ class Meeting extends React.Component {
       meetingID : [],
       intersections : [],
       meetingMemberIDS : [],
-      eventsArray : [],
+      fullcalendarEvents : [],
+      savedEvents: {},// event_id : [start, end]
       minTime: '06:00:00',
       endTime: '22:00:00',
     }
@@ -61,15 +63,31 @@ class Meeting extends React.Component {
           title: "Available",
           start: start_end[0],
           end: start_end[1],
+          id: uuidv4(),
+          saved: false,
         };
         _events.push(_event);
       }
-      this.setState({eventsArray: _events, intersections : this.props.intersections, meetingID : this.props.meetingID, meetingMemberIDS : this.props.meetingMemberIDS})
+      this.setState({fullcalendarEvents: _events, intersections : this.props.intersections, meetingID : this.props.meetingID, meetingMemberIDS : this.props.meetingMemberIDS})
     }
   }
 
   handleEventClick = (arg) => {
-    console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title)
+    //console.log("start: ", arg.event.start," end: ", arg.event.end, " title: ", arg.event.title, " id: ", arg.event.id)
+    const saved_events = {...this.state.savedEvents };
+    if (arg.event.extendedProps.saved) {
+      console.log("unsaved");
+      arg.event.setExtendedProp("saved", false);
+      arg.event.setProp("backgroundColor", "green");
+      delete saved_events[arg.event.id];
+    }
+    else {
+      console.log("saved")
+      arg.event.setExtendedProp("saved", true);
+      arg.event.setProp("backgroundColor", "red");
+      saved_events[arg.event.id] = [arg.event.start, arg.event.end];
+    }
+    this.setState({ savedEvents: saved_events });
   }
 
   handleMouseEnter = (arg) => {
@@ -88,12 +106,22 @@ class Meeting extends React.Component {
     this.setState({ endTime: event.target.value });
   }
 
+
+
   checkData = () => {
     console.log("this.state:", this.state)
     return
     console.log(this.state.intersections)
-    console.log(this.state.eventsArray)
+    console.log(this.state.fullcalendarEvents)
     console.log(this.props.intersections)
+  }
+
+  checkSavedEvents = () => {
+    console.log(this.savedEvents);
+    for (let event_id in this.state.savedEvents) {
+      //console.log("event id: ", event_id);
+      console.log("event data: ", this.state.savedEvents[event_id]);
+    }
   }
 
   render() {
@@ -105,6 +133,7 @@ class Meeting extends React.Component {
         </div>
 
         <button onClick={this.checkData}>check data</button>
+        <button onClick={this.checkSavedEvents}>check saved events</button>
 
         <div>
           <label htmlFor="start-time-input"></label>
@@ -142,10 +171,11 @@ class Meeting extends React.Component {
             handleWindowResize={true}
             slotMinTime={this.state.minTime}
             slotMaxTime={this.state.endTime}
-            events ={this.state.eventsArray}
-            //editable={true} // allows both resizing and dragging
+            events ={this.state.fullcalendarEvents}
+            editable={true} // allows both resizing and dragging
             eventDurationEditable={true}
             eventResizableFromStart={true}
+            eventDrop={this.handleEventDrop}
           />
         </calendar>
   
