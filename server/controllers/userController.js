@@ -1,117 +1,37 @@
 const User = require("../models/userModel");
-const { intersectionFind } = require("../intersectionFind");
-const { db_removeV, db_createUser, db_userEvents } = require("../graphDB");
 
-const readReq = async (req) => {
-    return new Promise((resolve, reject) => {
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            resolve(JSON.parse(body));
-        });
-    });
-}
-
-// route POST /api/users
+// route POST /api/users/createUser
 async function createUser(req, res) {
-    console.log("Called createUser");
-
-    //const body = await readReq(req);
-    const body = req.body
-    //const user = body.user;
-    const user = body
-
-    console.log("body:")
-    console.log(body)
-    console.log("user:")
-    console.log(user)
-
-    // Validate body
-    if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
-        res.send({ success: false });
-        console.log("User not created (validation failed)");
-        return;
+    if (req.body.userID === undefined || req.body.meetingIDs === undefined) {
+        res.send({success : false, "error" : "Invalid userID"})
     }
+    let user = new User({
+        userID : userID,
+        meetingIDs : req.body.meetingIDs
+    })
+    res.send({ success: true, user: user })
+    await user.save()
+    .then(() => {
+        res.send({ success: true, user: user })
+    })
+    .catch((e) => {
+        console.log(e)
+        res.send({ success: false, error: `Could not save user object ${e}`, user: user })
+    })
+}
 
-    if (await db_createUser(user)) {
-        res.send({ success: true });
-        console.log("User created");
+// route GET /api/users/getUserMeetings
+async function getUserMeetings(req, res) {
+    if (req.query.userID !== null) {
+        //res.send({ success: false, error: "Disabled for testing"})
+        let user = await User.findOne({userID : req.query.userID})
+        if (!user)
+            return res.status(404).send({ success: false, error: `userID ${req.query.userID} does not exist` })
+        res.send({ success: true, user: user })
     }
-    else{
-        console.log("User not created");
-        res.send({ success: false });
+    else {
+        res.send({ success: false, error: "Need to specify query user"})
     }
 }
 
-// route POST /api/users
-async function deleteUser(req, res) {
-    console.log("Called deleteUser");
-
-    const body = await readReq(req);
-    const user = body.user;
-
-    // Validate body
-    if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
-        res.send({ success: false });
-        console.log("User not deleted (validation failed)");
-        return;
-    }
-
-    if (await db_removeV(user)) {
-        res.send({ success: true });
-        console.log("User deleted");
-    }
-    else{
-        res.send({ success: false });
-        console.log("User not deleted");
-    }
-}
-
-// get user info given id
-// run intersection find on that with constraint [start,end] (like 8am-2pm)
-
-// route GET /api/users
-async function userEvents(req, res) {
-    console.log("Called userEvents");
-
-    const user = req.query.id;
-
-    console.log(user)
-
-    let userEvents = Array.from(await db_userEvents(user));
-    console.log("a")
-    let usersEventsObjects = userEvents.map(event => ({
-        constraint : JSON.parse(event.properties.constraint[0].value), 
-        eventsObject : JSON.parse(event.properties.usersEvents[0].value)
-    }));
-
-    let userIntersections = usersEventsObjects.map(usersEvents => {
-        // Find the intersection of all users events for each event
-        let intersection = usersEvents.constraint;
-        for (const event of usersEvents.eventsObject) {
-            intersection = intersectionFind(intersection, event.events);
-        }
-        return intersection;
-    });
-
-    // Zip together intersection and events
-    // Add the intersection to the event object
-    const events = userEvents.map((event, index) => {
-        event.usersEvents = JSON.parse(event.properties.usersEvents[0].value);
-        event.intersection = userIntersections[index];
-        return event;
-    });
-
-    if (events) {
-        res.send({ success: true, events: events });
-        console.log("User events retrieved");
-    }
-    else{
-        res.send({ success: false });
-        console.log("User events not retrieved");
-    }
-}
-
-module.exports = { createUser, deleteUser, userEvents };
+module.exports = { createUser, getUserMeetings };

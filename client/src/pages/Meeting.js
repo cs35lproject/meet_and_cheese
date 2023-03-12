@@ -1,10 +1,10 @@
+import { useLocation, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useLocation, useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
@@ -12,11 +12,12 @@ import Navbar from "../components/Navbar"
 import './style.css';
 
 export default function Meeting() {
+    const navigate = useNavigate()
     const { state } = useLocation()
     const [searchParams] = useSearchParams();
     const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
-    const [intersections, setIntersections] = useState(state ? state.intersections : null);
-    const [meetingMemberIDS, setMeetingMemberIDS] = useState(null);
+    const [intersections, setIntersections] = useState(state ? state.availability : null);
+    const [meetingMemberIDS, setMeetingMemberIDS] = useState(state ? state.meetingMemberIDs : null);
     const [eventsArray, setEventsArray] = useState([]);
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
@@ -75,9 +76,16 @@ export default function Meeting() {
         const response = await fetch(url, metadata)
         const data = await response.json()
         if (data.meeting !== undefined) {
+          console.log("Rendering JoinMeeting:", data.meeting)
+          if (data !== undefined) {
+            navigate(`/join-meeting?id=${meetingID}`,
+                { state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
+            })
+            console.log("data:", data)
             setMeetingID(data.meeting.meetingID);
-            setIntersections(data.meeting.meeting.intersections);
-            setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
+            setIntersections(data.meeting.intersections);
+            setMeetingMemberIDS(data.meeting.meetingMemberIDS);
+          } 
         }
     } catch (error) {
         console.log(error);
@@ -120,7 +128,11 @@ export default function Meeting() {
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
 
+        <p>MEETING MEMBERS AVAILABILITY</p>
+
         <button onClick={checkSavedEvents}>check saved events</button>
+
+        <p>meeting members: {meetingMemberIDS}</p>
 
         <div>
           <label htmlFor="start-time-input"></label>

@@ -5,15 +5,13 @@ const meetingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    meeting : {
-        meetingMemberIDs : {
-            type : [String],
-            required : true
-        },
-        intersections : {
-            type : [Object],
-            required: false
-        }
+    meetingMemberIDs : {
+        type : [String],
+        required : true
+    },
+    intersections : {
+        type : [Object],
+        required: false
     }
 });
 

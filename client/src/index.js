@@ -4,6 +4,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import Calendar from './pages/Calendar'
 import Meeting from './pages/Meeting'
+import JoinMeeting from './pages/JoinMeeting';
 import './index.css';
 
 import GetStarted from './pages/GetStarted';
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/meeting',
     element: <Meeting />,
+  },
+  {
+    path: '/join-meeting',
+    element: <JoinMeeting />,
   }
 ]);
 

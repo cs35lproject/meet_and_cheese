@@ -7,11 +7,7 @@ router
     .post(userController.createUser);
 
 router
-    .route('/deleteUser')
-    .post(userController.deleteUser);
-
-router
-    .route('/userEvents')
-    .get(userController.userEvents);
+    .route('/getUserMeetings')
+    .get(userController.getUserMeetings);
 
 module.exports = router;
