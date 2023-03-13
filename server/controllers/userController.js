@@ -53,7 +53,7 @@ async function deleteUser(req, res) {
     const user = body.user;
 
     // Validate body
-    if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
+    if (user._id === undefined) {
         res.send({ success: false });
         console.log("User not deleted (validation failed)");
         return;
