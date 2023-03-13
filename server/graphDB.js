@@ -314,5 +314,7 @@ module.exports = {
     db_joinEvent, 
     db_leaveEvent, 
     db_userEvents, 
-    db_eventUsers 
+    db_eventUsers,
+    db_editEvent,
+    db_editUser
 };

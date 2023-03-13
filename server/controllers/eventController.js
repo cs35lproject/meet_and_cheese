@@ -1,6 +1,6 @@
 const Event = require("../models/eventModel");
 const User = require("../models/userModel");
-const { db_removeV, db_createEvent, db_joinEvent, db_leaveEvent } = require("../graphDB");
+const { db_removeV, db_createEvent, db_joinEvent, db_leaveEvent, db_editEvent } = require("../graphDB");
 
 const readReq = async (req) => {
     return new Promise((resolve, reject) => {
@@ -52,7 +52,7 @@ async function deleteEvent(req, res) {
     const event = body.event;
 
     // Validate body
-    if (event._id === undefined || event.name === undefined || event.owner === undefined || event.constraint === undefined) {
+    if (event._id === undefined) {
         res.send({ success: false });
         console.log("Event not deleted (validation failed)");
         return;
@@ -128,4 +128,27 @@ async function leaveEvent(req, res){
     }
 }
 
-module.exports = { createEvent, deleteEvent, joinEvent, leaveEvent };
+async function editEvent(req, res) {
+    console.log("Called editEvent");
+
+    const body = await readReq(req);
+    const event = body.event;
+
+    // Validate body
+    if (event._id === undefined || event.name === undefined || event.owner === undefined || event.constraint === undefined) {
+        res.send({ success: false });
+        console.log("Event not edited (validation failed)");
+        return;
+    }
+
+    if (await db_editEvent(event)) {
+        res.send({ success: true });
+        console.log("Event edited");
+    }
+    else{
+        res.send({ success: false });
+        console.log("Event not edited");
+    }
+}
+
+module.exports = { createEvent, deleteEvent, joinEvent, leaveEvent, editEvent };
