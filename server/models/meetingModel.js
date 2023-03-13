@@ -5,6 +5,10 @@ const meetingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    organizer : {
+        type: String,
+        required: false
+    },
     meetingMemberIDs : {
         type : [String],
         required : true
@@ -13,7 +17,7 @@ const meetingSchema = new mongoose.Schema({
         type : [Object],
         required: false
     }
-});
+}, {timestamps : true});
 
 const meeting = mongoose.model("meeting", meetingSchema);
 module.exports = meeting;

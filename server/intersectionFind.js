@@ -5,7 +5,6 @@
  *        HTTPS://OPENSOURCE.ORG/LICENSES/MIT.         *
  *******************************************************/
 
-//Classic leetcode merge intervals algorithm
 //See https://javascript.plainenglish.io/javascript-algorithms-merge-intervals-leetcode-98da240805bc
 const union = intervals => {
   if (intervals.length < 2) return intervals;
@@ -32,7 +31,6 @@ const union = intervals => {
 //Find intersection of two arrays of time intervals
 //Can be used to filter events before running intersection find 
 //E.g. events = intersection(events, filter)
-//Courtesy of ChatGPT
 const intersection = (intervals1, intervals2) => {
   intervals1.sort((a, b) => a[0] - b[0]);
   intervals2.sort((a, b) => a[0] - b[0]);

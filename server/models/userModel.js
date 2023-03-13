@@ -8,8 +8,9 @@ const userSchema = new mongoose.Schema({
     meetingIDs : {
         type : [String],
         required : false
-    }
-});
+    },
+
+}, {timestamps : true});
 
 const user = mongoose.model("user", userSchema);
 module.exports = user;

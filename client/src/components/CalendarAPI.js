@@ -12,6 +12,7 @@ const scriptSrcGapi = "https://apis.google.com/js/api.js";
 var tokenClient =  null;
 var onLoadCallback = null;
 
+// calendarsData is callback function "updateCalendars(calendars, events, primaryEmail)"
 const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
     const scriptGoogle = document.createElement("script");
     const scriptGapi = document.createElement("script");

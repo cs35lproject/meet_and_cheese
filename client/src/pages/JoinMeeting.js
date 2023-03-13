@@ -27,11 +27,14 @@ export default function JoinMeeting() {
     const [updated, setUpdated] = useState(null);
 
     useEffect(() => {
+        console.log("joinmeeting a")
         handleClientLoad(updateCalendars);
     }, []);
 
     useEffect(() => {
+        console.log("joinmeeting b")
         if (updated) {
+            addMeetingToUser();
             navigate(`/meeting?id=${meetingID}`, 
                 { state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs }
             })
@@ -39,18 +42,23 @@ export default function JoinMeeting() {
     }, [updated])
 
     useEffect(() => {
+        console.log("joinmeeting c")
         if (eventsData !== null && calendarsData !== null && eventsData.length > 0) {
             let eventsArray = eventsData.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
             let intersection = intersectionFind(eventsArray, [[0, Infinity]])
             loadValues(intersection)
+            console.log("intersection:", intersection)
         }
     }, [eventsData, calendarsData])
 
     const updateCalendars = async (calendars, events, primaryEmail) => {
+        console.log("Primary email:", primaryEmail)
         await new Promise(r => setTimeout(r, 400));
         setCalendarsData(calendars)
         setUserID(primaryEmail)
         setEventsData(events)
+        console.log("events:", events)
+        console.log("calendars:", calendars)
     }
 
     const handleEventClick = (arg) => {
@@ -104,15 +112,31 @@ export default function JoinMeeting() {
         }
     }
 
+    const addMeetingToUser = async() => {
+        let body = {"userID" : userID, "meetingID" : meetingID}
+        let url = `${process.env.REACT_APP_BACKEND}/user/updateUserMeetings`
+        let metadata = { method: "PUT", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
+        }
+        console.log("addMeetingToUser", body)
+        try {
+            const response = await fetch(url, metadata)
+            const data = await response.json()
+            setMeetingMemberIDs(data.meeting.meetingMemberIDs)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const confirmAvailability = async () => {
         console.log("saved_events:", savedAvailability)
+        console.log("userID:", userID)
         let confirmed_availability = []
         for (let event_id in savedAvailability) {
             confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0])
         }
         console.log("confirmed_avail:", confirmed_availability)
         let body = {"userID" : userID, "availability" : confirmed_availability, "meetingID" : meetingID, "meetingMemberIDs" : meetingMemberIDs}
-        let url = process.env.REACT_APP_UPDATE_MEETING
+        let url = `${process.env.REACT_APP_BACKEND}/meeting/updateMeeting`
         let metadata = { method: "PUT", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
         }
         try {

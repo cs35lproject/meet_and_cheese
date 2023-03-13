@@ -26,13 +26,18 @@ export default function Calendar() {
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
 
+    // When user loads home screen, initialize Google Calendar API
     useEffect(() => {
+        console.log("calendar a")
         handleClientLoad(updateCalendars);
     }, [])
 
+    // When meetingID hook is updated from specified meetingID by backend, save new user to backend and route to meeting page
     useEffect(() => {
+        console.log("calendar b")
         if (meetingID !== null) {
             console.log("confirmed availability in useEffect:", confirmedAvailability)
+            createUser();
             navigate({
                 pathname: "meeting",
                 search: createSearchParams({ id: meetingID }).toString()}, 
@@ -41,7 +46,9 @@ export default function Calendar() {
         }
     }, [meetingID])
 
+    // Find availabilities when Google Calendar API data updates hooks
     useEffect(() => {
+        console.log("calendar c")
         if (eventsData !== null && calendarsData !== null && eventsData.length > 0) {
             let eventsArray = eventsData.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
             let intersection = intersectionFind(eventsArray, [[0, Infinity]])
@@ -50,13 +57,33 @@ export default function Calendar() {
         }
     }, [eventsData, calendarsData])
 
+    // Update hooks with Google Calendar API data
     const updateCalendars = async (calendars, events, primaryEmail) => {
         await new Promise(r => setTimeout(r, 400));
+        console.log("Called updateCalendars")
         setCalendarsData(calendars)
         setUserID(primaryEmail)
         setEventsData(events)
+        if (!localStorage.getItem("userID")) {
+            localStorage.setItem("userID", primaryEmail)
+        }
     }
 
+    // Save new user with userID & meetingID to backend
+    const createUser = async () => {
+        let body = {"userID" : userID, "meetingID" : meetingID}
+        let url = `${process.env.REACT_APP_BACKEND}/user/createUser`
+        let metadata = { method: "POST", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
+        }
+        try {
+            const response = await fetch(url, metadata)
+            const data = await response.json()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // Save new meeting (with userID and availability) from confirmed availabilities to backend
     const confirmAvailability = async () => {
         console.log("saved_events:", savedAvailability)
         let confirmed_availability = []
@@ -65,12 +92,13 @@ export default function Calendar() {
         }
         setConfirmedAvailability(confirmed_availability);
         let body = {"userID" : userID, "availability" : confirmed_availability}
-        let url = process.env.REACT_APP_CREATE_MEETING
+        let url = `${process.env.REACT_APP_BACKEND}/meeting/createMeeting`
         let metadata = { method: "POST", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
         }
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
+            console.log("data:", data)
             setMeetingID(data.meeting.meetingID)
             setMeetingMemberIDs(data.meeting.meetingMemberIDs)
         } catch (error) {
@@ -78,6 +106,7 @@ export default function Calendar() {
         }
     }
 
+    // Transform availability from Google Calendar API into displayed availabilities on calendar GUI
     const loadValues = async (tempAvailability) => {
         await new Promise(r => setTimeout(r, 100));
         if (tempAvailability) {
@@ -98,6 +127,7 @@ export default function Calendar() {
         }
     }
 
+    // Save displayed events to savedAvailability hook when user clicks on event from calendar GUI
     const handleEventClick = (arg) => {
     const saved_events = {...savedAvailability };
     if (arg.event.extendedProps.saved) {
@@ -139,12 +169,12 @@ export default function Calendar() {
     return (
         <React.Fragment>
             <div>
-                <Navbar handleAuthClick = {handleAuthClick}/>
+                <Navbar handleAuthClick = {handleAuthClick} userID={userID} callback={updateCalendars}/>
             </div>
 
-            <p>{eventsData ? "CREATE MEETING (expand, shrink, drag to modify availability. select times which accurately reflect your availability, then confirm times)" : "LOG IN TO START"}</p>
+            <p>{eventsData ? "CREATE MEETING (expand, shrink, drag to modify availability. select times which accurately reflect your availability, then confirm times)" : "Click create meeting to start!"}</p>
 
-            <button onClick={confirmAvailability}>Confirm availability</button>
+            <button onClick={confirmAvailability}>{ eventsData ? "Confirm availability" : ""}</button>
 
             <button onClick={checkConfirmedAvailability}>check confirmed availability</button>
 

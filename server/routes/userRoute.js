@@ -10,4 +10,8 @@ router
     .route('/getUserMeetings')
     .get(userController.getUserMeetings);
 
+router
+    .route('/updateUserMeetings')
+    .get(userController.updateUserMeetings);
+
 module.exports = router;
