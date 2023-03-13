@@ -34,7 +34,6 @@ async function updateUserMeetings(req, res) {
     console.log("updateUserMeetings", req.body)
     if (req.body.userID === null || req.body.meetingID === null) {
         return res.send({ success: false, "error" : "Invalid user format"})
-
     }
     let user = await User.findOne({userID : req.body.userID})
     if (!user)

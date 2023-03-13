@@ -184,6 +184,7 @@ export default function Calendar() {
         else return false;
     }
 
+    // Save displayed events to savedAvailability hook when user clicks on event from calendar GUI
     const handleEventClick = (arg) => {
         const saved_events = {...savedAvailability };
         if (arg.event.extendedProps.saved) {
