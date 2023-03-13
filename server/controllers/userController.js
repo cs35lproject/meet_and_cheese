@@ -1,9 +1,6 @@
 const User = require("../models/userModel");
-<<<<<<< HEAD
-=======
 const { intersectionFind } = require("../intersectionFind");
 const { db_removeV, db_createUser, db_userEvents, db_editUser } = require("../graphDB");
->>>>>>> 976d78e1 (edit user updated)
 
 // route POST /api/users/createUser
 async function createUser(req, res) {
