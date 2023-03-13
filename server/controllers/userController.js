@@ -66,4 +66,4 @@ async function getUserMeetings(req, res) {
     }
 }
 
-module.exports = { createUser, getUserMeetings };
+module.exports = { createUser, getUserMeetings, updateUserMeetings };
