@@ -52,7 +52,7 @@ async function deleteEvent(req, res) {
     const event = body.event;
 
     // Validate body
-    if (event._id === undefined || event.name === undefined || event.owner === undefined || event.constraint === undefined) {
+    if (event._id === undefined || event.name === undefined) {
         res.send({ success: false });
         console.log("Event not deleted (validation failed)");
         return;
