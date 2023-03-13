@@ -128,12 +128,17 @@ async function leaveEvent(req, res){
     }
 }
 
+<<<<<<< HEAD
 async function editEvent(req, res) {
+=======
+async function editEvent(req, res){
+>>>>>>> 4cdd0a79 (edit user updated)
     console.log("Called editEvent");
 
     const body = await readReq(req);
     const event = body.event;
 
+<<<<<<< HEAD
     // Validate body
     if (event._id === undefined || event.name === undefined || event.owner === undefined || event.constraint === undefined) {
         res.send({ success: false });
@@ -149,6 +154,8 @@ async function editEvent(req, res) {
         res.send({ success: false });
         console.log("Event not edited");
     }
+=======
+>>>>>>> 4cdd0a79 (edit user updated)
 }
 
 module.exports = { createEvent, deleteEvent, joinEvent, leaveEvent, editEvent };
