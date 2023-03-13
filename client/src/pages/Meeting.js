@@ -178,6 +178,8 @@ export default function Meeting() {
             initialView="timeGridWeek"
             allDaySlot={false}
             eventColor={'#378006'}
+            //eventColor={'#634a71'}
+            
             googleCalendarApiKey={config.apiKey}
             // auto gets rid of need for scrolling for contentHeight
             //contentHeight="auto" 
@@ -193,6 +195,8 @@ export default function Meeting() {
             eventDurationEditable={true}
             eventResizableFromStart={true}
             //eventDrop={handleEventDrop}
+            //slotEventOverlap={true} // true => slight overlap ?
+            slotEventOverlap={false} // false => side by side, no overlap
           />
         </calendar>
   

@@ -113,34 +113,116 @@ export default function Calendar() {
             let _events = [];
             const timeNow = Date.now();
             for (const start_end of tempAvailability) {
-            if (start_end[0] < timeNow) continue;
-            const _event = {
-              title: "Available",
-              start: start_end[0],
-              end: start_end[1],
-              id: uuidv4(),
-              saved: false,
-            };
-            _events.push(_event);
-            setDisplayedAvailability(_events);
+                // testing: will show all availability before too
+                if (start_end[1] < timeNow) continue;
+
+                // if event spans multiple days
+                if (!isOneDay(start_end)) {
+                    let s = new Date(start_end[0]); // temp start
+                    const end = new Date(start_end[1]); // end
+
+                    // iterate until reach end
+                    while (s < end) {
+
+                        const e = new Date(s); // temp end
+                        e.setHours(23);
+                        e.setMinutes(59);
+                        e.setSeconds(59);
+
+                        if (e < end) {
+                            const _event = {
+                                title: "Available",
+                                start: s,
+                                end: e,
+                                id: uuidv4(),
+                                saved: false,
+                            };
+                            _events.push(_event);
+                            setDisplayedAvailability(_events);
+                            s = new Date(s.getFullYear(), s.getMonth(), s.getDate() + 1, 0, 0, 0)
+                        }
+                        else {
+                            const _event = {
+                                title: "Available",
+                                start: s,
+                                end: start_end[1],
+                                id: uuidv4(),
+                                saved: false,
+                            };
+                            _events.push(_event);
+                            setDisplayedAvailability(_events);
+                            break;
+                        }
+                    }
+                }
+
+                else {
+                    const _event = {
+                        title: "Available",
+                        start: start_end[0],
+                        end: start_end[1],
+                        id: uuidv4(),
+                        saved: false,
+                    };
+                    _events.push(_event);
+                    setDisplayedAvailability(_events);
+                };
             }
         }
     }
 
-    // Save displayed events to savedAvailability hook when user clicks on event from calendar GUI
+    // Check to see if event only spans one day (ex. monday - monday)
+    // cannot be Mon 5 pm - Tue 1 am
+    const isOneDay = ([s, e]) => {
+        const start = new Date(s);
+        const end = new Date(e);
+        if (start.getDate() === end.getDate()
+            && start.getMonth() === end.getMonth()
+            && start.getFullYear() === end.getFullYear()) {
+                return true;
+            }
+        else return false;
+    }
+
     const handleEventClick = (arg) => {
-    const saved_events = {...savedAvailability };
-    if (arg.event.extendedProps.saved) {
-        arg.event.setExtendedProp("saved", false);
-        arg.event.setProp("backgroundColor", "green");
-        delete saved_events[arg.event.id];
+        const saved_events = {...savedAvailability };
+        if (arg.event.extendedProps.saved) {
+            arg.event.setExtendedProp("saved", false);
+            arg.event.setProp("backgroundColor", "green");
+            delete saved_events[arg.event.id];
+        }
+        else {
+            arg.event.setExtendedProp("saved", true);
+            arg.event.setProp("backgroundColor", "red");
+            saved_events[arg.event.id] = [arg.event.start, arg.event.end];
+        }
+        setSavedAvailability(saved_events);
     }
-    else {
-        arg.event.setExtendedProp("saved", true);
-        arg.event.setProp("backgroundColor", "red");
-        saved_events[arg.event.id] = [arg.event.start, arg.event.end];
+
+    const handleEventDrop = (arg) => {
+        const saved_events = {...savedAvailability };
+
+        // if the event was saved pre-drop
+        if (arg.oldEvent.extendedProps.saved) {
+            if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
+            // replace the old event with the new, by key = id
+            delete saved_events[arg.oldEvent.id]
+            saved_events[arg.event.id] = [arg.event.start, arg.event.end]
+        }
+        setSavedAvailability(saved_events);
     }
-    setSavedAvailability(saved_events);
+
+    const handleEventResize = (arg) => {
+        const saved_events = {...savedAvailability };
+
+        // if the event was saved pre-drop
+        if (arg.oldEvent.extendedProps.saved) {
+            if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
+            // replace the old event with the new, by key = id
+            delete saved_events[arg.oldEvent.id]
+            saved_events[arg.event.id] = [arg.event.start, arg.event.end]
+        }
+        setSavedAvailability(saved_events);
     }
 
     const handleMouseEnter = (arg) => {
@@ -160,7 +242,7 @@ export default function Calendar() {
     }
 
     const checkConfirmedAvailability = () => {
-        console.log(savedAvailability);
+        //console.log(savedAvailability);
         for (let event_id in savedAvailability) {
             console.log("event data: ", savedAvailability[event_id]);
         }
@@ -217,7 +299,9 @@ export default function Calendar() {
                 editable={true} // allows both resizing and dragging
                 eventDurationEditable={true}
                 eventResizableFromStart={true}
-                //eventDrop={handleEventDrop}
+                eventDrop={handleEventDrop}
+                eventResize={handleEventResize}
+                
                 />
             </calendar>
         

@@ -213,6 +213,7 @@ export default function JoinMeeting() {
             eventDurationEditable={true}
             eventResizableFromStart={true}
             //eventDrop={handleEventDrop}
+            
           />
         </calendar>
   
