@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
 const { intersectionFind } = require("../intersectionFind");
-const { db_removeV, db_createUser, db_userEvents } = require("../graphDB");
+const { db_removeV, db_createUser, db_userEvents, db_editUser } = require("../graphDB");
 
 const readReq = async (req) => {
     return new Promise((resolve, reject) => {
@@ -114,4 +114,27 @@ async function userEvents(req, res) {
     }
 }
 
-module.exports = { createUser, deleteUser, userEvents };
+async function editUser(req, res) {
+    console.log("Called editUser");
+
+    const body = await readReq(req);
+    const user = body.user;
+
+    // Validate body
+    if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
+        res.send({ success: false });
+        console.log("User not edited (validation failed)");
+        return;
+    }
+
+    if (await db_editUser(user)) {
+        res.send({ success: true });
+        console.log("User edited");
+    }
+    else{
+        res.send({ success: false });
+        console.log("User not edited");
+    }
+}
+
+module.exports = { createUser, deleteUser, userEvents, editUser };
