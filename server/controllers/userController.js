@@ -1,6 +1,4 @@
 const User = require("../models/userModel");
-const { intersectionFind } = require("../intersectionFind");
-const { db_removeV, db_createUser, db_userEvents, db_editUser } = require("../graphDB");
 
 // route POST /api/users/createUser
 async function createUser(req, res) {
