@@ -5,17 +5,19 @@ const meetingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    meeting : {
-        meetingMemberIDs : {
-            type : [String],
-            required : true
-        },
-        intersections : {
-            type : [Object],
-            required: false
-        }
+    organizer : {
+        type: String,
+        required: false
+    },
+    meetingMemberIDs : {
+        type : [String],
+        required : true
+    },
+    intersections : {
+        type : [Object],
+        required: false
     }
-});
+}, {timestamps : true});
 
 const meeting = mongoose.model("meeting", meetingSchema);
 module.exports = meeting;

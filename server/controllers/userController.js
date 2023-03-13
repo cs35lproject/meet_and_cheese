@@ -1,140 +1,70 @@
 const User = require("../models/userModel");
-const { intersectionFind } = require("../intersectionFind");
-const { db_removeV, db_createUser, db_userEvents, db_editUser } = require("../graphDB");
 
-const readReq = async (req) => {
-    return new Promise((resolve, reject) => {
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            resolve(JSON.parse(body));
-        });
-    });
-}
-
-// route POST /api/users
+// route POST /api/users/createUser
 async function createUser(req, res) {
-    console.log("Called createUser");
+    console.log("createUser", req.body)
+    console.log("userID:", req.body.userID)
+    let existingUser = await User.findOne({userID : req.body.userID})
+    console.log("existinguser:", existingUser)
+    if (existingUser) {
+        let updateRes = await updateUserMeetings(req, res);
+        console.log("updatRes:", updateRes)
+        res.send({ success: true, user: user })
+    }
 
-    //const body = await readReq(req);
-    const body = req.body
-    //const user = body.user;
-    const user = body
-
-    console.log("body:")
-    console.log(body)
-    console.log("user:")
+    if (req.body.userID === undefined || req.body.meetingID === undefined)
+        res.send({success : false, "error" : "Invalid user format"})
+    let user = new User({
+        userID : req.body.userID,
+        meetingIDs : [req.body.meetingID]
+    })
     console.log(user)
+    await user.save()
+    .then(() => {
+        res.send({ success: true, user: user })
+    })
+    .catch((e) => {
+        console.log(e)
+        res.send({ success: false, error: `Could not save user object ${e}`, user: user })
+    })
+}
 
-    // Validate body
-    if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
-        res.send({ success: false });
-        console.log("User not created (validation failed)");
-        return;
-    }
+// route PUT /api/users/updateUserMeetings
+async function updateUserMeetings(req, res) {
+    console.log("updateUserMeetings", req.body)
+    if (req.body.userID === null || req.body.meetingID === null) {
+        return res.send({ success: false, "error" : "Invalid user format"})
 
-    if (await db_createUser(user)) {
-        res.send({ success: true });
-        console.log("User created");
     }
-    else{
-        console.log("User not created");
-        res.send({ success: false });
+    let user = await User.findOne({userID : req.body.userID})
+    if (!user)
+        return res.status(404).send({ success: false, error: `User ${req.body.userID} does not exist` })
+    let meetings = user.toJSON().meetingIDs
+    meetings.push(req.body.meetingID)
+    console.log("new meetings:", meetings)
+    await User.updateOne({
+        "userID" : req.body.userID}, {$set : {"meetingIDs" : meetings}})
+    .then(() => {
+        return res.send({ success: true, user : {userID : user.userID, meetingIDs : meetings}})
+    })
+    .catch((e) => {
+        console.log("updateUserMeetings", e)
+        return res.send({ success: false, user : {userID : user.userID, meetingIDs : meetings}})
+    })
+}
+
+// route GET /api/users/getUserMeetings
+async function getUserMeetings(req, res) {
+    console.log("getUserMeetings req.body:", req.query)
+    if (req.query.userID !== null) {
+        let user = await User.findOne({userID : req.query.userID})
+        if (!user)
+            return res.status(404).send({ success: false, error: `userID ${req.query.userID} does not exist` })
+        res.send({ success: true, user: user })
+    }
+    else {
+        res.send({ success: false, error: "Need to specify query user"})
     }
 }
 
-// route POST /api/users
-async function deleteUser(req, res) {
-    console.log("Called deleteUser");
-
-    const body = await readReq(req);
-    const user = body.user;
-
-    // Validate body
-    if (user._id === undefined) {
-        res.send({ success: false });
-        console.log("User not deleted (validation failed)");
-        return;
-    }
-
-    if (await db_removeV(user)) {
-        res.send({ success: true });
-        console.log("User deleted");
-    }
-    else{
-        res.send({ success: false });
-        console.log("User not deleted");
-    }
-}
-
-// get user info given id
-// run intersection find on that with constraint [start,end] (like 8am-2pm)
-
-// route GET /api/users
-async function userEvents(req, res) {
-    console.log("Called userEvents");
-
-    const user = req.query.id;
-
-    console.log(user)
-
-    let userEvents = Array.from(await db_userEvents(user));
-    console.log("a")
-    let usersEventsObjects = userEvents.map(event => ({
-        constraint : JSON.parse(event.properties.constraint[0].value), 
-        eventsObject : JSON.parse(event.properties.usersEvents[0].value)
-    }));
-
-    let userIntersections = usersEventsObjects.map(usersEvents => {
-        // Find the intersection of all users events for each event
-        let intersection = usersEvents.constraint;
-        for (const event of usersEvents.eventsObject) {
-            intersection = intersectionFind(intersection, event.events);
-        }
-        return intersection;
-    });
-
-    // Zip together intersection and events
-    // Add the intersection to the event object
-    const events = userEvents.map((event, index) => {
-        event.usersEvents = JSON.parse(event.properties.usersEvents[0].value);
-        event.intersection = userIntersections[index];
-        return event;
-    });
-
-    if (events) {
-        res.send({ success: true, events: events });
-        console.log("User events retrieved");
-    }
-    else{
-        res.send({ success: false });
-        console.log("User events not retrieved");
-    }
-}
-
-async function editUser(req, res) {
-    console.log("Called editUser");
-
-    const body = await readReq(req);
-    const user = body.user;
-
-    // Validate body
-    if (user._id === undefined || user.name === undefined || user.email === undefined || user.events === undefined) {
-        res.send({ success: false });
-        console.log("User not edited (validation failed)");
-        return;
-    }
-
-    if (await db_editUser(user)) {
-        res.send({ success: true });
-        console.log("User edited");
-    }
-    else{
-        res.send({ success: false });
-        console.log("User not edited");
-    }
-}
-
-module.exports = { createUser, deleteUser, userEvents, editUser };
+module.exports = { createUser, getUserMeetings, updateUserMeetings };

@@ -12,6 +12,7 @@ const scriptSrcGapi = "https://apis.google.com/js/api.js";
 var tokenClient =  null;
 var onLoadCallback = null;
 
+// calendarsData is callback function "updateCalendars(calendars, events, primaryEmail)"
 const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
     const scriptGoogle = document.createElement("script");
     const scriptGapi = document.createElement("script");
@@ -31,7 +32,9 @@ const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
         client_id: config.clientId,
         scope: config.scope,
         prompt: "",
-        callback: () => {setCalendars(calendarsData, daysAhead, maxResults)},
+        callback: () => {
+            setCalendars(calendarsData, daysAhead, maxResults);
+        },
         });
     };
 }
@@ -70,18 +73,22 @@ const handleAuthClick = () => {
 const setCalendars = (calendarsData, daysAhead, maxResults) => {
     let tempCalendars = [];
     let events = []
+    let primaryEmail = ""
     let curCalendar;
     if (gapi) {
         gapi.client.calendar.calendarList.list()
         .then( ({ result }) => {
             result.items.forEach((calendar) => {
+                if (calendar.primary) {
+                    primaryEmail = calendar.id
+                }
                 curCalendar = {};
                 curCalendar.name = calendar.summaryOverride ? calendar.summaryOverride : calendar.summary;
                 curCalendar.id = calendar.id
                 setEvents(curCalendar, events, daysAhead, maxResults);
                 tempCalendars.push(curCalendar);
             })
-            calendarsData(tempCalendars, events);
+            calendarsData(tempCalendars, events, primaryEmail);
         });
     }
 }

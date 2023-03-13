@@ -1,10 +1,10 @@
+import { useLocation, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
 import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useLocation, useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { handleAuthClick, config } from '../components/CalendarAPI';
@@ -12,26 +12,33 @@ import Navbar from "../components/Navbar"
 import './style.css';
 
 export default function Meeting() {
+    const navigate = useNavigate()
     const { state } = useLocation()
     const [searchParams] = useSearchParams();
+    const [meetingOrganizer, setMeetingOrganizer] = useState(null);
+    const [userID, setUserID] = useState(!!localStorage.getItem("userID") ? localStorage.getItem("userID") : null);
     const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
-    const [intersections, setIntersections] = useState(state ? state.intersections : null);
-    const [meetingMemberIDS, setMeetingMemberIDS] = useState(null);
+    const [intersections, setIntersections] = useState(state ? state.availability : null);
+    const [meetingMemberIDs, setMeetingMemberIDs] = useState(state ? state.meetingMemberIDs : null);
     const [eventsArray, setEventsArray] = useState([]);
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
     const [savedEvents, setSavedEvents] = useState({});
 
     useEffect(() => {
+      console.log("meeting a")
         loadValues()
     }, [intersections])
 
     useEffect(() => {
-        if (intersections === null) {
-            findMeeting()
-        } else {
-            loadValues()
-        }
+      // If users came from Calendar page, intersections Hook would have availability
+      if (intersections === null) {
+          findMeeting()
+      } 
+      // Otherwise, need to pull from backend to find meeting availability data
+      else {
+          loadValues()
+      }
     }, []);
 
   const handleEventClick = (arg) => {
@@ -69,16 +76,27 @@ export default function Meeting() {
 
   const findMeeting = async () => {
     const meetingID = searchParams.get("id");
-    let url = `${process.env.REACT_APP_GET_MEETING}?id=${meetingID}`
+    let url = `${process.env.REACT_APP_BACKEND}/meeting/getMeeting?id=${meetingID}`
     let metadata = { method: "GET" }
     try {
-        const response = await fetch(url, metadata)
-        const data = await response.json()
-        if (data.meeting !== undefined) {
-            setMeetingID(data.meeting.meetingID);
-            setIntersections(data.meeting.meeting.intersections);
-            setMeetingMemberIDS(data.meeting.meeting.meetingMemberIDS);
-        }
+      const response = await fetch(url, metadata)
+      const data = await response.json()
+      console.log("Meeting findMeeting data:", data)
+      if (data.meeting !== undefined) {
+          if (userID && data.meeting.meetingMemberIDs && data.meeting.meetingMemberIDs.includes(userID)) { 
+            console.log("userID")
+          }
+          else {
+            console.log("Rendering JoinMeeting:", data.meeting)
+            navigate(`/join-meeting?id=${meetingID}`,
+                { state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
+            })
+          }
+          setMeetingID(data.meeting.meetingID);
+          setMeetingOrganizer(data.meeting.organizer);
+          setIntersections(data.meeting.intersections);
+          setMeetingMemberIDs(data.meeting.meetingMemberIDs);
+        } 
     } catch (error) {
         console.log(error);
     }
@@ -101,7 +119,7 @@ export default function Meeting() {
         _events.push(_event);
         setEventsArray(_events);
         setMeetingID(meetingID);
-        setMeetingMemberIDS(meetingMemberIDS);
+        setMeetingMemberIDs(meetingMemberIDs);
       }
     }
   }
@@ -113,14 +131,27 @@ export default function Meeting() {
       console.log("event data: ", savedEvents[event_id]);
     }
   }
-
+  
   return (
     <React.Fragment>
         <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
 
+        <p>MEETING MEMBERS AVAILABILITY (meeting organizer can confirm meeting times when ready)</p>
+
         <button onClick={checkSavedEvents}>check saved events</button>
+
+        <p>meeting organizer: {meetingOrganizer}</p>
+        <p>meeting members: {meetingMemberIDs}</p>
+
+        <div>
+        <button>Confirm final meeting time</button>
+        </div>
+        
+        <div>
+        <input type="checkbox" />
+        </div>
 
         <div>
           <label htmlFor="start-time-input"></label>
