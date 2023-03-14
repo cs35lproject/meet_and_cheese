@@ -6,6 +6,7 @@ import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { v4 as uuidv4 } from 'uuid';
+import tippy from 'tippy.js';
 
 import { handleAuthClick, config, formatEvent, handleClientLoad } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
@@ -43,29 +44,62 @@ export default function Meeting() {
       }
     }, []);
 
-  const handleEventClick = (arg) => {
-    const saved_events = {...savedEvents };
-    if (arg.event.extendedProps.saved) {
-      console.log("unsaved");
-      arg.event.setExtendedProp("saved", false);
-      arg.event.setProp("backgroundColor", "green");
-      delete saved_events[arg.event.id];
+  const handleSelect = (arg) => {
+    let temp_events = [];
+    let temp_saved =[];
+    for (let e of eventsArray) {
+      if (e.title === "Meeting") continue;
+      temp_events.push({...e});
+    };
+
+    let temp_e = {
+      title: "Meeting",
+      start: arg.start,
+      end: arg.end,
+      timeFormat: 'h(:mm)a'
     }
-    else {
-      console.log("saved")
-      arg.event.setExtendedProp("saved", true);
-      arg.event.setProp("backgroundColor", "red");
-      saved_events[arg.event.id] = [arg.event.start, arg.event.end];
-    }
-    setSavedEvents(saved_events);
+    temp_events.push(temp_e);
+    temp_saved.push(temp_e);
+
+    setSavedEvents(temp_saved);
+    setEventsArray(temp_events);
   }
 
   const handleMouseEnter = (arg) => {
     arg.el.classList.add('event_hover'); // Add custom class on mouse enter
+
+    // const tipContent = `<strong>${arg.event.title} is available </strong>`
+
+    // new Tooltip(arg.el, {
+    //   title: tipContent,
+    //   placement: 'top',
+    //   trigger: 'hover',
+    //   container: 'body',
+    //   animation: 'shift-away',
+    //   arrow: true,
+    //   theme: 'light'
+    // });
+    
   }
 
   const handleMouseLeave = (arg) => {
     arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
+
+    //tooltip.hide();
+  }
+
+  const handleEventMount = (info) => {
+    // const tipContent = `<strong>${info.event.title} is available </strong>`
+
+    tippy(info.el, {
+      content: `${info.event.title} available`,
+      placement: 'top',
+      trigger: 'mouseenter',
+      hideOnLeave: true,
+      hideOnClick: false,
+      animation: 'scale',
+      duration: 0
+    })
   }
 
   const handleStartChange = (event) => {
@@ -118,12 +152,21 @@ export default function Meeting() {
           end: start_end[1],
           id: uuidv4(),
           saved: false,
+          display: 'background'
         };
         _events.push(_event);
         setEventsArray(_events);
         setMeetingID(meetingID);
         setMeetingMemberIDs(meetingMemberIDs);
       }
+    }
+  }
+
+  const checkSavedEvents = () => {
+    console.log("saved events total:", Object.keys(savedEvents).length);
+    for (let event_id in savedEvents) {
+      //console.log("event id: ", event_id);
+      console.log("event data: ", savedEvents[event_id]);
     }
   }
 
@@ -206,22 +249,33 @@ export default function Meeting() {
             // auto gets rid of need for scrolling for contentHeight
             //contentHeight="auto" 
             height={700}
-            eventClick={handleEventClick}
-            eventMouseEnter={handleMouseEnter}
-            eventMouseLeave={handleMouseLeave}
+            // eventClick={handleEventClick}
+            //eventMouseEnter={handleMouseEnter}
+            //eventMouseLeave={handleMouseLeave}
             handleWindowResize={true}
             slotMinTime={minTime}
             slotMaxTime={endTime}
             events ={eventsArray}
-            editable={true} // allows both resizing and dragging
-            eventDurationEditable={true}
-            eventResizableFromStart={true}
+            eventDidMount = {handleEventMount}
+            selectable = {true}
+            select = {handleSelect}
+            selectOverlap = {true}
+            eventTimeFormat= {{
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true
+            }}
+            //eventTimeFormat={'h:mm a'}
+            //editable={true} // allows both resizing and dragging
+            //eventDurationEditable={true}
+            //eventResizableFromStart={true}
             //eventDrop={handleEventDrop}
             //slotEventOverlap={true} // true => slight overlap ?
             slotEventOverlap={false} // false => side by side, no overlap
           />
+          
         </calendar>
   
         </React.Fragment>
   )
-}
+} 
