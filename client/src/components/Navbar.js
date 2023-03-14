@@ -1,9 +1,9 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import React, { useState, useEffect } from 'react';
-import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 import './Navbar.css'
 
 const Navbar = (props) => {
+  const navigate = useNavigate()
   const [signinStatus, setSigninStatus] = useState(null);
 
   useEffect(() => {
@@ -16,12 +16,19 @@ const Navbar = (props) => {
     }
   }, [])
 
+  const loadCalendar = () => {
+    navigate(`/calendar`,
+      { state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
+    })
+    props.handleAuthClick
+  }
+
   return (
     <ul class = "navbar"> 
     <a href = "/" class = "title"  > 
         Meet & Cheese
     </a>
-    <li> <a onClick={props.handleAuthClick} className="click">{signinStatus}</a></li>
+    <li> <a onClick={loadCalendar} className="click">{signinStatus}</a></li>
     <li> <a href="/list-meetings">LIST MEETINGS</a></li>
     <li> <a href="/getstarted">GET STARTED</a></li>
     </ul>
