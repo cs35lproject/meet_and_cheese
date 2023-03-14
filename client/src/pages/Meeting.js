@@ -7,7 +7,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { v4 as uuidv4 } from 'uuid';
 
-import { handleAuthClick, config } from '../components/CalendarAPI';
+import { handleAuthClick, config, formatEvent, handleClientLoad } from '../components/CalendarAPI';
 import Navbar from "../components/Navbar"
 import './style.css';
 
@@ -15,7 +15,7 @@ export default function Meeting() {
     const navigate = useNavigate()
     const { state } = useLocation()
     const [searchParams] = useSearchParams();
-    const [meetingOrganizer, setMeetingOrganizer] = useState(null);
+    const [meetingOrganizer, setMeetingOrganizer] = useState(state ? state.organizer : null);
     const [userID, setUserID] = useState(!!localStorage.getItem("userID") ? localStorage.getItem("userID") : null);
     const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
     const [intersections, setIntersections] = useState(state ? state.availability : null);
@@ -31,6 +31,8 @@ export default function Meeting() {
     }, [intersections])
 
     useEffect(() => {
+      if (!userID && localStorage.getItem("userID")) setUserID(localStorage.getItem("userID"))
+      handleClientLoad(setupCalendarEvent)
       // If users came from Calendar page, intersections Hook would have availability
       if (intersections === null) {
           findMeeting()
@@ -131,6 +133,18 @@ export default function Meeting() {
       console.log("event data: ", savedEvents[event_id]);
     }
   }
+
+  const confirmMeeting = () => {
+    if (!localStorage.getItem("meetingMemberIDs")) localStorage.setItem("meetingMemberIDs", JSON.stringify(meetingMemberIDs))
+    if (!localStorage.getItem("savedEvents")) localStorage.setItem("savedEvents", JSON.stringify(savedEvents))
+    handleAuthClick();
+  }
+
+  const setupCalendarEvent = async () => {
+    await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")))
+    if (localStorage.getItem("savedEvents")) localStorage.removeItem("savedEvents")
+    localStorage.removeItem("meetingMemberIDs")
+  }
   
   return (
     <React.Fragment>
@@ -142,11 +156,13 @@ export default function Meeting() {
 
         <button onClick={checkSavedEvents}>check saved events</button>
 
+        <button onClick={test}>test</button>
+
         <p>meeting organizer: {meetingOrganizer}</p>
         <p>meeting members: {meetingMemberIDs}</p>
 
         <div>
-        <button>Confirm final meeting time</button>
+        <button onClick={confirmMeeting}>Confirm final meeting time</button>
         </div>
         
         <div>

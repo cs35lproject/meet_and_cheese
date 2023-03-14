@@ -41,7 +41,7 @@ export default function Calendar() {
             navigate({
                 pathname: "meeting",
                 search: createSearchParams({ id: meetingID }).toString()}, 
-                { state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs }
+                { state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs, organizer : userID}
             })
         }
     }, [meetingID])

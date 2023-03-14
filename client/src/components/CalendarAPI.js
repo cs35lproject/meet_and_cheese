@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import { Form } from 'react-router-dom';
+
 export const config = {
   "clientId": process.env.REACT_APP_CLIENT_ID,
   "apiKey": process.env.REACT_APP_API_KEY,
@@ -10,7 +13,6 @@ const scriptSrcGoogle = "https://accounts.google.com/gsi/client";
 const scriptSrcGapi = "https://apis.google.com/js/api.js";
 
 var tokenClient =  null;
-var onLoadCallback = null;
 
 // calendarsData is callback function "updateCalendars(calendars, events, primaryEmail)"
 const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
@@ -39,7 +41,7 @@ const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
     };
 }
 
-const initGapiClient = () => {
+const initGapiClient = (onLoadCallback) => {
     gapi.client.init({
         apiKey: config.apiKey,
         discoveryDocs: config.discoveryDocs,
@@ -62,7 +64,7 @@ const handleAuthClick = () => {
         } else {
             tokenClient.requestAccessToken({
             prompt: "",
-            });
+        });
         }
         } else {
         console.error("Error: gapi not loaded");
@@ -124,4 +126,55 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     });
 };
 
-export { handleClientLoad, handleAuthClick }
+const formatEvent = async (meetingTime, meetingMemberIDs) => {
+    console.log(meetingTime, meetingMemberIDs);
+    console.log("gapi:", gapi)
+    // Meeting attendees
+    let attendeesObjects = []
+    Array.from(meetingMemberIDs).forEach((email) => {
+        console.log(email)
+        attendeesObjects.push({"email" : email})
+    })
+    
+    // Meeting times
+    let start = new Date();
+    let end = new Date();
+    start.setDate(start.getDate());
+    end.setDate(end.getDate() + 1);
+    
+    const event = {
+        'summary': 'Meeting Title',
+        'description': 'Meeting description',
+        'start': {
+          'dateTime': start.toISOString(),
+          'timeZone': 'America/Los_Angeles'
+        },
+        'end': {
+          'dateTime': end.toISOString(),
+          'timeZone': 'America/Los_Angeles'
+        },
+        //'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+        'attendees': attendeesObjects,
+        'reminders': {
+          'useDefault': true,
+        //   'overrides': [
+        //     {'method': 'email', 'minutes': 24 * 60},
+        //     {'method': 'popup', 'minutes': 10}
+        //   ]
+        }
+      };
+    
+      console.log("gapi:", gapi)
+    
+    const request = gapi.client.calendar.events.insert({
+        'calendarId': 'primary',
+        'resource': event
+    });
+    
+    request.execute(function(event) {
+        console.log("sent:", event)
+        //appendPre('Event created: ' + event.htmlLink);
+    });
+}
+
+export { handleClientLoad, handleAuthClick, formatEvent }
