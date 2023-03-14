@@ -129,19 +129,52 @@ calendar {
     }
   }
 
-  .event_hover {
-    cursor: pointer;
-  }
+.event_hover {
+  cursor: pointer;
+}
 
-  .page-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin: 0.8rem;
-    padding: 0;
-  }
+.page-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0.8rem;
+  padding: 0;
+}
 
-  .page-desc {
-    font-size: 1.2rem;
-    margin: 0.8rem;
-    padding: 0;
-  }
+.page-desc {
+  font-size: 1.2rem;
+  margin: 0.8rem;
+  padding: 0;
+}
+
+.revertButton {
+  margin-left: 2rem;
+}
+.newButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  color: #000000;
+  cursor: pointer;
+  fill: currentcolor;
+  font-size: 15px;
+  height: 45px;
+  letter-spacing: 0.3px;
+  padding: 15px;
+}
+  
+.newButton:hover {
+  color: #8f5eb2;
+}
+  
+  
+.newButton:active {
+  color: #ac89c5;
+  background-color: whitesmoke;
+  box-shadow: #bd8edf 0px 10px 20px, #bd8edf 0px 6px 6px;
+}
+  
+  

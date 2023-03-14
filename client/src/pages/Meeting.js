@@ -213,8 +213,9 @@ export default function Meeting() {
           {loadMeetingMembers()}
 
           <div>
-            <button onClick={confirmMeeting}>Confirm final meeting time</button>
-            <button onClick={checkSavedEvents}>Check saved events</button>
+            <button className="newButton" onClick={confirmMeeting}>Confirm final meeting time</button>
+            <br />
+            {/*<button onClick={checkSavedEvents}>Check saved events</button>*/}
           </div>
 
         </div>

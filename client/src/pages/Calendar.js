@@ -401,7 +401,7 @@ export default function Calendar() {
 
     const confirmButton = () => {
         if (eventsData) {
-            return <button onClick={confirmAvailability}>Confirm availability</button>
+            return <button className="newButton" onClick={confirmAvailability}>Confirm availability</button>
         }
     }
 
@@ -458,8 +458,11 @@ export default function Calendar() {
                         onChange={handleEndChange}
                         />
 
-                        <button onClick={revertChanges}> Revert Changes </button>
-                        <button onClick={checkSavedEvents}>Check saved events</button>
+                        {/*<button onClick={revertChanges}> Revert Changes </button>*/}
+                        {/*<button onClick={checkSavedEvents}>Check saved events</button>*/}
+                        <div className="revertButton">
+                            <button className="newButton" onClick={revertChanges}>Revert changes</button>
+                        </div>
                     </div>
                     )}
                 </div>

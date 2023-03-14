@@ -394,9 +394,9 @@ export default function JoinMeeting() {
 
         <p>JOIN MEETING (log in to modify and add your times!)</p>
 
-        <button onClick={confirmAvailability}>Confirm availability</button>
+        <button className="newButton" onClick={confirmAvailability}>Confirm availability</button>
 
-        <button onClick={checkConfirmedAvailability}>check saved events</button>
+        {/*<button onClick={checkConfirmedAvailability}>check saved events</button>*/}
 
         <p>meeting members: {meetingMemberIDs}</p>
 
@@ -417,8 +417,8 @@ export default function JoinMeeting() {
             onChange={handleEndChange}
           />
 
-            <button onClick={revertChanges}> Revert Changes </button>
-            <button onClick={checkSavedEvents}>Check saved events</button>
+            <button className="newButton" onClick={revertChanges}> Revert changes </button>
+            {/*<button onClick={checkSavedEvents}>Check saved events</button>*/}
         </div>
 
         <calendar>
