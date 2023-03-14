@@ -9,9 +9,11 @@ const Navbar = (props) => {
       <a href="/" class="title"  >
         Meet & Cheese
       </a>
-      <li> <a onClick={props.handleAuthClick} className="click">{props.status ? "Create Meeting" : "Sign In"}</a></li>
-      <li> <a href="/list-meetings">List Meetings</a></li>
-      <li> <a href="/getstarted">Get Started</a></li>
+      <div className="list">
+        <li> <a onClick={props.handleAuthClick} className="click">{props.status ? "Create Meeting" : "Sign In"}</a></li>
+        <li> <a href="/list-meetings">List Meetings</a></li>
+        <li> <a href="/getstarted">Get Started</a></li>
+      </div>
     </ul>
   )
 }
