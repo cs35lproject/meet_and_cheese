@@ -180,6 +180,9 @@ export default function Meeting() {
     await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")))
     if (localStorage.getItem("savedEvents")) localStorage.removeItem("savedEvents")
     if (localStorage.getItem("meetingMemberIDs")) localStorage.removeItem("meetingMemberIDs")
+    navigate(`/`,
+      { state: {  }
+    })
   }
 
   const loadMeetingMembers = () => {
@@ -199,6 +202,17 @@ export default function Meeting() {
       </div>
     )
   }
+
+  const loadConfirmMeeting = () => {
+    if (userID === meetingOrganizer) {
+      return (
+        <div>
+          <button className="newButton" onClick={confirmMeeting}>Confirm final meeting time</button>
+          <br />
+        </div>
+      )
+    }
+  }
   
   return (
     <React.Fragment>
@@ -212,11 +226,7 @@ export default function Meeting() {
           <p className="page-desc">Meeting organizer: {meetingOrganizer}</p>
           {loadMeetingMembers()}
 
-          <div>
-            <button className="newButton" onClick={confirmMeeting}>Confirm final meeting time</button>
-            <br />
-            {/*<button onClick={checkSavedEvents}>Check saved events</button>*/}
-          </div>
+          {loadConfirmMeeting()}
 
         </div>
 
