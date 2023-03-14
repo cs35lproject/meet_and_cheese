@@ -126,8 +126,20 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     });
 };
 
-const formatEvent = async (meetingTime, meetingMemberIDs) => {
-    console.log(meetingTime, meetingMemberIDs);
+const formatEvent = async (savedEvents, meetingMemberIDs) => {
+    
+    // Meeting times
+    let start = "";
+    let end = "";
+
+    for (let event_id in savedEvents) {
+        console.log(start = savedEvents[event_id][0])
+        start = new Date(savedEvents[event_id][0]).toISOString();
+        end = new Date(savedEvents[event_id][1]).toISOString();
+        break
+    }
+
+    console.log(savedEvents, meetingMemberIDs);
     console.log("gapi:", gapi)
     // Meeting attendees
     let attendeesObjects = []
@@ -136,21 +148,15 @@ const formatEvent = async (meetingTime, meetingMemberIDs) => {
         attendeesObjects.push({"email" : email})
     })
     
-    // Meeting times
-    let start = new Date();
-    let end = new Date();
-    start.setDate(start.getDate());
-    end.setDate(end.getDate() + 1);
-    
     const event = {
         'summary': 'Meeting Title',
         'description': 'Meeting description',
         'start': {
-          'dateTime': start.toISOString(),
+          'dateTime': start,
           'timeZone': 'America/Los_Angeles'
         },
         'end': {
-          'dateTime': end.toISOString(),
+          'dateTime': end,
           'timeZone': 'America/Los_Angeles'
         },
         //'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],

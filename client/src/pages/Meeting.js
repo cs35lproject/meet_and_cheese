@@ -143,7 +143,7 @@ export default function Meeting() {
   const setupCalendarEvent = async () => {
     await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")))
     if (localStorage.getItem("savedEvents")) localStorage.removeItem("savedEvents")
-    localStorage.removeItem("meetingMemberIDs")
+    if (localStorage.getItem("meetingMemberIDs")) localStorage.removeItem("meetingMemberIDs")
   }
   
   return (
@@ -155,8 +155,6 @@ export default function Meeting() {
         <p>MEETING MEMBERS AVAILABILITY (meeting organizer can confirm meeting times when ready)</p>
 
         <button onClick={checkSavedEvents}>check saved events</button>
-
-        <button onClick={test}>test</button>
 
         <p>meeting organizer: {meetingOrganizer}</p>
         <p>meeting members: {meetingMemberIDs}</p>
