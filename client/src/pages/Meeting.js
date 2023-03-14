@@ -191,6 +191,7 @@ export default function Meeting() {
 
           <div>
             <button onClick={confirmMeeting}>Confirm final meeting time</button>
+            <button onClick={checkSavedEvents}>Check saved events</button>
           </div>
 
         </div>
@@ -220,15 +221,8 @@ export default function Meeting() {
             initialView="timeGridWeek"
             allDaySlot={false}
             eventColor={'#378006'}
-            //eventColor={'#634a71'}
-            
             googleCalendarApiKey={config.apiKey}
-            // auto gets rid of need for scrolling for contentHeight
-            //contentHeight="auto" 
             height={700}
-            // eventClick={handleEventClick}
-            //eventMouseEnter={handleMouseEnter}
-            //eventMouseLeave={handleMouseLeave}
             handleWindowResize={true}
             slotMinTime={minTime}
             slotMaxTime={endTime}
@@ -242,13 +236,7 @@ export default function Meeting() {
               minute: "2-digit",
               hour12: true
             }}
-            //eventTimeFormat={'h:mm a'}
-            //editable={true} // allows both resizing and dragging
-            //eventDurationEditable={true}
-            //eventResizableFromStart={true}
-            //eventDrop={handleEventDrop}
-            //slotEventOverlap={true} // true => slight overlap ?
-            slotEventOverlap={false} // false => side by side, no overlap
+            slotEventOverlap={true} // false => side by side, no overlap
           />
           
         </calendar>

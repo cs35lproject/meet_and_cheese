@@ -215,8 +215,12 @@ export default function Calendar() {
     // Save displayed events to savedAvailability hook when user clicks on event from calendar GUI
     const handleEventClick = (arg) => {
         const saved_events = {...savedAvailability };
+        
+        let temp_displayed = [];
+        for (let e of displayedAvailability) {
+            temp_displayed.push({...e});
+        }
 
-        const temp_displayed = [...displayedAvailability];
         const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
 
         if (arg.event.extendedProps.saved) {
@@ -239,8 +243,12 @@ export default function Calendar() {
 
     const handleEventDrop = (arg) => {
         const saved_events = {...savedAvailability };
+        let temp_displayed = [];
 
-        const temp_displayed = [...displayedAvailability];
+        for (let e of displayedAvailability) {
+            temp_displayed.push({...e});
+        }
+
         const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
 
         if (arg.oldEvent.extendedProps.saved) {
@@ -248,16 +256,23 @@ export default function Calendar() {
             // replace the old event with the new, by key = id
             delete saved_events[arg.oldEvent.id]
             saved_events[arg.event.id] = [arg.event.start, arg.event.end]
-            temp_displayed[idx].start = arg.event.start;
-            temp_displayed[idx].end = arg.event.end;
         }
+        temp_displayed[idx].start = arg.event.start;
+        temp_displayed[idx].end = arg.event.end;
+
         setSavedAvailability(saved_events);
         setDisplayedAvailability(temp_displayed);
     }
 
     const handleEventResize = (arg) => {
         const saved_events = {...savedAvailability };
+        let temp_displayed = [];
+    
+        for (let e of displayedAvailability) {
+            temp_displayed.push({...e});
+        }
 
+        const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
         // if the event was saved pre-drop
         if (arg.oldEvent.extendedProps.saved) {
             if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
@@ -265,7 +280,11 @@ export default function Calendar() {
             delete saved_events[arg.oldEvent.id]
             saved_events[arg.event.id] = [arg.event.start, arg.event.end]
         }
+        temp_displayed[idx].start = arg.event.start;
+        temp_displayed[idx].end = arg.event.end;
+        
         setSavedAvailability(saved_events);
+        setDisplayedAvailability(temp_displayed);
     }
 
     const handleMouseEnter = (arg) => {
@@ -373,6 +392,14 @@ export default function Calendar() {
         setEndTime('23:59');
     }
 
+    const checkSavedEvents = () => {
+        console.log("saved events total:", Object.keys(savedAvailability).length);
+        for (let event_id in savedAvailability) {
+          //console.log("event id: ", event_id);
+          console.log("event data: ", savedAvailability[event_id]);
+        }
+      }
+
     const confirmButton = () => {
         if (eventsData) {
             return <button onClick={confirmAvailability}>Confirm availability</button>
@@ -433,6 +460,7 @@ export default function Calendar() {
                         />
 
                         <button onClick={revertChanges}> Revert Changes </button>
+                        <button onClick={checkSavedEvents}>Check saved events</button>
                     </div>
                     )}
                 </div>
@@ -463,6 +491,11 @@ export default function Calendar() {
                     eventResize={handleEventResize}
                     eventOverlap={false}
                     //eventAfterRender={handleEventAfterRender}
+                    eventTimeFormat= {{
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true
+                      }}
                     />
                 </calendar>
             </div>
