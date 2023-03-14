@@ -5,19 +5,52 @@
 
 /* Calendar.js */
 
-.flexContainer{
+.flex-container{
   display: flex;
   flex-direction: row;
   height: 100%;
+  width: 100%;
   padding-left: 4vh;
   padding-right: 4vh;
+  gap: 3vh;
 }
 
-.leftColumn {
+.left-column {
   flex-basis: 20%;
 }
 
-.rightColumn {
+.left-column-contents {
+  background-color: white;
+  padding-bottom: 7vh;
+  border-radius: 6%;
+  padding-left: 7px;
+  padding-right: 7px;
+   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+}
+
+.left-column p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3vh;
+  color: black;
+  justify-content: center; 
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 0;
+}
+
+.left-column h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 4vh;
+  color: #4D368C;
+  font-weight: 600;
+  justify-content: center; 
+  text-align: center;
+  padding-top: 5vh;
+  margin-bottom: 0;
+}
+
+.right-column {
   flex-grow: 1;
 }
 
@@ -27,8 +60,8 @@ calendar {
   color: black;
   background-color: white;
   margin-top: 2rem;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
   margin-bottom: 2rem;
   border: 25px solid white;
   border-radius: 2.5%;
@@ -36,9 +69,23 @@ calendar {
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
+.times {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+input {
+  background-color: #d3d3d3;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
 /* Getting Started */
 
-.box_container{
+.box-container{
   display: grid;
   height: 100vh;
   grid-template-columns: repeat(3,1fr);
@@ -109,7 +156,7 @@ h1 {
   color: #4D368C;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  font-size: 7vh;
+  font-size: 6vh;
   padding-top: 2vh;
 }
 
