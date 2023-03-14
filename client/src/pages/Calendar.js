@@ -1,4 +1,4 @@
-import { useNavigate, createSearchParams } from 'react-router-dom'
+import { useNavigate, useLocation, createSearchParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid' // plugin
@@ -10,9 +10,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
 import intersectionFind from '../components/intersectionFind';
 import Navbar from "../components/Navbar";
+import "./Calendar.css"
 import './style.css';
 
 export default function Calendar() {
+    const { state } = useLocation();
     const navigate = useNavigate()
     const [calendarsData, setCalendarsData] = useState(null);
     const [userID, setUserID] = useState(null);
@@ -31,7 +33,13 @@ export default function Calendar() {
     // When user loads home screen, initialize Google Calendar API
     useEffect(() => {
         console.log("calendar a")
-        handleClientLoad(updateCalendars);
+        if (state && state.doAuthClick) {
+            console.log("Calendar doauth")
+            handleClientLoad(updateCalendars, handleAuthClick);
+        }
+        else {
+            handleClientLoad(updateCalendars);
+        }
     }, [])
 
     // When meetingID hook is updated from specified meetingID by backend, save new user to backend and route to meeting page
@@ -47,7 +55,7 @@ export default function Calendar() {
             })
         }
     }, [meetingID])
-
+    
     // Find availabilities when Google Calendar API data updates hooks
     useEffect(() => {
         console.log("calendar c")
@@ -55,6 +63,13 @@ export default function Calendar() {
             let eventsArray = eventsData.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
             let intersection = intersectionFind(eventsArray, [[0, Infinity]])
             console.log("intersection:", intersection)
+            if (intersection.length === 0) {
+                let today = new Date();
+                let tmrw = new Date(today);
+                tmrw.setDate(tmrw.getDate()+1)
+                intersection = [[today.getTime(), tmrw.getTime()]]
+                console.log("Called, intersection now:", intersection)
+            }
             loadValues(intersection)
         }
     }, [eventsData, calendarsData])
@@ -63,6 +78,8 @@ export default function Calendar() {
     const updateCalendars = async (calendars, events, primaryEmail) => {
         await new Promise(r => setTimeout(r, 400));
         console.log("Called updateCalendars")
+        console.log(calendars)
+        console.log(events)
         setCalendarsData(calendars)
         setUserID(primaryEmail)
         setEventsData(events)
@@ -73,7 +90,7 @@ export default function Calendar() {
 
     // Save new user with userID & meetingID to backend
     const createUser = async () => {
-        let body = {"userID" : userID, "meetingID" : meetingID}
+        let body = {"userID" : userID, "meetingID" : meetingID, "isCreated" : true}
         let url = `${process.env.REACT_APP_BACKEND}/user/createUser`
         let metadata = { method: "POST", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
         }
@@ -356,12 +373,31 @@ export default function Calendar() {
         setEndTime('23:59');
     }
 
-    const checkConfirmedAvailability = () => {
-        //console.log(savedAvailability);
-        for (let event_id in savedAvailability) {
-            console.log("event data: ", savedAvailability[event_id]);
+    const confirmButton = () => {
+        if (eventsData) {
+            return <button onClick={confirmAvailability}>Confirm availability</button>
         }
-        console.log("saved events total:", Object.keys(savedAvailability).length);
+    }
+
+    const loadTitle = () => {
+        // Title when user hasn't signed in yet
+        if (!eventsData) 
+            return (
+                <div>
+                    <p className="page-title">Click create meeting to start!</p>
+                </div>
+            )
+    }
+
+    const loadDesc = () => {
+        // Description when user signed in & loaded calendar events
+        if (eventsData)
+        return (
+            <div>
+                <p className="page-desc">Click on the highlighted time slots that accurately reflect your availability for meeting times</p>
+                <p className="page-desc">Drag the top/bottom of highlighted time slots to modify their times</p>
+            </div>
+        )
     }
 
     return (
@@ -370,63 +406,68 @@ export default function Calendar() {
                 <Navbar handleAuthClick = {handleAuthClick} userID={userID} callback={updateCalendars}/>
             </div>
 
-            <p>{eventsData ? "CREATE MEETING (expand, shrink, drag to modify availability. select times which accurately reflect your availability, then confirm times)" : "Click create meeting to start!"}</p>
+            {loadTitle()}
 
-            <button onClick={confirmAvailability}>{ eventsData ? "Confirm availability" : ""}</button>
+            <div>
+                {eventsData && (
+                    <div id="calendar-additions">
 
-            <button onClick={checkConfirmedAvailability}>check confirmed availability</button>
-            
-            {eventsData && (
-                <div>
-                    <br/>
-                    <label htmlFor="start-time-input"></label>
-                    <input
-                    id="start-time-input"
-                    type="time"
-                    value={minTime}
-                    onChange={handleStartChange}
-                    />
+                        {loadDesc()}
+                        {confirmButton()}
 
-                    <label htmlFor="end-time-input"></label>
-                    <input
-                    id="end-time-input"
-                    type="time"
-                    value={endTime}
-                    onChange={handleEndChange}
-                    />
+                        <br/>
+                        <label htmlFor="start-time-input"></label>
+                        <input
+                        id="start-time-input"
+                        type="time"
+                        value={minTime}
+                        onChange={handleStartChange}
+                        />
 
-                    <button onClick={revertChanges}> Revert Changes </button>
+                        <label htmlFor="end-time-input"></label>
+                        <input
+                        id="end-time-input"
+                        type="time"
+                        value={endTime}
+                        onChange={handleEndChange}
+                        />
+
+                        <button onClick={revertChanges}> Revert Changes </button>
+                    </div>
+                    )}
                 </div>
-            )}
 
-            <calendar>
-                <div class="square"></div>
-                <FullCalendar
-                plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="timeGridWeek"
-                allDaySlot={false}
-                eventColor={'#378006'}
-                googleCalendarApiKey={config.apiKey}
-                // auto gets rid of need for scrolling for contentHeight
-                //contentHeight="auto" 
-                height={700}
-                eventClick={handleEventClick}
-                eventMouseEnter={handleMouseEnter}
-                eventMouseLeave={handleMouseLeave}
-                handleWindowResize={true}
-                slotMinTime={minTime}
-                slotMaxTime={endTime}
-                events ={displayedAvailability}
-                editable={true} // allows both resizing and dragging
-                eventDurationEditable={true}
-                eventResizableFromStart={true}
-                eventDrop={handleEventDrop}
-                eventResize={handleEventResize}
-                eventOverlap={false}
-                //eventAfterRender={handleEventAfterRender}
-                />
-            </calendar>
+            <div id="calendar-body">
+                <calendar id="calendar-element">
+                    <div class="square"></div>
+                    <FullCalendar
+                    plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
+                    allDaySlot={false}
+                    eventColor={'#378006'}
+                    googleCalendarApiKey={config.apiKey}
+                    // auto gets rid of need for scrolling for contentHeight
+                    //contentHeight="auto" 
+                    height={700}
+                    eventClick={handleEventClick}
+                    eventMouseEnter={handleMouseEnter}
+                    eventMouseLeave={handleMouseLeave}
+                    handleWindowResize={true}
+                    slotMinTime={minTime}
+                    slotMaxTime={endTime}
+                    events ={displayedAvailability}
+                    editable={true} // allows both resizing and dragging
+                    eventDurationEditable={true}
+                    eventResizableFromStart={true}
+                    eventDrop={handleEventDrop}
+                    eventResize={handleEventResize}
+                    eventOverlap={false}
+                    //eventAfterRender={handleEventAfterRender}
+                    />
+                </calendar>
+            </div>
+            
         
-            </React.Fragment>
+        </React.Fragment>
       )
     }

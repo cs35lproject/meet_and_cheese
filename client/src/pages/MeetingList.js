@@ -1,23 +1,18 @@
-import { useLocation, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom';
-import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
+import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import Navbar from "../components/Navbar"
 import './style.css';
+import './MeetingList.css'
 
 export default function Meeting() {
   const { state } = useLocation();
-  const navigate = useNavigate();
   const [userID, setUserID] = useState(state ? state.userID : null);
-  const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
   const [userMeetings, setUserMeetings] = useState();
+  const [createdMeetings, setCreatedMeetings] = useState();
 
   useEffect(() => {
-    handleClientLoad((calendars, events, primaryEmail) => {
-      setUserID(primaryEmail);
-    })
     if (localStorage.getItem("userID")) {
-      console.log(localStorage.getItem("userID"))
       setUserID(localStorage.getItem("userID"))
     }
   }, []);
@@ -41,8 +36,9 @@ export default function Meeting() {
             const data = await response.json()
             console.log("data:", data)
             if (data.userID !== null && data.userMeetings !== null) {
-              console.log("setting to:", data.user.meetingIDs)
+              console.log("setting user meetings to meeting id list:", data.user.meetingIDs)
               setUserMeetings(data.user.meetingIDs)
+              setCreatedMeetings(data.user.createdMeetingIDs)
             }
         } catch (error) {
             console.log(error);
@@ -51,13 +47,27 @@ export default function Meeting() {
     }
   }
 
-  const displayMeetingIDs = () => {
+  const showCreatedMeetings = () => {
+    console.log("createdMeetings:", createdMeetings)
+    let meetings = []
+    let link = ""
+    for (let meetingKey in createdMeetings) {
+      link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
+      meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+    }
+    console.log("meetings:", meetings)
+    return meetings
+  }
+
+  const showJoinedMeetings = () => {
     console.log("userMeetings:", userMeetings)
     let meetings = []
     let link = ""
     for (let meetingKey in userMeetings) {
-      link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
-      meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+      if (createdMeetings && !createdMeetings.includes(userMeetings[meetingKey])) {
+        link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
+        meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+      }
     }
     console.log("meetings:", meetings)
     return meetings
@@ -66,14 +76,23 @@ export default function Meeting() {
   return (
     <React.Fragment>
       <div>
-        <Navbar handleAuthClick = {handleAuthClick}/>
+        <Navbar />
       </div>
 
       <p>Hi, {userID}. Here are your meetings:</p>
 
-      <div>
-        {displayMeetingIDs()}
+      <div id="meeting-wrapper">
+        <div className="meetings-list">
+          <p>Created Meetings</p>
+          {showCreatedMeetings()}
+        </div>
+
+        <div className="meetings-list">
+          <p>Joined Meetings</p>
+          {showJoinedMeetings()}
+        </div>
       </div>
+
 
   
     </React.Fragment>

@@ -43,33 +43,3 @@ class GetStarted extends React.Component {
 }
 
 export default GetStarted
-
-/* class GetStarted extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <getstarted>
-            <h1>Let's Get Cheesin'</h1>
-            <div class="row">
-                <div class="column">
-                  <div class="container">
-                    <div class="circle">1</div>
-                    <h2>Make an Account</h2>
-                    <div className="rectangle"></div>
-                  </div>
-                </div>
-                <div class="column">
-                    <div class="circle">2</div>
-                    <h2>Schedule a Meeting</h2>
-                </div>
-                <div class="column">
-                    <div class="circle">3</div>
-                    <h2>Share with others!</h2>
-                </div>
-            </div>
-        </getstarted>
-      </React.Fragment>
-    )
-  }
-}
-*/

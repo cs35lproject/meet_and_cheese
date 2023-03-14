@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         type : [String],
         required : false
     },
+    createdMeetingIDs : {
+        type : [String],
+        required: false
+    },
 
 }, {timestamps : true});
 

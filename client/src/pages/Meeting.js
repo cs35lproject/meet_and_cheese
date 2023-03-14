@@ -34,7 +34,7 @@ export default function Meeting() {
       if (!userID && localStorage.getItem("userID")) setUserID(localStorage.getItem("userID"))
       handleClientLoad(setupCalendarEvent)
       // If users came from Calendar page, intersections Hook would have availability
-      if (intersections === null) {
+      if (intersections === null || !meetingOrganizer) {
           findMeeting()
       } 
       // Otherwise, need to pull from backend to find meeting availability data
@@ -127,14 +127,6 @@ export default function Meeting() {
     }
   }
 
-  const checkSavedEvents = () => {
-    console.log(savedEvents);
-    for (let event_id in savedEvents) {
-      //console.log("event id: ", event_id);
-      console.log("event data: ", savedEvents[event_id]);
-    }
-  }
-
   const confirmMeeting = () => {
     if (!localStorage.getItem("meetingMemberIDs")) localStorage.setItem("meetingMemberIDs", JSON.stringify(meetingMemberIDs))
     if (!localStorage.getItem("savedEvents")) localStorage.setItem("savedEvents", JSON.stringify(savedEvents))
@@ -146,6 +138,24 @@ export default function Meeting() {
     if (localStorage.getItem("savedEvents")) localStorage.removeItem("savedEvents")
     if (localStorage.getItem("meetingMemberIDs")) localStorage.removeItem("meetingMemberIDs")
   }
+
+  const loadMeetingMembers = () => {
+    let membersElements = ""
+    for (let member in meetingMemberIDs) {
+      if (meetingMemberIDs[member] !== meetingOrganizer) {      
+        if (member == meetingMemberIDs.length - 1)
+        membersElements += (`${meetingMemberIDs[member]}`)
+        else
+        membersElements += (`${meetingMemberIDs[member]},`)
+
+      }
+    }
+    return (
+      <div>
+        <p className="page-desc">Meeting Members: {membersElements}</p>
+      </div>
+    )
+  }
   
   return (
     <React.Fragment>
@@ -153,19 +163,16 @@ export default function Meeting() {
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
 
-        <p>MEETING MEMBERS AVAILABILITY (meeting organizer can confirm meeting times when ready)</p>
-
-        <button onClick={checkSavedEvents}>check saved events</button>
-
-        <p>meeting organizer: {meetingOrganizer}</p>
-        <p>meeting members: {meetingMemberIDs}</p>
-
         <div>
-        <button onClick={confirmMeeting}>Confirm final meeting time</button>
-        </div>
-        
-        <div>
-        <input type="checkbox" />
+          <p className="page-title">MEETING MEMBERS AVAILABILITY</p>
+
+          <p className="page-desc">Meeting organizer: {meetingOrganizer}</p>
+          {loadMeetingMembers()}
+
+          <div>
+            <button onClick={confirmMeeting}>Confirm final meeting time</button>
+          </div>
+
         </div>
 
         <div>

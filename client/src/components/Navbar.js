@@ -17,8 +17,14 @@ const Navbar = (props) => {
   }, [])
 
   const loadCalendar = () => {
-    navigate("/")
-    props.handleAuthClick();
+    console.log("loadCalendar", window.location.pathname)
+    if (window.location.pathname === "/") {
+      props.handleAuthClick();
+    }
+    else {
+      navigate("/",
+      { state : {doAuthClick : true} })
+    }
   }
 
   const chooseAuthentication = () => {
@@ -36,9 +42,7 @@ const Navbar = (props) => {
 
   return (
     <ul class = "navbar"> 
-    <a href = "/" class = "title"  > 
-        Meet & Cheese
-    </a>
+    <a href = "/" class = "title">Meet & Cheese</a>
     {chooseAuthentication()}
     <li> <a href="/list-meetings">LIST MEETINGS</a></li>
     <li> <a href="/getstarted">GET STARTED</a></li>

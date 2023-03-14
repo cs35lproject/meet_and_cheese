@@ -12,6 +12,6 @@ router
 
 router
     .route('/updateUserMeetings')
-    .get(userController.updateUserMeetings);
+    .put(userController.updateUserMeetings);
 
 module.exports = router;
