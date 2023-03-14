@@ -89,8 +89,9 @@ export default function Calendar() {
     const confirmAvailability = async () => {
         console.log("saved_events:", savedAvailability)
         let confirmed_availability = []
+        console.log("user id", userID);
         for (let event_id in savedAvailability) {
-            confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0])
+            confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0, userID])
         }
         setConfirmedAvailability(confirmed_availability);
         let body = {"userID" : userID, "availability" : confirmed_availability}

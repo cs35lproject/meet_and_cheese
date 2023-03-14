@@ -132,7 +132,7 @@ export default function JoinMeeting() {
         console.log("userID:", userID)
         let confirmed_availability = []
         for (let event_id in savedAvailability) {
-            confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0])
+            confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0, userID])
         }
         console.log("confirmed_avail:", confirmed_availability)
         let body = {"userID" : userID, "availability" : confirmed_availability, "meetingID" : meetingID, "meetingMemberIDs" : meetingMemberIDs}

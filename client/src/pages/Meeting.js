@@ -110,9 +110,10 @@ export default function Meeting() {
       let _events = [];
       const timeNow = Date.now();
       for (const start_end of intersections) {
+        console.log("user id", start_end[2]);
         if (start_end[0] < timeNow) continue;
         const _event = {
-          title: "Available",
+          title: start_end[2],
           start: start_end[0],
           end: start_end[1],
           id: uuidv4(),
