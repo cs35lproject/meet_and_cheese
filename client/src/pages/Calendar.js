@@ -295,6 +295,16 @@ export default function Calendar() {
                         ) : (
                             <h4>Please sign in to create a meeting</h4>
                         )}
+
+                <div button>
+                            <Button
+                                variant="contained"
+                                // onClick={placeholder}
+                                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" , marginTop: "20px"}}
+                            >
+                                SIGN IN
+                            </Button>
+                            </div>
                     </div>
                 </div>
 
