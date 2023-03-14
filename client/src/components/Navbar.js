@@ -18,12 +18,12 @@ const Navbar = (props) => {
 
   return (
     <ul class = "navbar"> 
-    <a href = "/" class = "title"  > 
+    <a href = "/getstarted" class = "title"  > 
         Meet & Cheese
     </a>
     <li> <a onClick={props.handleAuthClick} className="click">{signinStatus}</a></li>
     <li> <a href="/list-meetings">LIST MEETINGS</a></li>
-    <li> <a href="/getstarted">GET STARTED</a></li>
+    <li> <a href="/">CALENDAR</a></li>
     </ul>
   )
 }
