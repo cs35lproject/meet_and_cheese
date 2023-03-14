@@ -26,7 +26,7 @@ export default function Meeting() {
     console.log("MeetingList useEffect getuser")
     getUser();
   }, [userID])
-  
+
   // Get user from backend and update userMeetings hook
   const getUser = async () => {
     console.log("MeetingList getUser, userID:", userID)
@@ -37,17 +37,17 @@ export default function Meeting() {
         let metadata = { method: "GET" }
         console.log("url:", url)
         try {
-            const response = await fetch(url, metadata)
-            const data = await response.json()
-            console.log("data:", data)
-            if (data.userID !== null && data.userMeetings !== null) {
-              console.log("setting to:", data.user.meetingIDs)
-              setUserMeetings(data.user.meetingIDs)
-            }
+          const response = await fetch(url, metadata)
+          const data = await response.json()
+          console.log("data:", data)
+          if (data.userID !== null && data.userMeetings !== null) {
+            console.log("setting to:", data.user.meetingIDs)
+            setUserMeetings(data.user.meetingIDs)
+          }
         } catch (error) {
-            console.log(error);
+          console.log(error);
         }
-      } 
+      }
     }
   }
 
@@ -66,16 +66,18 @@ export default function Meeting() {
   return (
     <React.Fragment>
       <div>
-        <Navbar handleAuthClick = {handleAuthClick}/>
+        <Navbar handleAuthClick={handleAuthClick} />
       </div>
 
-      <p>Hi, {userID}. Here are your meetings:</p>
+      <div className="meetings-header">
+        <h5>All Meetings</h5>
+        <p>{userID}</p>
+      </div>
 
       <div>
         {displayMeetingIDs()}
       </div>
 
-  
     </React.Fragment>
   )
 }
