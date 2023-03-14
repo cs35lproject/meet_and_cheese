@@ -299,7 +299,7 @@ export default function Calendar() {
                 <div button>
                             <Button
                                 variant="contained"
-                                // onClick={placeholder}
+                                onClick={handleAuthClick}
                                 style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" , marginTop: "20px"}}
                             >
                                 SIGN IN
