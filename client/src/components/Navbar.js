@@ -17,10 +17,21 @@ const Navbar = (props) => {
   }, [])
 
   const loadCalendar = () => {
-    navigate(`/calendar`,
-      { state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
-    })
-    props.handleAuthClick
+    navigate("/")
+    props.handleAuthClick();
+  }
+
+  const chooseAuthentication = () => {
+    console.log("signinStatus", signinStatus)
+    if (signinStatus === "CREATE MEETING") {
+      return <li> <a onClick={loadCalendar} className="click">{signinStatus}</a></li>
+    }
+    else if (signinStatus === "SIGN IN") {
+      return <li> <a onClick={props.handleAuthClick} className="click">{signinStatus}</a></li>
+    }
+    else {
+      return <p>none</p>
+    }
   }
 
   return (
@@ -28,7 +39,7 @@ const Navbar = (props) => {
     <a href = "/" class = "title"  > 
         Meet & Cheese
     </a>
-    <li> <a onClick={loadCalendar} className="click">{signinStatus}</a></li>
+    {chooseAuthentication()}
     <li> <a href="/list-meetings">LIST MEETINGS</a></li>
     <li> <a href="/getstarted">GET STARTED</a></li>
     </ul>
