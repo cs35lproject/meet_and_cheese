@@ -7,27 +7,27 @@ class GetStarted extends React.Component {
     return (
       <React.Fragment>
         <div>
-          <Navbar />
+          <Navbar /> {/* TODO: add api call to login from this page */}
         </div>
         <getstarted>
             <h1>Find the best times to meet with everyone!</h1>
 
-            <div class="box_container">
+            <div className="box-container">
                 <div class="box">
                     <div className="circle"><h2>1</h2></div>
                     <div className="rectangle">
                       <h3>Sign into Google</h3>
-                      <p>Click “Create Meeting” on the top right corner to sign into your Google account.</p>
+                      <p>Click “Sign In” on the top right corner to sign into your Google account.</p>
                     </div>
                 </div>
-                <div class="box">
+                <div className="box">
                     <div className="circle"><h2>2</h2></div>
                     <div className="rectangle">
                       <h3>Create a Meeting</h3>
                       <p>Select the dates/times you would like to meet based on your availability from your Google Calendar!</p>
                     </div>
                 </div>
-                <div class="box">
+                <div className="box">
                     <div className="circle"><h2>3</h2></div>
                     <div className="rectangle">
                       <h3>Share with Others</h3>
