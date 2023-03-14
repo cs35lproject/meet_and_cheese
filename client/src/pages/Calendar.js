@@ -129,7 +129,6 @@ export default function Calendar() {
     // Transform availability from Google Calendar API into displayed availabilities on calendar GUI
     const loadValues = async (tempAvailability) => {
         await new Promise(r => setTimeout(r, 100));
-        console.log("load values called");
         if (tempAvailability) {
             let _events = [];
             let _ogevents = [];

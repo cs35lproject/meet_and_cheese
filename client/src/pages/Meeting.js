@@ -22,8 +22,8 @@ export default function Meeting() {
     const [intersections, setIntersections] = useState(state ? state.availability : null);
     const [meetingMemberIDs, setMeetingMemberIDs] = useState(state ? state.meetingMemberIDs : null);
     const [eventsArray, setEventsArray] = useState([]);
-    const [minTime, setMinTime] = useState('06:00:00');
-    const [endTime, setEndTime] = useState('22:00:00');
+    const [minTime, setMinTime] = useState('00:00');
+    const [endTime, setEndTime] = useState('23:59');
     const [savedEvents, setSavedEvents] = useState({});
 
     useEffect(() => {
@@ -55,7 +55,7 @@ export default function Meeting() {
     let temp_e = {
       title: "Meeting",
       start: arg.start,
-      end: arg.end,
+      end: arg.end, 
     }
     temp_events.push(temp_e);
 
@@ -67,16 +67,40 @@ export default function Meeting() {
 
   const handleEventMount = (info) => {
     // const tipContent = `<strong>${info.event.title} is available </strong>`
+    let names = [];
+    //let msg = `${info.event.title} available`;
+    let msg = "";
+
+    // check which events overlapping
+    for (const e of eventsArray) {
+      // info.event.start >= e.start && info.event.end <= e.end
+      // info.event.start >= e.start && info.event.start <= e.end
+      // info.event.start <= e.start && info.event.end >= e.end
+      if (info.event.start >= e.start && info.event.end <= e.end ||
+        info.event.start >= e.start && info.event.start <= e.end ||
+        info.event.start <= e.start && info.event.end >= e.end) {
+          names.push(e.title);
+        };
+    };
+
+    for (const n of [...new Set(names)]) {
+      msg += n + " available\n";
+    };
+
+    if (info.event.title === "Meeting") {
+      msg = "Meeting";
+    };
 
     tippy(info.el, {
-      content: `${info.event.title} available`,
+      content: msg,
       placement: 'top',
       trigger: 'mouseenter',
       hideOnLeave: true,
-      hideOnClick: false,
+      hideOnClick: true,
       animation: 'scale',
-      duration: 0
-    })
+      duration: 0,
+      multiple: true,
+    });
   }
 
   const handleStartChange = (event) => {
@@ -121,7 +145,6 @@ export default function Meeting() {
       let _events = [];
       const timeNow = Date.now();
       for (const start_end of intersections) {
-        console.log("user id", start_end[2]);
         if (start_end[0] < timeNow) continue;
         const _event = {
           title: start_end[2],
@@ -129,7 +152,7 @@ export default function Meeting() {
           end: start_end[1],
           id: uuidv4(),
           saved: false,
-          display: 'background'
+          display: 'background',
         };
         _events.push(_event);
         setEventsArray(_events);
@@ -236,7 +259,7 @@ export default function Meeting() {
               minute: "2-digit",
               hour12: true
             }}
-            slotEventOverlap={true} // false => side by side, no overlap
+            slotEventOverlap={true} // false => side by side, no overlap; true => overlap/transparency
           />
           
         </calendar>
