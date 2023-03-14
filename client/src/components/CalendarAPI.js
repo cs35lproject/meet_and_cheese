@@ -15,7 +15,7 @@ const scriptSrcGapi = "https://apis.google.com/js/api.js";
 var tokenClient =  null;
 
 // calendarsData is callback function "updateCalendars(calendars, events, primaryEmail)"
-const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
+const handleClientLoad = (calendarsData, initCallback, daysAhead, maxResults) => {
     const scriptGoogle = document.createElement("script");
     const scriptGapi = document.createElement("script");
     scriptGoogle.src = scriptSrcGoogle;
@@ -27,7 +27,7 @@ const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
     document.body.appendChild(scriptGapi);
     document.body.appendChild(scriptGoogle);
     scriptGapi.onload = () => {
-        gapi.load("client", initGapiClient);
+        gapi.load("client", () => initGapiClient(initCallback));
     };
     scriptGoogle.onload = async () => {
         tokenClient = await window.google.accounts.oauth2.initTokenClient({
@@ -42,6 +42,7 @@ const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
 }
 
 const initGapiClient = (onLoadCallback) => {
+    console.log("onloadcallback:", onLoadCallback)
     gapi.client.init({
         apiKey: config.apiKey,
         discoveryDocs: config.discoveryDocs,
@@ -49,6 +50,7 @@ const initGapiClient = (onLoadCallback) => {
     })
     .then( () => {
         if (onLoadCallback) {
+            console.log("ONLOADCALLBACK")
             onLoadCallback();
         }
     })
@@ -127,7 +129,7 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
 };
 
 const formatEvent = async (savedEvents, meetingMemberIDs) => {
-    
+    console.log("CalendarAPI, savedEvents:", savedEvents, meetingMemberIDs)
     // Meeting times
     let start = "";
     let end = "";
@@ -138,6 +140,7 @@ const formatEvent = async (savedEvents, meetingMemberIDs) => {
         end = new Date(savedEvents[event_id][1]).toISOString();
         break
     }
+    console.log("CalendarAPI, start/end:", start, end)
 
     console.log(savedEvents, meetingMemberIDs);
     console.log("gapi:", gapi)

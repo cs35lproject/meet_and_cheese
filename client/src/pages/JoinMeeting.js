@@ -22,6 +22,7 @@ export default function JoinMeeting() {
     const [userID, setUserID] = useState(null);
     const [meetingID, setMeetingID] = useState(state ? state.meetingID : null);
     const [meetingMemberIDs, setMeetingMemberIDs] = useState(state ? state.meetingMemberIDs : null);
+    const [meetingOrganizer, setMeetingOrganizer] = useState(null);
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
     const [updated, setUpdated] = useState(null);
@@ -35,8 +36,9 @@ export default function JoinMeeting() {
         console.log("joinmeeting b")
         if (updated) {
             addMeetingToUser();
+            setUpdated(null);
             navigate(`/meeting?id=${meetingID}`, 
-                { state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs }
+                { state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs, organizer : meetingOrganizer}
             })
         }
     }, [updated])
@@ -113,6 +115,7 @@ export default function JoinMeeting() {
     }
 
     const addMeetingToUser = async() => {
+        console.log("Called addMeetingToUser")
         let body = {"userID" : userID, "meetingID" : meetingID}
         let url = `${process.env.REACT_APP_BACKEND}/user/updateUserMeetings`
         let metadata = { method: "PUT", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
@@ -143,6 +146,7 @@ export default function JoinMeeting() {
             const response = await fetch(url, metadata)
             const data = await response.json()
             console.log("data inside JoinMeeting:", data)
+            setMeetingOrganizer(data.meeting.organizer)
             setMeetingMemberIDs(data.meeting.meetingMemberIDs)
             setUpdated(data.meeting.intersections)
             setConfirmedAvailability(data.meeting.intersections)

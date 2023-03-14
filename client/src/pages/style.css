@@ -132,3 +132,16 @@ calendar {
   .event_hover {
     cursor: pointer;
   }
+
+  .page-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0.8rem;
+    padding: 0;
+  }
+
+  .page-desc {
+    font-size: 1.2rem;
+    margin: 0.8rem;
+    padding: 0;
+  }
