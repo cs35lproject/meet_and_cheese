@@ -4,26 +4,14 @@ import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 import './Navbar.css'
 
 const Navbar = (props) => {
-  const [signinStatus, setSigninStatus] = useState(null);
-
-  useEffect(() => {
-    console.log("Navbar pathname:", window.location.pathname)
-    if (window.location.pathname === "/join-meeting") {
-      setSigninStatus("SIGN IN")
-    }
-    else{
-      setSigninStatus("CREATE MEETING")
-    }
-  }, [])
-
   return (
-    <ul class = "navbar"> 
-    <a href = "/" class = "title"  > 
+    <ul class="navbar">
+      <a href="/" class="title"  >
         Meet & Cheese
-    </a>
-    <li> <a onClick={props.handleAuthClick} className="click">{signinStatus}</a></li>
-    <li> <a href="/list-meetings">LIST MEETINGS</a></li>
-    <li> <a href="/getstarted">GET STARTED</a></li>
+      </a>
+      <li> <a onClick={props.handleAuthClick} className="click">{props.status ? "Create Meeting" : "Sign In"}</a></li>
+      <li> <a href="/list-meetings">List Meetings</a></li>
+      <li> <a href="/getstarted">Get Started</a></li>
     </ul>
   )
 }
