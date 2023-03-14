@@ -134,7 +134,7 @@ export default function Meeting() {
   
   return (
     <React.Fragment>
-        <div>
+        {/* <div>
           <Navbar handleAuthClick = {handleAuthClick}/>
         </div>
 
@@ -169,9 +169,18 @@ export default function Meeting() {
             value={endTime}
             onChange={handleEndChange}
           />
-        </div>
+        </div> */}
+      <div class="box_container">
+          <div class="box2">
+          <div class="share-container"></div>
+              <div className="users">
+                  <h4>Users</h4>
+                    {/* placeholderfortext */}
+              </div>
+              <div className="sharebutton"><p3>Share</p3></div>
+          </div>
 
-        <calendar>
+        <calendar2>
           <div class="square"></div>
           <FullCalendar
             plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
@@ -198,8 +207,8 @@ export default function Meeting() {
             //slotEventOverlap={true} // true => slight overlap ?
             slotEventOverlap={false} // false => side by side, no overlap
           />
-        </calendar>
-  
+        </calendar2>
+      </div>
         </React.Fragment>
   )
 }
