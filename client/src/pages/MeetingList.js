@@ -52,16 +52,26 @@ export default function Meeting() {
   }
 
   const displayMeetingIDs = () => {
-    console.log("userMeetings:", userMeetings)
-    let meetings = []
-    let link = ""
-    for (let meetingKey in userMeetings) {
-      link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
-      meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+    if (!Array.isArray(userMeetings)) {
+      console.error("Invalid userMeetings value:", userMeetings);
+      return null;
     }
-    console.log("meetings:", meetings)
-    return meetings
-  }
+  
+    console.log("userMeetings:", userMeetings);
+    let meetings = [];
+    for (let i = 0; i < userMeetings.length; i++) {
+      const meetingId = userMeetings[i];
+      const link = `${window.location.origin}/meeting?id=${meetingId}`;
+      const meetingLink = (
+        <div key={i}>
+          <a href={link}>Meeting {i + 1}</a>
+        </div>
+      );
+      meetings.push(meetingLink);
+    }
+    console.log("meetings:", meetings);
+    return meetings;
+  };
 
   return (
     <React.Fragment>
