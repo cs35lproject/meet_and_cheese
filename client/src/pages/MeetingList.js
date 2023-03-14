@@ -84,7 +84,7 @@ export default function Meeting() {
         <p>{userID}</p>
       </div>
 
-      <div>
+      <div className="meeting-id">
         {displayMeetingIDs()}
       </div>
 
