@@ -56,36 +56,13 @@ export default function Meeting() {
       title: "Meeting",
       start: arg.start,
       end: arg.end,
-      timeFormat: 'h(:mm)a'
     }
     temp_events.push(temp_e);
-    temp_saved.push(temp_e);
+
+    temp_saved.push([temp_e.start, temp_e.end]);
 
     setSavedEvents(temp_saved);
     setEventsArray(temp_events);
-  }
-
-  const handleMouseEnter = (arg) => {
-    arg.el.classList.add('event_hover'); // Add custom class on mouse enter
-
-    // const tipContent = `<strong>${arg.event.title} is available </strong>`
-
-    // new Tooltip(arg.el, {
-    //   title: tipContent,
-    //   placement: 'top',
-    //   trigger: 'hover',
-    //   container: 'body',
-    //   animation: 'shift-away',
-    //   arrow: true,
-    //   theme: 'light'
-    // });
-    
-  }
-
-  const handleMouseLeave = (arg) => {
-    arg.el.classList.remove('event_hover'); // Add custom class on mouse enter
-
-    //tooltip.hide();
   }
 
   const handleEventMount = (info) => {
