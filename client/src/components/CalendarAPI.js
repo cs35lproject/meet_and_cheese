@@ -129,7 +129,7 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
 };
 
 const formatEvent = async (savedEvents, meetingMemberIDs) => {
-    
+    console.log("CalendarAPI, savedEvents:", savedEvents, meetingMemberIDs)
     // Meeting times
     let start = "";
     let end = "";
@@ -140,6 +140,7 @@ const formatEvent = async (savedEvents, meetingMemberIDs) => {
         end = new Date(savedEvents[event_id][1]).toISOString();
         break
     }
+    console.log("CalendarAPI, start/end:", start, end)
 
     console.log(savedEvents, meetingMemberIDs);
     console.log("gapi:", gapi)
