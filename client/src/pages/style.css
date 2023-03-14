@@ -21,6 +21,18 @@ padding-bottom: 10vh;
 justify-content: center;
 }
 
+.box_container_meeting{
+  display: grid;
+  height: 100vh;
+  grid-template-columns: repeat(3,1fr);
+  grid-template-rows: 1fr;
+  gap: 2vh;
+  padding-left: 10vh;
+  padding-right: 10vh;
+  padding-bottom: 10vh;
+  justify-content: center;
+  }
+
 .box {
 padding: 7px;
 /* will remove border later */
@@ -32,10 +44,12 @@ padding-bottom: 30vh;
 .box2 {
   color: black;
   padding: 20px;
+  display: flex;
   justify-content: center;
-  /* margin-top: 4rem;
-  margin-left: 26vh;
-  margin-right: 26vh; */
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   }
 
 .circle {
@@ -200,21 +214,14 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
 
 calendar2 {
 width: 200%;
-display: block;
-color: black;
-background-color: white;
-/* margin-top: 2rem; */
-/* margin-left: auto;
-margin-right: auto;
-margin-bottom: 2rem; */
-margin-top: 4rem;
-margin-left: auto;
-margin-right: 3rem;
-border: 25px solid white;
-margin-bottom: 3rem;
-border-radius: 2.5%;
-/*box-shadow: 7px 7px 7px rgb(117, 117, 117);*/
-box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  display: block;
+  color: black;
+  background-color: white;
+  margin: 4rem auto 3rem;
+  border: 25px solid white;
+  border-radius: 2.5%;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
 }
 @media screen and (max-width: 600px) {
   .column {

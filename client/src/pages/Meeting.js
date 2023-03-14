@@ -170,7 +170,7 @@ export default function Meeting() {
             onChange={handleEndChange}
           />
         </div> */}
-      <div class="box_container">
+      <div class="box_container_meeting">
           <div class="box2">
           <div class="share-container"></div>
               <div className="users">
