@@ -6,6 +6,7 @@ import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '@mui/material/Button';
 
 import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
 import intersectionFind from '../components/intersectionFind';
@@ -22,7 +23,7 @@ export default function Calendar() {
     const [confirmedAvailability, setConfirmedAvailability] = useState({});
     const [meetingID, setMeetingID] = useState(null);
     const [meetingMemberIDs, setMeetingMemberIDs] = useState(null);
-    
+
     const [minTime, setMinTime] = useState('06:00:00');
     const [endTime, setEndTime] = useState('22:00:00');
 
@@ -40,9 +41,11 @@ export default function Calendar() {
             createUser();
             navigate({
                 pathname: "meeting",
-                search: createSearchParams({ id: meetingID }).toString()}, 
-                { state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs }
-            })
+                search: createSearchParams({ id: meetingID }).toString()
+            },
+                {
+                    state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs }
+                })
         }
     }, [meetingID])
 
@@ -71,9 +74,10 @@ export default function Calendar() {
 
     // Save new user with userID & meetingID to backend
     const createUser = async () => {
-        let body = {"userID" : userID, "meetingID" : meetingID}
+        let body = { "userID": userID, "meetingID": meetingID }
         let url = `${process.env.REACT_APP_BACKEND}/user/createUser`
-        let metadata = { method: "POST", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
+        let metadata = {
+            method: "POST", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
         }
         try {
             const response = await fetch(url, metadata)
@@ -91,9 +95,10 @@ export default function Calendar() {
             confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0])
         }
         setConfirmedAvailability(confirmed_availability);
-        let body = {"userID" : userID, "availability" : confirmed_availability}
+        let body = { "userID": userID, "availability": confirmed_availability }
         let url = `${process.env.REACT_APP_BACKEND}/meeting/createMeeting`
-        let metadata = { method: "POST", body: JSON.stringify(body), headers: {'Content-Type': 'application/json'}
+        let metadata = {
+            method: "POST", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
         }
         try {
             const response = await fetch(url, metadata)
@@ -179,14 +184,14 @@ export default function Calendar() {
         if (start.getDate() === end.getDate()
             && start.getMonth() === end.getMonth()
             && start.getFullYear() === end.getFullYear()) {
-                return true;
-            }
+            return true;
+        }
         else return false;
     }
 
     // Save displayed events to savedAvailability hook when user clicks on event from calendar GUI
     const handleEventClick = (arg) => {
-        const saved_events = {...savedAvailability };
+        const saved_events = { ...savedAvailability };
         if (arg.event.extendedProps.saved) {
             arg.event.setExtendedProp("saved", false);
             arg.event.setProp("backgroundColor", "green");
@@ -201,7 +206,7 @@ export default function Calendar() {
     }
 
     const handleEventDrop = (arg) => {
-        const saved_events = {...savedAvailability };
+        const saved_events = { ...savedAvailability };
 
         // if the event was saved pre-drop
         if (arg.oldEvent.extendedProps.saved) {
@@ -214,7 +219,7 @@ export default function Calendar() {
     }
 
     const handleEventResize = (arg) => {
-        const saved_events = {...savedAvailability };
+        const saved_events = { ...savedAvailability };
 
         // if the event was saved pre-drop
         if (arg.oldEvent.extendedProps.saved) {
@@ -252,60 +257,76 @@ export default function Calendar() {
     return (
         <React.Fragment>
             <div>
-                <Navbar handleAuthClick = {handleAuthClick} userID={userID} callback={updateCalendars}/>
+                <Navbar handleAuthClick={handleAuthClick} userID={userID} callback={updateCalendars} status={eventsData} />
+            </div>
+            <div className="flex-container">
+                <div className="left-column">
+                    <div className="left-column-contents">
+                        {eventsData ? (
+                            <>
+                                <h4>Create Meeting</h4>
+                                <p>Click and drag the time slots to select your availability.</p>
+                                <div className="times">
+                                    <label htmlFor="start-time-input"></label>
+                                    <input
+                                        id="start-time-input"
+                                        type="time"
+                                        value={minTime}
+                                        onChange={handleStartChange}
+                                    />
+                                    <label htmlFor="end-time-input"></label>
+                                    <input
+                                        id="end-time-input"
+                                        type="time"
+                                        value={endTime}
+                                        onChange={handleEndChange}
+                                    />
+                                </div>
+                                <div button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={confirmAvailability}
+                                        style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" }}
+                                    >
+                                        Confirm Availability
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            <h4>Please sign in to create a meeting</h4>
+                        )}
+                    </div>
+                </div>
+
+                <div class="right-column">
+                    <calendar>
+                        <div class="square"></div>
+                        <FullCalendar
+                            plugins={[dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
+                            initialView="timeGridWeek"
+                            allDaySlot={false}
+                            eventColor={'#378006'}
+                            googleCalendarApiKey={config.apiKey}
+                            // auto gets rid of need for scrolling for contentHeight
+                            //contentHeight="auto" 
+                            height={700}
+                            eventClick={handleEventClick}
+                            eventMouseEnter={handleMouseEnter}
+                            eventMouseLeave={handleMouseLeave}
+                            handleWindowResize={true}
+                            slotMinTime={minTime}
+                            slotMaxTime={endTime}
+                            events={displayedAvailability}
+                            editable={true} // allows both resizing and dragging
+                            eventDurationEditable={true}
+                            eventResizableFromStart={true}
+                            eventDrop={handleEventDrop}
+                            eventResize={handleEventResize}
+                        />
+                    </calendar>
+                </div>
             </div>
 
-            <p>{eventsData ? "CREATE MEETING (expand, shrink, drag to modify availability. select times which accurately reflect your availability, then confirm times)" : "Click create meeting to start!"}</p>
-
-            <button onClick={confirmAvailability}>{ eventsData ? "Confirm availability" : ""}</button>
-
-            <button onClick={checkConfirmedAvailability}>check confirmed availability</button>
-
-            <div>
-                <label htmlFor="start-time-input"></label>
-                <input
-                id="start-time-input"
-                type="time"
-                value={minTime}
-                onChange={handleStartChange}
-                />
-
-                <label htmlFor="end-time-input"></label>
-                <input
-                id="end-time-input"
-                type="time"
-                value={endTime}
-                onChange={handleEndChange}
-                />
-            </div>
-
-            <calendar>
-                <div class="square"></div>
-                <FullCalendar
-                plugins={[ dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="timeGridWeek"
-                allDaySlot={false}
-                eventColor={'#378006'}
-                googleCalendarApiKey={config.apiKey}
-                // auto gets rid of need for scrolling for contentHeight
-                //contentHeight="auto" 
-                height={700}
-                eventClick={handleEventClick}
-                eventMouseEnter={handleMouseEnter}
-                eventMouseLeave={handleMouseLeave}
-                handleWindowResize={true}
-                slotMinTime={minTime}
-                slotMaxTime={endTime}
-                events ={displayedAvailability}
-                editable={true} // allows both resizing and dragging
-                eventDurationEditable={true}
-                eventResizableFromStart={true}
-                eventDrop={handleEventDrop}
-                eventResize={handleEventResize}
-                
-                />
-            </calendar>
-        
-            </React.Fragment>
-      )
-    }
+        </React.Fragment>
+    )
+}

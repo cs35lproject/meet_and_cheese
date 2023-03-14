@@ -26,7 +26,7 @@ export default function Meeting() {
     console.log("MeetingList useEffect getuser")
     getUser();
   }, [userID])
-  
+
   // Get user from backend and update userMeetings hook
   const getUser = async () => {
     console.log("MeetingList getUser, userID:", userID)
@@ -37,45 +37,57 @@ export default function Meeting() {
         let metadata = { method: "GET" }
         console.log("url:", url)
         try {
-            const response = await fetch(url, metadata)
-            const data = await response.json()
-            console.log("data:", data)
-            if (data.userID !== null && data.userMeetings !== null) {
-              console.log("setting to:", data.user.meetingIDs)
-              setUserMeetings(data.user.meetingIDs)
-            }
+          const response = await fetch(url, metadata)
+          const data = await response.json()
+          console.log("data:", data)
+          if (data.userID !== null && data.userMeetings !== null) {
+            console.log("setting to:", data.user.meetingIDs)
+            setUserMeetings(data.user.meetingIDs)
+          }
         } catch (error) {
-            console.log(error);
+          console.log(error);
         }
-      } 
+      }
     }
   }
 
   const displayMeetingIDs = () => {
-    console.log("userMeetings:", userMeetings)
-    let meetings = []
-    let link = ""
-    for (let meetingKey in userMeetings) {
-      link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
-      meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+    if (!Array.isArray(userMeetings)) {
+      console.error("Invalid userMeetings value:", userMeetings);
+      return null;
     }
-    console.log("meetings:", meetings)
-    return meetings
-  }
+  
+    console.log("userMeetings:", userMeetings);
+    let meetings = [];
+    for (let i = 0; i < userMeetings.length; i++) {
+      const meetingId = userMeetings[i];
+      const link = `${window.location.origin}/meeting?id=${meetingId}`;
+      const meetingLink = (
+        <div key={i}>
+          <a href={link}>Meeting {i + 1}</a>
+        </div>
+      );
+      meetings.push(meetingLink);
+    }
+    console.log("meetings:", meetings);
+    return meetings;
+  };
 
   return (
     <React.Fragment>
       <div>
-        <Navbar handleAuthClick = {handleAuthClick}/>
+        <Navbar handleAuthClick={handleAuthClick} />
       </div>
 
-      <p>Hi, {userID}. Here are your meetings:</p>
+      <div className="meetings-header">
+        <h5>All Meetings</h5>
+        <p>{userID}</p>
+      </div>
 
-      <div>
+      <div className="meeting-id">
         {displayMeetingIDs()}
       </div>
 
-  
     </React.Fragment>
   )
 }

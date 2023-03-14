@@ -1,15 +1,149 @@
 @font-face {
-  font-family: 'Comfortaa';
-  src: url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap');
+  font-family: 'Poppins';
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
+  src: url('http://fonts.googleapis.com/css?family=Corben:bold');
+  src: url('http://fonts.googleapis.com/css?family=Nobile');
 }
-@font-face {
-font-family: 'Playfair Display';
-src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;800&display=swap');
+/* MeetingList.js */
+
+h5 {
+color: #000;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 550;
+font-size: 4vh;
+margin: 0;
+margin-top: auto;
 }
 
-/* Steps 1-3 Boxes */
+.meetings-header
+{
+display: flex;
+text-align: left;
+margin-top: 3vh;
+padding-left: 3vh;
+margin-bottom: 10px;
+}
 
-.box_container{
+.meetings-header p {
+color:gray;
+font-family: 'Nobile', Helvetica, Arial, sans-serif;
+font-weight: 400;
+font-size: 3vh;
+margin: 0;
+margin-top: 4px;
+margin-left: 15px;
+}
+
+.meeting-id {
+color:white;
+font-family: 'Poppins', sans-serif;
+margin-left: 15px;
+}
+
+.left-column p1 {
+font-family: 'Poppins', sans-serif;
+font-size: 3vh;
+font-weight: 500;
+color: black;
+display: flex;
+justify-content: center; 
+text-align: center;
+margin-top: 10px;
+}
+
+.left-column p2 {
+font-family: 'Poppins', sans-serif;
+font-size: 3vh;
+color: gray;
+font-weight: 100;
+display: flex;
+justify-content: center; 
+text-align: center;
+}
+
+/* Calendar.js */
+
+.flex-container{
+display: flex;
+flex-direction: row;
+height: 100%;
+width: 100%;
+padding-left: 4vh;
+padding-right: 4vh;
+gap: 3vh;
+}
+
+.left-column {
+flex-basis: 20%;
+}
+
+.left-column-contents {
+background-color: white;
+padding-bottom: 7vh;
+border-radius: 6%;
+padding-left: 7px;
+padding-right: 7px;
+ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+}
+
+.left-column p {
+font-family: 'Nobile', Helvetica, Arial, sans-serif;
+font-size: 3vh;
+color: black;
+justify-content: center; 
+text-align: center;
+margin-top: 25px;
+margin-bottom: 0;
+}
+
+.left-column h4 {
+font-family: 'Corben', Georgia, Times, serif;
+font-size: 4vh;
+color: #4D368C;
+font-weight: 600;
+justify-content: center; 
+text-align: center;
+padding-top: 5vh;
+margin-bottom: 0;
+}
+
+.right-column {
+flex-grow: 1;
+}
+
+calendar {
+width: 90%;
+display: block;
+color: black;
+background-color: white;
+margin-top: 2rem;
+margin-left: 0;
+margin-right: 0;
+margin-bottom: 2rem;
+border: 25px solid white;
+border-radius: 2.5%;
+/*box-shadow: 7px 7px 7px rgb(117, 117, 117);*/
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.times {
+display: flex;
+align-items: center;
+justify-content: center;
+margin-top: 20px;
+margin-bottom: 35px;
+}
+
+input {
+background-color: #d3d3d3;
+border-radius: 10px;
+font-family: 'Poppins', sans-serif;
+}
+
+/* Getting Started */
+
+.box-container{
 display: grid;
 height: 100vh;
 grid-template-columns: repeat(3,1fr);
@@ -21,36 +155,11 @@ padding-bottom: 10vh;
 justify-content: center;
 }
 
-.box_container_meeting{
-  display: grid;
-  height: 100vh;
-  grid-template-columns: repeat(3,1fr);
-  grid-template-rows: 1fr;
-  gap: 2vh;
-  padding-left: 10vh;
-  padding-right: 10vh;
-  padding-bottom: 10vh;
-  justify-content: center;
-  }
-
 .box {
 padding: 7px;
-/* will remove border later */
-/* border: 1px solid white; */
 overflow: hidden;
 padding-bottom: 30vh;
 }
-
-.box2 {
-  color: black;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  }
 
 .circle {
 border-radius: 50%;
@@ -68,9 +177,9 @@ align-items: center;
 
 .circle h2 {
 color: #000;
-font-family: 'Playfair Display', serif;
-font-weight: 800;
-font-size: 6vh;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 600;
+font-size: 5vh;
 }
 
 .rectangle {
@@ -79,88 +188,23 @@ background: white;
 width: 100%;
 height: 100%;
 top: -11vh;
-border-radius: 16px;
-/* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.2); */
+border-radius: 8px;
+box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.2);
 }
-
-/* .rectangle2 {
-  position: relative;
-  background: white;
-  width: 70%;
-  height: 50%;
-  top: -11vh;
-  border-radius: 16px;
-  margin-top: 3rem;
-  margin-left: auto;
-  margin-right: auto;
-  /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
-/* } */
-
-  .users {
-    background: white;
-    width: 70%;
-    height: 50%;
-    /* top: -11vh;
-    top: -2px; */
-    border-radius: 30px;
-    position: relative;
-    right: -1px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    /* margin-top: 4rem;
-    margin-left: auto; */
-    /* margin-right: auto; */
-    /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
-    }
-    
-  
-  .sharebutton {
-    border-radius: 8px;
-    width: 15vh;
-    height: 5vh;
-    background: #ffffff;
-    text-align: right;   
-    border-radius: 8px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;   
-    /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
-  }
-
 
 h3 {
 color: #000;
-/* font-family: 'Playfair Display', serif; */
-font-weight: 800;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 550;
 font-size: 5vh;
 text-align: center;
 padding-top: 15vh;
 }
 
-h4 {
-color: #000;
-/* font-family: 'Playfair Display', serif; */
-font-weight: 800;
-font-size: 5vh;
-text-align: center;
-padding-top: 7vh;
-padding-bottom: 7vh;
-
-}
-
-p {
+.rectangle p {
 color: black;
+font-family: 'Nobile', Helvetica, Arial, sans-serif;
 font-size: 3vh;
-padding-left: 30px;
-padding-right: 30px;
-}
-
-p2 {
-color: black;
-font-size: 4vh;
-font-weight: 800;
 padding-left: 30px;
 padding-right: 30px;
 }
@@ -168,8 +212,9 @@ padding-right: 30px;
 h1 {
 text-align: center;
 color: #4D368C;
-/* font-family: 'Playfair Display', serif; */
-font-size: 7vh;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 600;
+font-size: 6vh;
 padding-top: 2vh;
 }
 
@@ -195,42 +240,6 @@ signin{
 display: block;
 width: 200%;
 padding-left: 100px;
-}
-
-calendar {
-width: 70%;
-display: block;
-color: black;
-background-color: white;
-margin-top: 2rem;
-margin-left: auto;
-margin-right: auto;
-margin-bottom: 2rem;
-border: 25px solid white;
-border-radius: 2.5%;
-/*box-shadow: 7px 7px 7px rgb(117, 117, 117);*/
-box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-calendar2 {
-width: 200%;
-  display: block;
-  color: black;
-  background-color: white;
-  margin: 4rem auto 3rem;
-  border: 25px solid white;
-  border-radius: 2.5%;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-
-}
-@media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-  }
-}
-
-.event_hover {
-  cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
