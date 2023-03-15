@@ -250,13 +250,6 @@ export default function JoinMeeting() {
         setEndTime('23:59');
     }
 
-    const checkSavedEvents = () => {
-        console.log("saved events total:", Object.keys(savedAvailability).length);
-        for (let event_id in savedAvailability) {
-            //console.log("event id: ", event_id);
-            console.log("event data: ", savedAvailability[event_id]);
-        }
-    }
 
     const loadValues = async (tempAvailability) => {
         await new Promise(r => setTimeout(r, 100));

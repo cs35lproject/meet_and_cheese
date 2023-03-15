@@ -94,7 +94,7 @@ export default function Meeting() {
 
     tippy(info.el, {
       content: msg,
-      placement: 'top',
+      placement: 'left',
       trigger: 'mouseenter',
       hideOnLeave: true,
       hideOnClick: true,
@@ -189,16 +189,21 @@ export default function Meeting() {
 
   const loadMeetingMembers = () => {
     let membersElements = ""
+    let uniqueMembers = []
     let displayMembers = []
     for (let member in meetingMemberIDs) {
       console.log(meetingMemberIDs[member]);
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
         if (member == meetingMemberIDs.length - 1)
-        membersElements += (`${meetingMemberIDs[member]}`)
+          membersElements += (`${meetingMemberIDs[member]}`)
         else
-        membersElements += (`${meetingMemberIDs[member]},`)
-        displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>)
-      }  
+          membersElements += (`${meetingMemberIDs[member]},`)
+        
+        if (!uniqueMembers.includes(meetingMemberIDs[member])) {
+          displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>)
+          uniqueMembers.push(meetingMemberIDs[member]);
+        }
+      }
     }
     return displayMembers;
     return (
