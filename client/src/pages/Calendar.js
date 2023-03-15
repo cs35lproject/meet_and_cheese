@@ -310,9 +310,9 @@ export default function Calendar() {
                                 margin: "0 auto",
                                 marginTop: "20px",
                                 boxShadow: "none",
-                                borderRadius: "50%",
+                                // borderRadius: "50%",
                                 width: "100px",
-                                height: "100px",
+                                height: "35px",
                                 textTransform: "none",
                                 transition: "background-color 0.2s ease-in-out",
                             }}

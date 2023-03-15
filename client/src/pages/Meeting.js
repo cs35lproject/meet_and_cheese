@@ -173,18 +173,48 @@ export default function Meeting() {
               <Button
                 variant="contained"
                 onClick={checkSavedEvents}
-                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" , marginTop: "20px"}}
+                style={{
+                  background: "linear-gradient(to bottom, #43b7ff, #cdecff)",
+                  color: "#4D368C",
+                  fontFamily: "'Nobile', Helvetica, Arial, sans-serif",
+                  fontWeight: 600,
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "0 auto",
+                  marginTop: "20px",
+                  boxShadow: "none",
+                  // borderRadius: "50%",
+                  width: "200px",
+                  height: "35px",
+                  textTransform: "none",
+                  transition: "background-color 0.2s ease-in-out",
+              }}
               >
-                check saved events
+                Check Saved Events
               </Button>
             </div>
 
             <div button>
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px" }}
+                style={{
+                  background: "linear-gradient(to bottom, #43b7ff, #cdecff)",
+                  color: "#4D368C",
+                  fontFamily: "'Nobile', Helvetica, Arial, sans-serif",
+                  fontWeight: 600,
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "0 auto",
+                  marginTop: "20px",
+                  boxShadow: "none",
+                  // borderRadius: "50%",
+                  width: "200px",
+                  height: "35px",
+                  textTransform: "none",
+                  transition: "background-color 0.2s ease-in-out",
+              }}
               >
-                confirm meeting
+                Confirm Meeting
               </Button>
             </div>
           </div>
