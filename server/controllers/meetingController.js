@@ -3,7 +3,6 @@ const Meeting = require("../models/meetingModel");
 
 // route PUT /api/meeting/updateMeeting
 async function updateMeeting(req, res) {
-    console.log("updateMeeting")
     if (req.body.userID === undefined || req.body.availability === undefined || req.body.meetingID === undefined || req.body.meetingMemberIDs === undefined) {
         return res.send({success : false, "error" : "Invalid meeting format"})
     }
@@ -11,7 +10,6 @@ async function updateMeeting(req, res) {
         if (!meeting)
             return res.status(404).send({ success: false, error: `Meeting ${req.body.meetingID} does not exist` })
     meeting = meeting.toJSON()
-    console.log("meeting:", meeting)
     let members = meeting.meetingMemberIDs
     members.push(req.body.userID)
     let availabilities = meeting.intersections
@@ -28,7 +26,7 @@ async function updateMeeting(req, res) {
         return res.send({ success: true, meeting : {intersections : availabilities, meetingMemberIDs : members, meetingID : req.body.meetingID}})
     })
     .catch((e) => {
-        console.log("updateMeeting", e)
+        console.log(e)
         return res.send({ success: false, meeting : {intersections : availabilities, meetingMemberIDs : members, meetingID : req.body.meetingID}})
     })
 }
@@ -70,11 +68,9 @@ async function removeUser(req, res) {
 
 // route DELETE /api/meeting/
 async function deleteMeeting(req, res) {
-    console.log("deleteMeeting")
     let meetingID = req.query.id || req.body.meetingID
     if (meetingID !== null) {
         let meeting = await Meeting.findOne({meetingID : meetingID})
-        console.log(meetingID)
         if (!meeting)
             return res.status(404).send({ success: false, error: `Meeting ${userID} does not exist` })
         await meeting.remove()
@@ -111,7 +107,6 @@ async function createMeeting(req, res) {
 async function getMeeting(req, res) {
     let userID = req.query.id || req.body.userID
     if (userID !== null) {
-        console.log("Called getMeeting from backend, looking for id:", userID)
         //res.send({ success: false, error: "Disabled for testing"})
         let meeting = await Meeting.findOne({meetingID : userID})
         if (!meeting)

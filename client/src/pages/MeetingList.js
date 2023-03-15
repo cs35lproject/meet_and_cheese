@@ -33,37 +33,31 @@ export default function Meeting() {
   }, []);
 
   useEffect(() => {
-    console.log("MeetingList useEffect getuser")
     getUser();
   }, [userID])
 
   // Get user from backend and update userMeetings hook
   const getUser = async () => {
-    console.log("MeetingList getUser, userID:", userID)
     if (userID !== null) {
       await new Promise(r => setTimeout(r, 400));
       if (userID !== undefined) {
         let url = `${process.env.REACT_APP_BACKEND}/user/getUserMeetings?userID=${userID}`
         let metadata = { method: "GET" }
-        console.log("url:", url)
         try {
           const response = await fetch(url, metadata)
           const data = await response.json()
-          console.log("data:", data)
           if (data.userID !== null && data.userMeetings !== null) {
-            console.log("setting user meetings to meeting id list:", data.user.meetingIDs)
             setUserMeetings(data.user.meetingIDs)
             setCreatedMeetings(data.user.createdMeetingIDs)
           }
-        } catch (error) {
-          console.log(error);
+        } catch (e) {
+          console.log(e);
         }
       }
     }
   }
 
   const showCreatedMeetings = () => {
-    console.log("createdMeetings:", createdMeetings)
     let meetings = []
     let link = ""
     for (let meetingKey in createdMeetings) {
@@ -72,7 +66,6 @@ export default function Meeting() {
                     <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey], true)}>🗑</p>
                     </div>)
     }
-    console.log("meetings:", meetings)
     return meetings
   }
 
@@ -84,18 +77,14 @@ export default function Meeting() {
   }
     try {
       const response = await fetch(url, metadata)
-      console.log("res:", response)
+      console.log(response)
     } catch (error) {
       console.log(error);
-    }
-    if (isCreator) {
-      console.log("Delete meeting here")
     }
     window.location.reload();
   }
 
   const showJoinedMeetings = () => {
-    console.log("userMeetings:", userMeetings)
     let meetings = []
     let link = ""
     for (let meetingKey in userMeetings) {
@@ -107,7 +96,6 @@ export default function Meeting() {
                       </div>)
       }
     }
-    console.log("meetings:", meetings)
     return meetings
   }
 
@@ -116,7 +104,6 @@ export default function Meeting() {
   };
 
   const initCreatedList = () => {
-    console.log("createdMeetings:", createdMeetings)
     let meetings = []
     for (let meetingKey in createdMeetings) {
       meetings.push(meetingKey);

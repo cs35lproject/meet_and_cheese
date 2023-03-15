@@ -33,12 +33,10 @@ export default function JoinMeeting() {
     const [updated, setUpdated] = useState(null);
 
     useEffect(() => {
-        console.log("joinmeeting a")
         handleClientLoad(updateCalendars);
     }, []);
 
     useEffect(() => {
-        console.log("joinmeeting b")
         if (updated) {
             addMeetingToUser();
             setUpdated(null);
@@ -50,23 +48,18 @@ export default function JoinMeeting() {
     }, [updated])
 
     useEffect(() => {
-        console.log("joinmeeting c")
         if (eventsData !== null && calendarsData !== null && eventsData.length > 0) {
             let eventsArray = eventsData.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
             let intersection = intersectionFind(eventsArray, [[0, Infinity]])
             loadValues(intersection)
-            console.log("intersection:", intersection)
         }
     }, [eventsData, calendarsData])
 
     const updateCalendars = async (calendars, events, primaryEmail) => {
-        console.log("Primary email:", primaryEmail)
         await new Promise(r => setTimeout(r, 400));
         setCalendarsData(calendars)
         setUserID(primaryEmail)
         setEventsData(events)
-        console.log("events:", events)
-        console.log("calendars:", calendars)
     }
 
     // Save displayed events to savedAvailability hook when user clicks on event from calendar GUI
@@ -109,7 +102,6 @@ export default function JoinMeeting() {
         const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
 
         if (arg.oldEvent.extendedProps.saved) {
-            if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
             // replace the old event with the new, by key = id
             delete saved_events[arg.oldEvent.id]
             saved_events[arg.event.id] = [arg.event.start, arg.event.end]
@@ -132,7 +124,6 @@ export default function JoinMeeting() {
         const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
         // if the event was saved pre-drop
         if (arg.oldEvent.extendedProps.saved) {
-            if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
             // replace the old event with the new, by key = id
             delete saved_events[arg.oldEvent.id]
             saved_events[arg.event.id] = [arg.event.start, arg.event.end]
@@ -178,9 +169,7 @@ export default function JoinMeeting() {
                     saved: e.saved,
                     backgroundColor: e.backgroundColor
                 };
-                console.log("Saved?", e.saved);
                 if (e.saved) {
-                    console.log("event previously saved")
                     delete saved_temp[e.id];
                     saved_temp[e.id] = [new_start, e.end];
                 };
@@ -235,7 +224,6 @@ export default function JoinMeeting() {
     }
 
     const revertChanges = () => {
-        console.log("reverting changes");
         let temp_avail = [];
 
         //setDisplayedAvailability([...ogAvail]);
@@ -333,30 +321,25 @@ export default function JoinMeeting() {
     }
 
     const addMeetingToUser = async () => {
-        console.log("Called addMeetingToUser")
         let body = { "userID": userID, "meetingID": meetingID }
         let url = `${process.env.REACT_APP_BACKEND}/user/updateUserMeetings`
         let metadata = {
             method: "PUT", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
         }
-        console.log("addMeetingToUser", body)
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
             setMeetingMemberIDs(data.meeting.meetingMemberIDs)
-        } catch (error) {
-            console.log(error);
+        } catch (e) {
+            console.log(e);
         }
     }
 
     const confirmAvailability = async () => {
-        console.log("saved_events:", savedAvailability)
-        console.log("userID:", userID)
         let confirmed_availability = []
         for (let event_id in savedAvailability) {
             confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0, userID])
         }
-        console.log("confirmed_avail:", confirmed_availability)
         let body = { "userID": userID, "availability": confirmed_availability, "meetingID": meetingID, "meetingMemberIDs": meetingMemberIDs }
         let url = `${process.env.REACT_APP_BACKEND}/meeting/updateMeeting`
         let metadata = {
@@ -365,43 +348,14 @@ export default function JoinMeeting() {
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
-            console.log("data inside JoinMeeting:", data)
             setMeetingOrganizer(data.meeting.organizer)
             setMeetingMemberIDs(data.meeting.meetingMemberIDs)
             setUpdated(data.meeting.intersections)
             setConfirmedAvailability(data.meeting.intersections)
             setMeetingID(data.meeting.meetingID)
-        } catch (error) {
-            console.log(error);
+        } catch (e) {
+            console.log(e);
         }
-    }
-
-    const checkConfirmedAvailability = () => {
-        console.log(savedAvailability);
-        for (let event_id in savedAvailability) {
-            console.log("event data: ", savedAvailability[event_id]);
-        }
-    }
-
-    const loadTitle = () => {
-        // Title when user hasn't signed in yet
-        if (!eventsData)
-            return (
-                <div>
-                    <p className="page-title">JOIN MEETING: Click log in to start!</p>
-                </div>
-            )
-    }
-
-    const loadDesc = () => {
-        // Description when user signed in & loaded calendar events
-        if (eventsData)
-            return (
-                <div>
-                    <p className="page-desc">Click on the highlighted time slots that accurately reflect your availability for meeting times</p>
-                    <p className="page-desc">Drag the top/bottom of highlighted time slots to modify their times</p>
-                </div>
-            )
     }
 
     const confirmButton = () => {

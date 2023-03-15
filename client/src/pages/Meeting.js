@@ -28,7 +28,6 @@ export default function Meeting() {
     const [savedEvents, setSavedEvents] = useState({});
 
   useEffect(() => {
-    console.log("meeting a")
     loadValues()
   }, [intersections])
 
@@ -119,13 +118,11 @@ export default function Meeting() {
     try {
       const response = await fetch(url, metadata)
       const data = await response.json()
-      console.log("Meeting findMeeting data:", data)
+      console.log(data)
       if (data.meeting !== undefined) {
         if (userID && data.meeting.meetingMemberIDs && data.meeting.meetingMemberIDs.includes(userID)) {
-          console.log("userID")
         }
         else {
-          console.log("Rendering JoinMeeting:", data.meeting)
           navigate(`/join-meeting?id=${meetingID}`,
             {
               state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
@@ -136,8 +133,8 @@ export default function Meeting() {
         setIntersections(data.meeting.intersections);
         setMeetingMemberIDs(data.meeting.meetingMemberIDs);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -161,14 +158,6 @@ export default function Meeting() {
         setMeetingID(meetingID);
         setMeetingMemberIDs(meetingMemberIDs);
       }
-    }
-  }
-
-  const checkSavedEvents = () => {
-    console.log("saved events total:", Object.keys(savedEvents).length);
-    for (let event_id in savedEvents) {
-      //console.log("event id: ", event_id);
-      console.log("event data: ", savedEvents[event_id]);
     }
   }
 
@@ -204,7 +193,6 @@ export default function Meeting() {
     let uniqueMembers = []
     let displayMembers = []
     for (let member in meetingMemberIDs) {
-      console.log(meetingMemberIDs[member]);
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
         if (member == meetingMemberIDs.length - 1)
           membersElements += (`${meetingMemberIDs[member]}`)
