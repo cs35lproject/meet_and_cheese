@@ -12,7 +12,7 @@ const Navbar = (props) => {
       setSigninStatus("SIGN IN")
     }
     else{
-      setSigninStatus("Create Meeting")
+      setSigninStatus("Sign In")
     }
   }, [])
 
@@ -22,7 +22,7 @@ const Navbar = (props) => {
         Meet & Cheese
     </a>
     <li> <a onClick={props.handleAuthClick} className="click">{signinStatus}</a></li>
-    <li> <a href="/list-meetings">List Meetings</a></li>
+    <li> <a href="/list-meetings">Meetings List</a></li>
     <li> <a href="/">Calendar</a></li>
     </ul>
   )
