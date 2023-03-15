@@ -80,7 +80,7 @@ export default function Meeting() {
       </div>
 
       <div className="meetings-header">
-        <h5>All Meetings</h5>
+        <h1>All Meetings</h1>
         <p>{userID}</p>
       </div>
 
