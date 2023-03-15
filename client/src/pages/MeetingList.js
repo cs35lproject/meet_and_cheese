@@ -13,6 +13,8 @@ export default function Meeting() {
   const [userMeetings, setUserMeetings] = useState();
   const [createdMeetings, setCreatedMeetings] = useState();
 
+  const [createdList, setCreatedList] = useState([])
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -66,10 +68,16 @@ export default function Meeting() {
     let link = ""
     for (let meetingKey in createdMeetings) {
       link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
-      meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+      meetings.push(<div className="buttons-and-trash"><a href={link} key={meetingKey}>{link}</a>
+                    <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey])}>🗑</p>
+                    </div>)
     }
     console.log("meetings:", meetings)
     return meetings
+  }
+
+  const trashMeeting = (meetingKey) => {
+    console.log(meetingKey, " deleted!!!");
   }
 
   const showJoinedMeetings = () => {
@@ -79,7 +87,10 @@ export default function Meeting() {
     for (let meetingKey in userMeetings) {
       if (createdMeetings && !createdMeetings.includes(userMeetings[meetingKey])) {
         link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
-        meetings.push(<div><a href={link} key={meetingKey}>{link}</a></div>)
+        if (!createdList.includes(meetingKey))
+        meetings.push(<div className="buttons-and-trash"><a href={link} key={meetingKey}>{link}</a>
+                      <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey])}>🗑</p>
+                      </div>)
       }
     }
     console.log("meetings:", meetings)
@@ -90,9 +101,19 @@ export default function Meeting() {
     setValue(newValue);
   };
 
+  const initCreatedList = () => {
+    console.log("createdMeetings:", createdMeetings)
+    let meetings = []
+    for (let meetingKey in createdMeetings) {
+      meetings.push(meetingKey);
+    }
+    setCreatedList(meetings);
+  }
+
 
   return (
     <React.Fragment>
+      {initCreatedList}
       <div>
         <Navbar />
       </div>
