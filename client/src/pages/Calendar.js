@@ -406,9 +406,11 @@ export default function Calendar() {
 
     const confirmButton = () => {
         if (eventsData) {
+            
             return <Button variant="contained" onClick={confirmAvailability} 
                 style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
                 }}>Confirm Availability</Button>
+            
         }
     }
 
@@ -449,62 +451,47 @@ export default function Calendar() {
                 <div className="left-column-contents">
                     {eventsData ? (
                         <>
-                            <h4>Create Meeting</h4>
-                            <p>Click and drag the time slots to select your availability.</p>
-                            <div className="times">
-                                <label htmlFor="start-time-input"></label>
-                                <input
-                                    id="start-time-input"
-                                    type="time"
-                                    value={minTime}
-                                    onChange={handleStartChange}
-                                />
-                                <label htmlFor="end-time-input"></label>
-                                <input
-                                    id="end-time-input"
-                                    type="time"
-                                    value={endTime}
-                                    onChange={handleEndChange}
-                                />
-                            </div>
-                            <div button>
-                                <Button
-                                    variant="contained"
-                                    onClick={confirmAvailability}
-                                    style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" }}
-                                >
-                                    Confirm Availability
-                                </Button>
+                            <div className='all-buttons'>
+                            <h4>Create a meeting</h4>
+                                Click to choose your availability.
+                                Drag, drop, and resize your availability to fit your schedule.
+                                <br/>
+                                    <div className="times">
+                                        <label htmlFor="start-time-input"></label>
+                                        <input
+                                            id="start-time-input"
+                                            type="time"
+                                            value={minTime}
+                                            onChange={handleStartChange}
+                                        />
+                                        <label htmlFor="end-time-input"></label>
+                                        <input
+                                            id="end-time-input"
+                                            type="time"
+                                            value={endTime}
+                                            onChange={handleEndChange}
+                                        />
+                                    </div>
+                                <div className="button-spacing">
+                                    {confirmButton()}
+                                </div>
+                                <div className="button-spacing">
+                                    {revertChangesButton()}
+                                </div>
                             </div>
                         </>
                     ) : (
                         <h4>Please sign in to create a meeting</h4>
                     )}
-
-                        <div button>
-                        <Button
-                        variant="contained"
-                        onClick={handleAuthClick}
-                        style={{
-                            background: "linear-gradient(to bottom, #43b7ff, #cdecff)",
-                            color: "#4D368C",
-                            fontFamily: "'Nobile', Helvetica, Arial, sans-serif",
-                            fontWeight: 600,
-                            display: "flex",
-                            justifyContent: "center",
-                            margin: "0 auto",
-                            marginTop: "20px",
-                            boxShadow: "none",
-                            // borderRadius: "50%",
-                            width: "100px",
-                            height: "35px",
-                            textTransform: "none",
-                            transition: "background-color 0.2s ease-in-out",
-                        }}
-                        >
-                        Sign In
-                    </Button>
-                    </div>
+                    {!eventsData && 
+                        <div>
+                            <br/>
+                            <Button variant="contained" onClick={handleAuthClick} 
+                            style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                            }}>Sign in</Button>
+                            <br/>
+                        </div>
+                    }
                 </div>
             </div>
 
