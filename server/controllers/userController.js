@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
-const Meeting = require("../models/meetingModel");
+const Meeting = require("../models/meetingModel")
+const meetingController = require("./meetingController")
 
 // route POST /api/users/createUser
 async function createUser(req, res) {
@@ -9,8 +10,6 @@ async function createUser(req, res) {
     console.log("existinguser:", existingUser)
     if (existingUser) {
         await updateUserMeetings(req, res);
-        console.log("updatRes:", updateRes)
-        res.send({ success: true, user: user })
     }
 
     if (req.body.userID === undefined || req.body.meetingID === undefined)
@@ -84,20 +83,45 @@ async function getUserMeetings(req, res) {
 
 // route DELETE /api/users/detachMeeting
 async function detachMeeting(req, res) {
-    console.log("detach meeting req.body:", req.body)
     let userID = req.body.userID;
     let meetingID = req.body.meetingID;
+
+    console.log("a")
     if (userID !== null && meetingID !== null) {
         let user = await User.findOne({userID : userID})
+        console.log("b")
         let meeting = await Meeting.findOne({meetingID : meetingID})
+        console.log("c")
         if (!user || !meeting)
             return res.status(404).send({ success: false, error: `Issue with userID ${userID} or meetingID ${meetingID}` })
-        let userJSON = user.toJSON()
-        console.log("user:", userJSON);
+
+        let meetings = user.toJSON().meetingIDs
+        let meetings_ = meetings.filter(e => e !== meetingID)
+        let created = user.toJSON().createdMeetingIDs
+        let created_ = created.filter(e => e !== meetingID)
+
+        let res_ = "";
+        console.log(created_)
+        console.log(created)
         
-        userJSON.meetingIDs.forEach( (meetingID) => {
-            console.log(meetingID)
-        })
+        // If the user didn't create the meeting
+        if (created_.length === created.length) {
+            await meetingController.removeUser(req, res);
+        }
+        // If the user did create the meeting
+        else {
+            await meetingController.deleteMeeting(req, res)
+        }
+        console.log("finished", meeting.toJSON())
+
+        await User.updateMany(
+            {"userID" : userID}, 
+            [
+                {$set : {"meetingIDs" : meetings_}},
+                {$set : {"createdMeetingIDs" : created_}}
+            ]
+        )
+        // remove user from meeting if not organizer, else delete meeting
     }
     else {
         res.send({ success: false, error: "Need to specify query user"})

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { json, useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import Navbar from "../components/Navbar"
@@ -69,15 +69,29 @@ export default function Meeting() {
     for (let meetingKey in createdMeetings) {
       link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
       meetings.push(<div className="buttons-and-trash"><a href={link} key={meetingKey}>{link}</a>
-                    <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey])}>🗑</p>
+                    <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey], true)}>🗑</p>
                     </div>)
     }
     console.log("meetings:", meetings)
     return meetings
   }
 
-  const trashMeeting = (meetingKey) => {
-    console.log(meetingKey, " deleted!!!");
+  const trashMeeting = async (meetingKey, isCreator) => {
+    let url = `${process.env.REACT_APP_BACKEND}/user/detachMeeting`
+    let body = { "userID": userID, "meetingID": meetingKey}
+    let metadata = {
+      method: "DELETE", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
+  }
+    try {
+      const response = await fetch(url, metadata)
+      console.log("res:", response)
+    } catch (error) {
+      console.log(error);
+    }
+    if (isCreator) {
+      console.log("Delete meeting here")
+    }
+    window.location.reload();
   }
 
   const showJoinedMeetings = () => {
@@ -89,7 +103,7 @@ export default function Meeting() {
         link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`
         if (!createdList.includes(meetingKey))
         meetings.push(<div className="buttons-and-trash"><a href={link} key={meetingKey}>{link}</a>
-                      <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey])}>🗑</p>
+                      <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey], false)}>🗑</p>
                       </div>)
       }
     }
