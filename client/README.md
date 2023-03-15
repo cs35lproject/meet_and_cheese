@@ -55,7 +55,48 @@ if (gapi) {
 This loops through every calendar which is sent back from the Google Calendar API (given by `gapi.client.calendar.calendarList.list()`), creates a new JavaScript object with only the Calendar's name and ID (since the original calendar object contains excessive information), adds the object to a list of such objects and pushes it to a list of all calendars. It then calls setEvents which does something similar for every event in the calendar and adds it to the new curCalendar object. This list is passed into a callback function called calendarsData which exists in Calendar.js, which then passes that calendar data to the intersectionFind component.
 
 #### IntersectionFind
-The IntersectionFind module contains functions that find the union and intersection between two sets of intervals and a function that finds the 
+The IntersectionFind module contains functions that find the union and intersection between two sets of intervals and a function that finds the intersection of the compliment of a set of time intervals with a second set of time intervals. The latter implements the former two and is the module's sole export. 
+
+##### Implementation
+```
+const intersectionFind = (events, intersections) => {
+
+    //events is an nx2 array of the form [[start, end],.....]
+    //intersections is an nx2 array of the form [[start, end],.....]
+
+    //Assume evenStarts and eventEnds are all relative to Unix epoch
+    //I.e. no time zones etc
+
+    //Assume that all the events are in the relevant search area
+    //If not, the algorithm will still work but will be slow
+    //I.e. will find intersections that aren't relevant
+
+    //Merge intervals
+    //Handle the case where some events overlap eachother
+    events = union(events);
+
+    //Find the new available times
+    //Simply find the intervals in between the event intervals
+    let myintersections = []
+    for (let i=0; i<events.length - 1; i++){
+        myintersections.push([events[i][1], events[i+1][0]]);
+    }
+
+    //Intersect intersections
+    //Find the intersection between current and previous free times
+    intersections = intersection(intersections, myintersections);
+
+    //Merge intersections
+    //Handle the case where some intersections overlap eachother
+    intersections = union(intersections);
+
+    return intersections;
+}
+```
+##### Notes
+- IntersectionFind is implemented on the client side to minimize data transmission between the client and the server.
+- All times are assumed to be integers and UNIX epoch timestamps by convention.
+- The intersections parameter of IntersectionFind can be initialized to be a set of constraints on meeting times (e.g. daily between 2pm and 4pm this week).
 
 The loadValues function / FullCalendar object which is being rendered / savedEvents flow / any of the cool FullCalendar features Juan made, talk about it a bit in the same format as I did.
 
