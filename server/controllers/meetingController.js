@@ -48,10 +48,6 @@ async function createMeeting(req, res) {
         intersections : req.body.availability,
     })
     console.log(meeting)
-    //console.log("meeting:", meeting)
-    // console.log("createMeeting SENDING BACK MEETING")
-    // res.send({ success: true, meeting: meeting })
-    await meeting.save()
     .then(() => {
         res.send({ success: true, meeting: meeting })
     })

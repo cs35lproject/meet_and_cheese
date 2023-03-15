@@ -18,6 +18,7 @@ Terminal 2 (install & start frontend):
 ```cd cs35l_project/frontend```
 ```npm install```
 ``` npm start```
+4 - Until Meet&Cheese is [officially verified by Google](https://support.google.com/cloud/answer/7454865), user's emails must be added in order to use the Google Calendar API. Unless explicitly confirmed that the correct email was added, expect to recieve errors whenever a user attempts to log in using Google.
 
 #### Previews
 
