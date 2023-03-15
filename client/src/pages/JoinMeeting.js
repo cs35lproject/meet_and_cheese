@@ -431,41 +431,53 @@ export default function JoinMeeting() {
                 <Navbar handleAuthClick={handleAuthClick} />
             </div>
 
-            <p>meeting members: {meetingMemberIDs}</p>
             <div></div>
             <div className="flex-container">
                 <div className="left-column">
-                    <div className="left-column-contents">
-                        {loadTitle()}
-                        {eventsData && (
+                    <div className="left-column-contents">   
+                        {eventsData ? (
                             <>
-                                <h4>Join Meeting</h4>
-                                <p>Click and drag the time slots to select your availability.</p>
-                                <div className="times">
-                                    <label htmlFor="start-time-input"></label>
-                                    <input
-                                        id="start-time-input"
-                                        type="time"
-                                        value={minTime}
-                                        onChange={handleStartChange}
-                                    />
-                                    <label htmlFor="end-time-input"></label>
-                                    <input
-                                        id="end-time-input"
-                                        type="time"
-                                        value={endTime}
-                                        onChange={handleEndChange}
-                                    />
+                                <div className='all-buttons'>
+                                <h4>Join the meeting.</h4>
+                                    Click to choose your availability.
+                                    Drag, drop, and resize your availability to fit your schedule.
+                                    <br/>
+                                    <div className="times">
+                                        <label htmlFor="start-time-input"></label>
+                                        <input
+                                            id="start-time-input"
+                                            type="time"
+                                            value={minTime}
+                                            onChange={handleStartChange}
+                                        />
+                                        <label htmlFor="end-time-input"></label>
+                                        <input
+                                            id="end-time-input"
+                                            type="time"
+                                            value={endTime}
+                                            onChange={handleEndChange}
+                                        />
+                                    </div>
+                                <div className="button-spacing">
+                                    {confirmButton()}
                                 </div>
-                                <div button>
-                                    {loadDesc()} {/* returns instructions */}
-                                    <br/>
-                                    {confirmButton()} {/* modify confirmButton function to style */}
-                                    <br/>
+                                <div className="button-spacing">
                                     {revertChangesButton()}
                                 </div>
+                            </div>
                             </>
+                        ) : (
+                            <h4>Please sign in to join the meeting.</h4>
                         )}
+                        {!eventsData && 
+                        <div>
+                            <br/>
+                            <Button variant="contained" onClick={handleAuthClick} 
+                            style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                            }}>Sign in</Button>
+                            <br/>
+                        </div>
+                        }
                     </div>
                 </div>
                 <div class="right-column">

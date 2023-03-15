@@ -452,7 +452,7 @@ export default function Calendar() {
                     {eventsData ? (
                         <>
                             <div className='all-buttons'>
-                            <h4>Create a meeting</h4>
+                            <h4>Create a meeting.</h4>
                                 Click to choose your availability.
                                 Drag, drop, and resize your availability to fit your schedule.
                                 <br/>

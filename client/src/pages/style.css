@@ -345,3 +345,62 @@ padding-left: 100px;
   height: 5px;
   align-items: center;
 }
+
+
+
+.meeting-buttons{
+  font-family: 'Nobile', Helvetica, Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 300 !important;
+  margin-top: 35px;
+  padding-top: 0px;
+  color: black;
+  font-weight: 100;
+  display: flex;
+  justify-content: center; 
+  text-align: center;
+  display: block;
+  background-color: white;
+  letter-spacing: -1px;
+  width: 380px;
+  height: 560px;
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; 
+}
+
+.meeting-buttons h4 {
+  margin-bottom: 5px;
+}
+.meet-h4 {
+  margin-top: -20px;
+}
+
+.meeting-button-spacing {
+  margin-top: -15px !important;
+  margin-bottom: 8px;
+}
+
+.meeting-members-box {
+ align-items: center;
+}
+
+.meeting-members-list {
+  overflow: auto;
+  width: 350px;
+  position:relative;
+  display: inline-block;  
+  list-style: none;
+  width:100%;
+  text-align: center;
+  margin: auto;
+  height: 150px;
+  padding: 0;
+  box-shadow: none !important;
+  margin-bottom: -15px
+}
+
+.meeting-members-list li {
+  padding-right: 7px;
+  padding-left: 7px;
+  font-size: 23px;
+}

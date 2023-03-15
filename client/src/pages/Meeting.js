@@ -94,7 +94,7 @@ export default function Meeting() {
 
     tippy(info.el, {
       content: msg,
-      placement: 'left',
+      placement: 'top',
       trigger: 'mouseenter',
       hideOnLeave: true,
       hideOnClick: true,
@@ -197,7 +197,7 @@ export default function Meeting() {
         membersElements += (`${meetingMemberIDs[member]}`)
         else
         membersElements += (`${meetingMemberIDs[member]},`)
-        displayMembers.push(<div><li>{meetingMemberIDs[member]}abcdefghijklmnopqrstuvwxyz1234</li></div>)
+        displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>)
       }  
     }
     return displayMembers;
@@ -217,6 +217,7 @@ export default function Meeting() {
       )
     }
   }
+
   
   return (
     <React.Fragment>
@@ -227,18 +228,19 @@ export default function Meeting() {
       <div className="flex-container">
         <div className="left-column">
           <div className="left-column-contents">
-            <h4>Members Availability</h4>
 
-            <p1>organizer</p1>
-            <p2>{meetingOrganizer}</p2> 
-            <p1>members</p1>
-            <div className="all-members">
-                {loadMeetingMembers()} {/* returns a list of memberIDs as a paragraph (replace w meetingMemberIDs) */}
-            </div>
-            <p>only meeting organizer can confirm meeting times</p>
-            {/*{loadConfirmMeeting()} {/* returns confirm meeting button */}
-
-            <div className="times">
+          <div className='meeting-buttons'>
+            <h4>Your Meeting.</h4>
+                Time to finalize your meeting.
+              <h4 className="meet-h4">Organizer: </h4>
+              {meetingOrganizer}
+              <h4 className="meet-h4">Members: </h4>
+              <div className="meeting-members-box">
+                <ul className="meeting-members-list">
+                  {loadMeetingMembers()}
+                </ul>
+              </div>
+              <div className="times">
               <label htmlFor="start-time-input"></label>
               <input
                 id="start-time-input"
@@ -254,11 +256,14 @@ export default function Meeting() {
                 value={endTime}
                 onChange={handleEndChange}
               />
-            </div>
+             </div>
+             <div className="meeting-button-spacing">
+                <div button>
+                    {loadConfirmMeeting()}
+                  </div>
+              </div>
 
-            <div button>
-              {loadConfirmMeeting()}
-            </div>
+          </div>
             
           </div>
         </div>
