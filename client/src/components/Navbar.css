@@ -1,10 +1,8 @@
 @font-face {
-  font-family: 'Poppins';
-  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
-}
-
-.list {
-  padding-right: 1vh;
+  font-family: 'Nobile';
+  font-family: 'Corben';
+  src: url('http://fonts.googleapis.com/css?family=Nobile');
+  src: url('http://fonts.googleapis.com/css?family=Corben:bold');
 }
 
 ul {
@@ -14,7 +12,6 @@ ul {
     overflow: hidden;
     background-color: white;
     box-shadow: 3px 3px 7px rgb(117, 117, 117);
-    
   }
   
   .active {
@@ -22,38 +19,44 @@ ul {
   }
   
   .navbar li a {
-    font-family: 'Poppins', sans-serif;
     display: block;
-    color: black;
+    /*color: #4D368C;*/
+    color: rgb(90, 89, 89);
     text-align: center;
-    padding: 14px 11px;
+    padding: 18px 16px;
     text-decoration: none;
     float: right;
+    font-weight: 550;
+    font-family: 'Poppins', sans-serif;
   }
-
   
   .navbar li a:hover {
-    font-family: 'Poppins', sans-serif;
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(245, 245, 245);
     text-decoration: underline;
-    color: #4D368C;
+    color: #8671be;
   }
   
   .navbar a.title {
-    font-family: 'Poppins', sans-serif;
     display: block;
+    /*color: #4D368C;*/
     color: black;
     text-align: center;
     padding: 12px 12px;
     text-decoration: none;
     float: left;
     font-size: 1.25rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 550;
+  }
+
+  .navbar a.title:hover {
+    /* background-color: rgb(235, 235, 235); */
+    /* text-decoration: underline; */
+    color: #000000;
   }
 
   .navbar li a:active{
-    font-family: 'Poppins', sans-serif;
     background-color: rgb(235, 235, 235);
-    text-decoration: underline;
     color: #8B78BF;
   }
 

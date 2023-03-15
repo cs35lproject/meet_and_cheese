@@ -33,9 +33,7 @@ export default function Calendar() {
 
     // When user loads home screen, initialize Google Calendar API
     useEffect(() => {
-        console.log("calendar a")
         if (state && state.doAuthClick) {
-            console.log("Calendar doauth")
             handleClientLoad(updateCalendars, handleAuthClick);
         }
         else {
@@ -45,9 +43,7 @@ export default function Calendar() {
 
     // When meetingID hook is updated from specified meetingID by backend, save new user to backend and route to meeting page
     useEffect(() => {
-        console.log("calendar b")
         if (meetingID !== null) {
-            console.log("confirmed availability in useEffect:", confirmedAvailability)
             createUser();
             navigate({
                 pathname: "meeting",
@@ -61,17 +57,14 @@ export default function Calendar() {
 
     // Find availabilities when Google Calendar API data updates hooks
     useEffect(() => {
-        console.log("calendar c")
         if (eventsData !== null && calendarsData !== null && eventsData.length > 0) {
             let eventsArray = eventsData.map(event => [!isNaN(Date.parse(event.start)) ? Date.parse(event.start) : 0, !isNaN(Date.parse(event.end)) ? Date.parse(event.end) : 0])
             let intersection = intersectionFind(eventsArray, [[0, Infinity]])
-            console.log("intersection:", intersection)
             if (intersection.length === 0) {
                 let today = new Date();
                 let tmrw = new Date(today);
                 tmrw.setDate(tmrw.getDate() + 1)
                 intersection = [[today.getTime(), tmrw.getTime()]]
-                console.log("Called, intersection now:", intersection)
             }
             loadValues(intersection)
         }
@@ -80,9 +73,6 @@ export default function Calendar() {
     // Update hooks with Google Calendar API data
     const updateCalendars = async (calendars, events, primaryEmail) => {
         await new Promise(r => setTimeout(r, 400));
-        console.log("Called updateCalendars")
-        console.log(calendars)
-        console.log(events)
         setCalendarsData(calendars)
         setUserID(primaryEmail)
         setEventsData(events)
@@ -101,16 +91,14 @@ export default function Calendar() {
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
-        } catch (error) {
-            console.log(error);
+        } catch (e) {
+            console.log(e);
         }
     }
 
     // Save new meeting (with userID and availability) from confirmed availabilities to backend
     const confirmAvailability = async () => {
-        console.log("saved_events:", savedAvailability)
         let confirmed_availability = []
-        console.log("user id", userID);
         for (let event_id in savedAvailability) {
             confirmed_availability.push([!isNaN(Date.parse(savedAvailability[event_id][0])) ? Date.parse(savedAvailability[event_id][0]) : 0, !isNaN(Date.parse(savedAvailability[event_id][1])) ? Date.parse(savedAvailability[event_id][1]) : 0, userID])
         }
@@ -123,11 +111,11 @@ export default function Calendar() {
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
-            console.log("data:", data)
+            console.log(data)
             setMeetingID(data.meeting.meetingID)
             setMeetingMemberIDs(data.meeting.meetingMemberIDs)
-        } catch (error) {
-            console.log(error);
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -256,7 +244,6 @@ export default function Calendar() {
         const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
 
         if (arg.oldEvent.extendedProps.saved) {
-            if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
             // replace the old event with the new, by key = id
             delete saved_events[arg.oldEvent.id]
             saved_events[arg.event.id] = [arg.event.start, arg.event.end]
@@ -279,7 +266,6 @@ export default function Calendar() {
         const idx = temp_displayed.findIndex(event => event.id === arg.event.id);
         // if the event was saved pre-drop
         if (arg.oldEvent.extendedProps.saved) {
-            if (arg.oldEvent.id === arg.event.id) console.log("same id! was expected");
             // replace the old event with the new, by key = id
             delete saved_events[arg.oldEvent.id]
             saved_events[arg.event.id] = [arg.event.start, arg.event.end]
@@ -324,9 +310,7 @@ export default function Calendar() {
                     saved: e.saved,
                     backgroundColor: e.backgroundColor
                 };
-                console.log("Saved?", e.saved);
                 if (e.saved) {
-                    console.log("event previously saved")
                     delete saved_temp[e.id];
                     saved_temp[e.id] = [new_start, e.end];
                 };
@@ -381,7 +365,6 @@ export default function Calendar() {
     }
 
     const revertChanges = () => {
-        console.log("reverting changes");
         let temp_avail = [];
 
         //setDisplayedAvailability([...ogAvail]);
@@ -396,19 +379,13 @@ export default function Calendar() {
         setEndTime('23:59');
     }
 
-    const checkSavedEvents = () => {
-        console.log("saved events total:", Object.keys(savedAvailability).length);
-        for (let event_id in savedAvailability) {
-            //console.log("event id: ", event_id);
-            console.log("event data: ", savedAvailability[event_id]);
-        }
-    }
-
     const confirmButton = () => {
         if (eventsData) {
+            
             return <Button variant="contained" onClick={confirmAvailability} 
                 style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
                 }}>Confirm Availability</Button>
+            
         }
     }
 
@@ -441,50 +418,61 @@ export default function Calendar() {
 
     return (
         <React.Fragment>
-            <div>
-                <Navbar handleAuthClick={handleAuthClick} userID={userID} callback={updateCalendars} status={eventsData} />
-            </div>
-
-            <div className="flex-container">
-                <div className="left-column">
-                    <div className="left-column-contents">
-                    {loadTitle()} 
-                        {/* only load when NOT signed in */}
-                        {eventsData && (
-                            <>
-                                <h4>Create Meeting</h4>
-                                <p>Click and drag the time slots to select your availability.</p>
-                                <div className="times">
-                                    <label htmlFor="start-time-input"></label>
-                                    <input
-                                        id="start-time-input"
-                                        type="time"
-                                        value={minTime}
-                                        onChange={handleStartChange}
-                                    />
-                                    <label htmlFor="end-time-input"></label>
-                                    <input
-                                        id="end-time-input"
-                                        type="time"
-                                        value={endTime}
-                                        onChange={handleEndChange}
-                                    />
+        <div>
+            <Navbar handleAuthClick={handleAuthClick} userID={userID} callback={updateCalendars} status={eventsData} />
+        </div>
+        <div className="flex-container">
+            <div className="left-column">
+                <div className="left-column-contents">
+                    {eventsData ? (
+                        <>
+                            <div className='all-buttons'>
+                            <h4>Create a meeting.</h4>
+                                Click to choose your availability.
+                                Drag, drop, and resize your availability to fit your schedule.
+                                <br/>
+                                    <div className="times">
+                                        <label htmlFor="start-time-input"></label>
+                                        <input
+                                            id="start-time-input"
+                                            type="time"
+                                            value={minTime}
+                                            onChange={handleStartChange}
+                                        />
+                                        <label htmlFor="end-time-input"></label>
+                                        <input
+                                            id="end-time-input"
+                                            type="time"
+                                            value={endTime}
+                                            onChange={handleEndChange}
+                                        />
+                                    </div>
+                                <div className="button-spacing">
+                                    {confirmButton()}
                                 </div>
-                                <div button>
-                                    {loadDesc()} {/* returns instructions */}
-                                    <br/>
-                                    {confirmButton()} {/* modify confirmButton function to style */}
-                                    <br/>
+                                <div className="button-spacing">
                                     {revertChangesButton()}
                                 </div>
-                            </>
-                        )}
-                    </div>
+                            </div>
+                        </>
+                    ) : (
+                        <h4>Please sign in to create a meeting</h4>
+                    )}
+                    {!eventsData && 
+                        <div>
+                            <br/>
+                            <Button variant="contained" onClick={handleAuthClick} 
+                            style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                            }}>Sign in</Button>
+                            <br/>
+                        </div>
+                    }
                 </div>
+            </div>
 
-                <div class="right-column">
+                <div className="right-column">
                     <calendar id="calendar-element">
-                        <div class="square"></div>
+                        <div className="square"></div>
                         <FullCalendar
                             plugins={[dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
                             initialView="timeGridWeek"

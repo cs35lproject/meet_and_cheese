@@ -1,11 +1,99 @@
 
-#meeting-wrapper {
-    text-align: center;
+.meetings-header {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 7vh;
+    margin-bottom: 5px;
+}
+
+.meetings-header h {
+    font-family: 'Poppins', sans-serif;
+    font-size: 35px;
+    color: #4D368C;
+    font-weight: 550;
+    margin: 0;
+    margin-top: auto;
+}
+
+.meetings-header p {
+    color: rgb(90, 89, 89);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0;
+    margin-top: 4px;
+}
+
+.meeting-wrapper {
+    text-align: center;
     margin: auto;
-    padding: auto;
+    padding: 10px;
+    height: 300px;
+    width: 500px;
+    border-color: 2px solid black;
+    border-radius: 8px;
+    overflow: scroll;
 }
 
 .meetings-list {
     margin: auto;
 }
+
+.meetings-list p {
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.tabs-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    width:max-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stack-style {
+    margin-bottom: 7px;
+}
+
+.preview {
+    background-color: #f1f1f1;
+    justify-content: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+}
+
+
+/* .meeting-link {
+    color: black;
+    font-family: 'Nobile', Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    font-size: 18px;
+} */
+
+/* h5 {
+    color: #4D368C;
+    font-family: 'Corben', Georgia, Times, serif;
+    font-weight: 550;
+    font-size: 4vh;
+    margin: 0;
+    margin-top: auto;
+}
+
+p3 {
+    color: black;
+    font-family: 'Corben', Georgia, Times, serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0;
+    margin-top: 4px;
+    margin-left: 15px;
+} */

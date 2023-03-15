@@ -42,7 +42,6 @@ const handleClientLoad = (calendarsData, initCallback, daysAhead, maxResults) =>
 }
 
 const initGapiClient = (onLoadCallback) => {
-    console.log("onloadcallback:", onLoadCallback)
     gapi.client.init({
         apiKey: config.apiKey,
         discoveryDocs: config.discoveryDocs,
@@ -50,7 +49,6 @@ const initGapiClient = (onLoadCallback) => {
     })
     .then( () => {
         if (onLoadCallback) {
-            console.log("ONLOADCALLBACK")
             onLoadCallback();
         }
     })
@@ -128,32 +126,26 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     });
 };
 
-const formatEvent = async (savedEvents, meetingMemberIDs) => {
-    console.log("CalendarAPI, savedEvents:", savedEvents, meetingMemberIDs)
+const formatEvent = async (savedEvents, meetingMemberIDs, values) => {
     // Meeting times
     let start = "";
     let end = "";
 
     for (let event_id in savedEvents) {
-        console.log(start = savedEvents[event_id][0])
         start = new Date(savedEvents[event_id][0]).toISOString();
         end = new Date(savedEvents[event_id][1]).toISOString();
         break
     }
-    console.log("CalendarAPI, start/end:", start, end)
 
-    console.log(savedEvents, meetingMemberIDs);
-    console.log("gapi:", gapi)
     // Meeting attendees
     let attendeesObjects = []
     Array.from(meetingMemberIDs).forEach((email) => {
-        console.log(email)
         attendeesObjects.push({"email" : email})
     })
     
     const event = {
-        'summary': 'Meeting Title',
-        'description': 'Meeting description',
+        'summary': values[0],
+        'description': values[1],
         'start': {
           'dateTime': start,
           'timeZone': 'America/Los_Angeles'
@@ -173,17 +165,12 @@ const formatEvent = async (savedEvents, meetingMemberIDs) => {
         }
       };
     
-      console.log("gapi:", gapi)
-    
     const request = gapi.client.calendar.events.insert({
         'calendarId': 'primary',
         'resource': event
     });
     
-    request.execute(function(event) {
-        console.log("sent:", event)
-        //appendPre('Event created: ' + event.htmlLink);
-    });
+    request.execute(function(event) {});
 }
 
 export { handleClientLoad, handleAuthClick, formatEvent }

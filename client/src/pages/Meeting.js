@@ -28,7 +28,6 @@ export default function Meeting() {
     const [savedEvents, setSavedEvents] = useState({});
 
   useEffect(() => {
-    console.log("meeting a")
     loadValues()
   }, [intersections])
 
@@ -119,13 +118,11 @@ export default function Meeting() {
     try {
       const response = await fetch(url, metadata)
       const data = await response.json()
-      console.log("Meeting findMeeting data:", data)
+      console.log(data)
       if (data.meeting !== undefined) {
         if (userID && data.meeting.meetingMemberIDs && data.meeting.meetingMemberIDs.includes(userID)) {
-          console.log("userID")
         }
         else {
-          console.log("Rendering JoinMeeting:", data.meeting)
           navigate(`/join-meeting?id=${meetingID}`,
             {
               state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
@@ -136,8 +133,8 @@ export default function Meeting() {
         setIntersections(data.meeting.intersections);
         setMeetingMemberIDs(data.meeting.meetingMemberIDs);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -164,24 +161,28 @@ export default function Meeting() {
     }
   }
 
-  const checkSavedEvents = () => {
-    console.log("saved events total:", Object.keys(savedEvents).length);
-    for (let event_id in savedEvents) {
-      //console.log("event id: ", event_id);
-      console.log("event data: ", savedEvents[event_id]);
-    }
-  }
-
   const confirmMeeting = () => {
-    if (!localStorage.getItem("meetingMemberIDs")) localStorage.setItem("meetingMemberIDs", JSON.stringify(meetingMemberIDs))
-    if (!localStorage.getItem("savedEvents")) localStorage.setItem("savedEvents", JSON.stringify(savedEvents))
+    let inputs = document.getElementsByClassName("invite-input");
+    let values = []
+    for (let element of inputs) {
+      values.push(element.value)
+    }
+    
+    if (!localStorage.getItem("values"))
+      localStorage.setItem("values", JSON.stringify(values))
+    if (!localStorage.getItem("meetingMemberIDs"))
+      localStorage.setItem("meetingMemberIDs", JSON.stringify(meetingMemberIDs))
+    if (!localStorage.getItem("savedEvents")) 
+      localStorage.setItem("savedEvents", JSON.stringify(savedEvents))
     handleAuthClick();
   }
 
   const setupCalendarEvent = async () => {
-    await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")))
+    await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")), JSON.parse(localStorage.getItem("values")))
+
     if (localStorage.getItem("savedEvents")) localStorage.removeItem("savedEvents")
     if (localStorage.getItem("meetingMemberIDs")) localStorage.removeItem("meetingMemberIDs")
+    if (localStorage.getItem("values")) localStorage.removeItem("values")
     navigate(`/`,
       { state: {  }
     })
@@ -189,34 +190,46 @@ export default function Meeting() {
 
   const loadMeetingMembers = () => {
     let membersElements = ""
+    let uniqueMembers = []
     let displayMembers = []
     for (let member in meetingMemberIDs) {
-      console.log(meetingMemberIDs[member]);
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
         if (member == meetingMemberIDs.length - 1)
-        membersElements += (`${meetingMemberIDs[member]}`)
+          membersElements += (`${meetingMemberIDs[member]}`)
         else
-        membersElements += (`${meetingMemberIDs[member]},`)
-        displayMembers.push(<div><li>{meetingMemberIDs[member]}abcdefghijklmnopqrstuvwxyz1234</li></div>)
-      }  
+          membersElements += (`${meetingMemberIDs[member]},`)
+        
+        if (!uniqueMembers.includes(meetingMemberIDs[member])) {
+          displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>)
+          uniqueMembers.push(meetingMemberIDs[member]);
+        }
+      }
     }
     return displayMembers;
-    return (
-      <div>
-        <p className="page-desc">Meeting Members: {membersElements}</p>
-      </div>
-    )
   }
 
   const loadConfirmMeeting = () => {
-    if (userID === meetingOrganizer) {
+    if (userID === meetingOrganizer && savedEvents && savedEvents.length > 0) {
       return (
-        <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
-        display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
-        }}>confirm meeting</Button>
+        <div>
+          <div id="invite-wrapper">
+            <div className="invite-text">
+              <p>Invite Title: </p>
+              <input className="invite-input"></input>
+            </div>
+            <div className="invite-text">
+              <p>Invite Desc: </p>
+              <input className="invite-input"></input>
+            </div>
+          </div>
+          <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
+          display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
+          }}>confirm meeting</Button>
+        </div>
       )
     }
   }
+
   
   return (
     <React.Fragment>
@@ -227,18 +240,19 @@ export default function Meeting() {
       <div className="flex-container">
         <div className="left-column">
           <div className="left-column-contents">
-            <h4>Members Availability</h4>
 
-            <p1>organizer</p1>
-            <p2>{meetingOrganizer}</p2> 
-            <p1>members</p1>
-            <div className="all-members">
-                {loadMeetingMembers()} {/* returns a list of memberIDs as a paragraph (replace w meetingMemberIDs) */}
-            </div>
-            <p>only meeting organizer can confirm meeting times</p>
-            {/*{loadConfirmMeeting()} {/* returns confirm meeting button */}
-
-            <div className="times">
+          <div className='meeting-buttons'>
+            <h4>Your Meeting.</h4>
+                Time to finalize your meeting.
+              <h4 className="meet-h4">Organizer: </h4>
+              {meetingOrganizer}
+              <h4 className="meet-h4">Members: </h4>
+              <div className="meeting-members-box">
+                <ul className="meeting-members-list">
+                  {loadMeetingMembers()}
+                </ul>
+              </div>
+              <div className="times">
               <label htmlFor="start-time-input"></label>
               <input
                 id="start-time-input"
@@ -254,11 +268,14 @@ export default function Meeting() {
                 value={endTime}
                 onChange={handleEndChange}
               />
-            </div>
+             </div>
+             <div className="meeting-button-spacing">
+                <div button>
+                    {loadConfirmMeeting()}
+                  </div>
+              </div>
 
-            <div button>
-              {loadConfirmMeeting()}
-            </div>
+          </div>
             
           </div>
         </div>

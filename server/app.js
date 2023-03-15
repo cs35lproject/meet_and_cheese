@@ -22,8 +22,6 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api/event', require('./routes/eventRoute'));
-
 app.use('/api/meeting', require('./routes/meetingRoute'));
 app.use('/api/user', require('./routes/userRoute'));
 
