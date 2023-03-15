@@ -81,12 +81,12 @@ flex-basis: 20%;
 
 .left-column-contents {
 /* background-color: white; */
-background-image: linear-gradient(white, #f1e8e8);
+/* background-image: linear-gradient(white, #f1e8e8); */
 padding-bottom: 7vh;
 border-radius: 6%;
 padding-left: 7px;
 padding-right: 7px;
- box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+ /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
 
 }
 

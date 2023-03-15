@@ -296,15 +296,30 @@ export default function Calendar() {
                             <h4>Please sign in to create a meeting</h4>
                         )}
 
-                <div button>
+                            <div button>
                             <Button
-                                variant="contained"
-                                onClick={handleAuthClick}
-                                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" , marginTop: "20px"}}
+                            variant="contained"
+                            onClick={handleAuthClick}
+                            style={{
+                                background: "linear-gradient(to bottom, #43b7ff, #cdecff)",
+                                color: "#4D368C",
+                                fontFamily: "'Nobile', Helvetica, Arial, sans-serif",
+                                fontWeight: 600,
+                                display: "flex",
+                                justifyContent: "center",
+                                margin: "0 auto",
+                                marginTop: "20px",
+                                boxShadow: "none",
+                                borderRadius: "50%",
+                                width: "100px",
+                                height: "100px",
+                                textTransform: "none",
+                                transition: "background-color 0.2s ease-in-out",
+                            }}
                             >
-                                SIGN IN
-                            </Button>
-                            </div>
+                            Sign In
+                        </Button>
+                        </div>
                     </div>
                 </div>
 
