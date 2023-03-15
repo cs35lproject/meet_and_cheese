@@ -14,4 +14,8 @@ router
     .route('/updateUserMeetings')
     .put(userController.updateUserMeetings);
 
+router
+    .route('/detachMeeting')
+    .delete(userController.detachMeeting);
+
 module.exports = router;

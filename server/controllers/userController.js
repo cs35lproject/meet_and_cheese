@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Meeting = require("../models/meetingModel");
 
 // route POST /api/users/createUser
 async function createUser(req, res) {
@@ -81,4 +82,26 @@ async function getUserMeetings(req, res) {
     }
 }
 
-module.exports = { createUser, getUserMeetings, updateUserMeetings };
+// route DELETE /api/users/detachMeeting
+async function detachMeeting(req, res) {
+    console.log("detach meeting req.body:", req.body)
+    let userID = req.body.userID;
+    let meetingID = req.body.meetingID;
+    if (userID !== null && meetingID !== null) {
+        let user = await User.findOne({userID : userID})
+        let meeting = await Meeting.findOne({meetingID : meetingID})
+        if (!user || !meeting)
+            return res.status(404).send({ success: false, error: `Issue with userID ${userID} or meetingID ${meetingID}` })
+        let userJSON = user.toJSON()
+        console.log("user:", userJSON);
+        
+        userJSON.meetingIDs.forEach( (meetingID) => {
+            console.log(meetingID)
+        })
+    }
+    else {
+        res.send({ success: false, error: "Need to specify query user"})
+    }
+}
+
+module.exports = { createUser, getUserMeetings, updateUserMeetings, detachMeeting };
