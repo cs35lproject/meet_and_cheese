@@ -78,9 +78,13 @@ async function getUserMeetings(req, res) {
 async function detachMeeting(req, res) {
     let userID = req.body.userID;
     let meetingID = req.body.meetingID;
+
+    console.log("a")
     if (userID !== null && meetingID !== null) {
         let user = await User.findOne({userID : userID})
+        console.log("b")
         let meeting = await Meeting.findOne({meetingID : meetingID})
+        console.log("c")
         if (!user || !meeting)
             return res.status(404).send({ success: false, error: `Issue with userID ${userID} or meetingID ${meetingID}` })
 
@@ -89,6 +93,13 @@ async function detachMeeting(req, res) {
         let created = user.toJSON().createdMeetingIDs
         let created_ = created.filter(e => e !== meetingID)
 
+<<<<<<< HEAD
+=======
+        let res_ = "";
+        console.log(created_)
+        console.log(created)
+        
+>>>>>>> 4540c158 (Finished backend to delete meetings / leave meetings)
         // If the user didn't create the meeting
         if (created_.length === created.length) {
             await meetingController.removeUser(req, res);
@@ -97,6 +108,10 @@ async function detachMeeting(req, res) {
         else {
             await meetingController.deleteMeeting(req, res)
         }
+<<<<<<< HEAD
+=======
+        console.log("finished", meeting.toJSON())
+>>>>>>> 4540c158 (Finished backend to delete meetings / leave meetings)
 
         await User.updateMany(
             {"userID" : userID}, 
