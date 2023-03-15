@@ -5,8 +5,10 @@
  *        HTTPS://OPENSOURCE.ORG/LICENSES/MIT.         *
  *******************************************************/
 
-//Classic leetcode merge intervals algorithm
-//See https://javascript.plainenglish.io/javascript-algorithms-merge-intervals-leetcode-98da240805bc
+/**
+*Classic leetcode merge intervals algorithm
+*See https://javascript.plainenglish.io/javascript-algorithms-merge-intervals-leetcode-98da240805bc
+*/
 const union = intervals => {
     if (intervals.length < 2) return intervals;
     
@@ -29,10 +31,12 @@ const union = intervals => {
     return result;
 };
 
-//Find intersection of two arrays of time intervals
-//Can be used to filter events before running intersection find 
-//E.g. events = intersection(events, filter)
-//Courtesy of ChatGPT
+/**
+*Find intersection of two arrays of time intervals
+*Can be used to filter events before running intersection find 
+*E.g. events = intersection(events, filter)
+*Courtesy of ChatGPT
+*/
 const intersection = (intervals1, intervals2) => {
     intervals1.sort((a, b) => a[0] - b[0]);
     intervals2.sort((a, b) => a[0] - b[0]);
@@ -60,10 +64,12 @@ const intersection = (intervals1, intervals2) => {
     return intersection;
 }
 
-// events & intersections both 2d arrays [start,end]
-// find intersection of all users by calling itself on every user's events
-// events: 
-// intersections: 
+/**
+*events & intersections both 2d arrays [start,end]
+*find intersection of all users by calling itself on every user's events
+*events: 
+*intersections: 
+*/
 const intersectionFind = (events, intersections) => {
 
     //events is an nx2 array of the form [[start, end],.....]
