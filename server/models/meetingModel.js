@@ -16,6 +16,10 @@ const meetingSchema = new mongoose.Schema({
     intersections : {
         type : [Object],
         required: false
+    },
+    meetings : {
+        type : [Object],
+        required: false
     }
 }, {timestamps : true});
 

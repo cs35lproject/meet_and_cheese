@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
+}
+
+.list {
+  padding-right: 1vh;
+}
 
 ul {
     list-style-type: none;
@@ -14,22 +22,25 @@ ul {
   }
   
   .navbar li a {
+    font-family: 'Poppins', sans-serif;
     display: block;
     color: black;
     text-align: center;
-    padding: 14px 16px;
+    padding: 14px 11px;
     text-decoration: none;
     float: right;
   }
 
   
   .navbar li a:hover {
+    font-family: 'Poppins', sans-serif;
     background-color: rgb(235, 235, 235);
     text-decoration: underline;
-    color: #8B78BF;
+    color: #4D368C;
   }
   
   .navbar a.title {
+    font-family: 'Poppins', sans-serif;
     display: block;
     color: black;
     text-align: center;
@@ -40,6 +51,7 @@ ul {
   }
 
   .navbar li a:active{
+    font-family: 'Poppins', sans-serif;
     background-color: rgb(235, 235, 235);
     text-decoration: underline;
     color: #8B78BF;

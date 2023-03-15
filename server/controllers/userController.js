@@ -7,7 +7,7 @@ async function createUser(req, res) {
     let existingUser = await User.findOne({userID : req.body.userID})
     console.log("existinguser:", existingUser)
     if (existingUser) {
-        let updateRes = await updateUserMeetings(req, res);
+        await updateUserMeetings(req, res);
         console.log("updatRes:", updateRes)
         res.send({ success: true, user: user })
     }
@@ -16,7 +16,8 @@ async function createUser(req, res) {
         res.send({success : false, "error" : "Invalid user format"})
     let user = new User({
         userID : req.body.userID,
-        meetingIDs : [req.body.meetingID]
+        meetingIDs : [req.body.meetingID],
+        createdMeetingIDs : [req.body.meetingID]
     })
     console.log(user)
     await user.save()
@@ -39,6 +40,7 @@ async function updateUserMeetings(req, res) {
     if (!user)
         return res.status(404).send({ success: false, error: `User ${req.body.userID} does not exist` })
     let meetings = user.toJSON().meetingIDs
+
     meetings.push(req.body.meetingID)
     console.log("new meetings:", meetings)
     await User.updateOne({
@@ -50,6 +52,19 @@ async function updateUserMeetings(req, res) {
         console.log("updateUserMeetings", e)
         return res.send({ success: false, user : {userID : user.userID, meetingIDs : meetings}})
     })
+    if (req.body.isCreated) {
+        let createdMeetings = user.toJSON().createdMeetingIDs;
+        createdMeetings.push(req.body.meetingID);
+        await User.updateOne({
+            "userID" : req.body.userID}, {$set : {"createdMeetingIDs" : createdMeetings}})
+        .then(() => {
+            return res.send({ success: true, user : {userID : user.userID, meetingIDs : meetings, createdMeetingIDs : createdMeetings}})
+        })
+        .catch((e) => {
+            console.log("updateUserMeetings", e)
+            return res.send({ success: false, user : {userID : user.userID, meetingIDs : meetings, createdMeetingIDs : createdMeetings}})
+        })
+    }
 }
 
 // route GET /api/users/getUserMeetings

@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import { Form } from 'react-router-dom';
+
 export const config = {
   "clientId": process.env.REACT_APP_CLIENT_ID,
   "apiKey": process.env.REACT_APP_API_KEY,
@@ -10,10 +13,9 @@ const scriptSrcGoogle = "https://accounts.google.com/gsi/client";
 const scriptSrcGapi = "https://apis.google.com/js/api.js";
 
 var tokenClient =  null;
-var onLoadCallback = null;
 
 // calendarsData is callback function "updateCalendars(calendars, events, primaryEmail)"
-const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
+const handleClientLoad = (calendarsData, initCallback, daysAhead, maxResults) => {
     const scriptGoogle = document.createElement("script");
     const scriptGapi = document.createElement("script");
     scriptGoogle.src = scriptSrcGoogle;
@@ -25,7 +27,7 @@ const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
     document.body.appendChild(scriptGapi);
     document.body.appendChild(scriptGoogle);
     scriptGapi.onload = () => {
-        gapi.load("client", initGapiClient);
+        gapi.load("client", () => initGapiClient(initCallback));
     };
     scriptGoogle.onload = async () => {
         tokenClient = await window.google.accounts.oauth2.initTokenClient({
@@ -39,7 +41,8 @@ const handleClientLoad = (calendarsData, daysAhead, maxResults) => {
     };
 }
 
-const initGapiClient = () => {
+const initGapiClient = (onLoadCallback) => {
+    console.log("onloadcallback:", onLoadCallback)
     gapi.client.init({
         apiKey: config.apiKey,
         discoveryDocs: config.discoveryDocs,
@@ -47,6 +50,7 @@ const initGapiClient = () => {
     })
     .then( () => {
         if (onLoadCallback) {
+            console.log("ONLOADCALLBACK")
             onLoadCallback();
         }
     })
@@ -62,7 +66,7 @@ const handleAuthClick = () => {
         } else {
             tokenClient.requestAccessToken({
             prompt: "",
-            });
+        });
         }
         } else {
         console.error("Error: gapi not loaded");
@@ -124,4 +128,62 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     });
 };
 
-export { handleClientLoad, handleAuthClick }
+const formatEvent = async (savedEvents, meetingMemberIDs) => {
+    console.log("CalendarAPI, savedEvents:", savedEvents, meetingMemberIDs)
+    // Meeting times
+    let start = "";
+    let end = "";
+
+    for (let event_id in savedEvents) {
+        console.log(start = savedEvents[event_id][0])
+        start = new Date(savedEvents[event_id][0]).toISOString();
+        end = new Date(savedEvents[event_id][1]).toISOString();
+        break
+    }
+    console.log("CalendarAPI, start/end:", start, end)
+
+    console.log(savedEvents, meetingMemberIDs);
+    console.log("gapi:", gapi)
+    // Meeting attendees
+    let attendeesObjects = []
+    Array.from(meetingMemberIDs).forEach((email) => {
+        console.log(email)
+        attendeesObjects.push({"email" : email})
+    })
+    
+    const event = {
+        'summary': 'Meeting Title',
+        'description': 'Meeting description',
+        'start': {
+          'dateTime': start,
+          'timeZone': 'America/Los_Angeles'
+        },
+        'end': {
+          'dateTime': end,
+          'timeZone': 'America/Los_Angeles'
+        },
+        //'recurrence': ['RRULE:FREQ=DAILY;COUNT=2'],
+        'attendees': attendeesObjects,
+        'reminders': {
+          'useDefault': true,
+        //   'overrides': [
+        //     {'method': 'email', 'minutes': 24 * 60},
+        //     {'method': 'popup', 'minutes': 10}
+        //   ]
+        }
+      };
+    
+      console.log("gapi:", gapi)
+    
+    const request = gapi.client.calendar.events.insert({
+        'calendarId': 'primary',
+        'resource': event
+    });
+    
+    request.execute(function(event) {
+        console.log("sent:", event)
+        //appendPre('Event created: ' + event.htmlLink);
+    });
+}
+
+export { handleClientLoad, handleAuthClick, formatEvent }
