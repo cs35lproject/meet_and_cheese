@@ -211,9 +211,15 @@ export default function Meeting() {
   const loadConfirmMeeting = () => {
     if (userID === meetingOrganizer) {
       return (
-        <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
-        display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
-        }}>confirm meeting</Button>
+        <Button onClick={confirmMeeting} variant="contained" style={{
+          backgroundColor: "#4D368C",
+          color: "white",
+          display: "flex",
+          justifyContent: "center",
+          margin: "0 auto",
+          marginTop: "10px",
+          textTransform: "none",
+        }}>Confirm Meeting</Button>
       )
     }
   }
