@@ -112,6 +112,7 @@ h5 {
 
 calendar {
   width: 90%;
+  box-sizing: border-box;
   display: block;
   color: black;
   background-color: white;
@@ -294,4 +295,43 @@ signin{
   box-shadow: #bd8edf 0px 10px 20px, #bd8edf 0px 6px 6px;
 }
   
-  
+
+/* Meeting.js */
+.all-members{
+  font-size: 30px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 3vh;
+  color: gray;
+  font-weight: 100;
+  display: flex;
+  justify-content: center; 
+  text-align: center;
+  list-style: none;
+  display: block;
+
+  overflow: auto;
+  width: 400px;
+  height: 275px;
+
+}
+
+.all-members li{
+  font-size: 25px;
+}
+
+.all-members2{
+  font-size: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 3vh;
+  color: gray;
+  font-weight: 100;
+  display: flex;
+  justify-content: center; 
+  text-align: center;
+  list-style: none;
+  display: block;
+
+  width: 200px;
+  height: 5px;
+  align-items: center;
+}

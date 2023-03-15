@@ -94,7 +94,7 @@ export default function Meeting() {
 
     tippy(info.el, {
       content: msg,
-      placement: 'top',
+      placement: 'left',
       trigger: 'mouseenter',
       hideOnLeave: true,
       hideOnClick: true,
@@ -189,15 +189,18 @@ export default function Meeting() {
 
   const loadMeetingMembers = () => {
     let membersElements = ""
+    let displayMembers = []
     for (let member in meetingMemberIDs) {
+      console.log(meetingMemberIDs[member]);
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
         if (member == meetingMemberIDs.length - 1)
         membersElements += (`${meetingMemberIDs[member]}`)
         else
         membersElements += (`${meetingMemberIDs[member]},`)
-
-      }
+        displayMembers.push(<div><li>{meetingMemberIDs[member]}abcdefghijklmnopqrstuvwxyz1234</li></div>)
+      }  
     }
+    return displayMembers;
     return (
       <div>
         <p className="page-desc">Meeting Members: {membersElements}</p>
@@ -208,10 +211,9 @@ export default function Meeting() {
   const loadConfirmMeeting = () => {
     if (userID === meetingOrganizer) {
       return (
-        <div>
-          <button className="newButton" onClick={confirmMeeting}>Confirm final meeting time</button>
-          <br />
-        </div>
+        <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
+        display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
+        }}>confirm meeting</Button>
       )
     }
   }
@@ -230,10 +232,11 @@ export default function Meeting() {
             <p1>organizer</p1>
             <p2>{meetingOrganizer}</p2> 
             <p1>members</p1>
-            <p2>{meetingMemberIDs}</p2>
+            <div className="all-members">
+                {loadMeetingMembers()} {/* returns a list of memberIDs as a paragraph (replace w meetingMemberIDs) */}
+            </div>
             <p>only meeting organizer can confirm meeting times</p>
-            {loadMeetingMembers()} {/* returns a list of memberIDs as a paragraph (replace w meetingMemberIDs) */}
-            {loadConfirmMeeting()} {/* returns confirm meeting button */}
+            {/*{loadConfirmMeeting()} {/* returns confirm meeting button */}
 
             <div className="times">
               <label htmlFor="start-time-input"></label>
@@ -254,13 +257,9 @@ export default function Meeting() {
             </div>
 
             <div button>
-              <Button
-                variant="contained"
-                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px" }}
-              >
-                confirm meeting
-              </Button>
+              {loadConfirmMeeting()}
             </div>
+            
           </div>
         </div>
 

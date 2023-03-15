@@ -5,6 +5,7 @@ import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { v4 as uuidv4 } from 'uuid';
+import Button from '@mui/material/Button';
 
 import { handleClientLoad, handleAuthClick, config } from '../components/CalendarAPI';
 import intersectionFind from '../components/intersectionFind';
@@ -389,69 +390,112 @@ export default function JoinMeeting() {
         }
     }
 
+    const loadTitle = () => {
+        // Title when user hasn't signed in yet
+        if (!eventsData)
+            return (
+                <div>
+                    <p className="page-title">JOIN MEETING: Click log in to start!</p>
+                </div>
+            )
+    }
+
+    const loadDesc = () => {
+        // Description when user signed in & loaded calendar events
+        if (eventsData)
+            return (
+                <div>
+                    <p className="page-desc">Click on the highlighted time slots that accurately reflect your availability for meeting times</p>
+                    <p className="page-desc">Drag the top/bottom of highlighted time slots to modify their times</p>
+                </div>
+            )
+    }
+
+    const confirmButton = () => {
+        if (eventsData) {
+            return <Button variant="contained" onClick={confirmAvailability} 
+                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                }}>Confirm Availability</Button>
+        }
+    }
+
+    const revertChangesButton = () => {
+        return <Button variant="contained" onClick={revertChanges} 
+                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                }}>Revert Changes</Button>
+    }
+
     return (
         <React.Fragment>
             <div>
                 <Navbar handleAuthClick={handleAuthClick} />
             </div>
 
-            <p>JOIN MEETING (log in to modify and add your times!)</p>
-
-            <button className="newButton" onClick={confirmAvailability}>Confirm availability</button>
-
-            {/*<button onClick={checkConfirmedAvailability}>check saved events</button>*/}
-
             <p>meeting members: {meetingMemberIDs}</p>
-
-            <div>
-                <label htmlFor="start-time-input"></label>
-                <input
-                    id="start-time-input"
-                    type="time"
-                    value={minTime}
-                    onChange={handleStartChange}
-                />
-
-                <label htmlFor="end-time-input"></label>
-                <input
-                    id="end-time-input"
-                    type="time"
-                    value={endTime}
-                    onChange={handleEndChange}
-                />
-
-                <div className="revertButton">
-                    <button className="newButton" onClick={revertChanges}>Revert changes</button>
+            <div></div>
+            <div className="flex-container">
+                <div className="left-column">
+                    <div className="left-column-contents">
+                        {loadTitle()}
+                        {eventsData && (
+                            <>
+                                <h4>Join Meeting</h4>
+                                <p>Click and drag the time slots to select your availability.</p>
+                                <div className="times">
+                                    <label htmlFor="start-time-input"></label>
+                                    <input
+                                        id="start-time-input"
+                                        type="time"
+                                        value={minTime}
+                                        onChange={handleStartChange}
+                                    />
+                                    <label htmlFor="end-time-input"></label>
+                                    <input
+                                        id="end-time-input"
+                                        type="time"
+                                        value={endTime}
+                                        onChange={handleEndChange}
+                                    />
+                                </div>
+                                <div button>
+                                    {loadDesc()} {/* returns instructions */}
+                                    <br/>
+                                    {confirmButton()} {/* modify confirmButton function to style */}
+                                    <br/>
+                                    {revertChangesButton()}
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
-                {/*<button onClick={checkSavedEvents}>Check saved events</button>*/}
+                <div class="right-column">
+                    <calendar id="calendar-element">
+                        <div class="square"></div>
+                        <FullCalendar
+                            plugins={[dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
+                            initialView="timeGridWeek"
+                            allDaySlot={false}
+                            eventColor={'#378006'}
+                            googleCalendarApiKey={config.apiKey}
+                            // auto gets rid of need for scrolling for contentHeight
+                            //contentHeight="auto" 
+                            height={700}
+                            eventClick={handleEventClick}
+                            eventMouseEnter={handleMouseEnter}
+                            eventMouseLeave={handleMouseLeave}
+                            handleWindowResize={true}
+                            slotMinTime={minTime}
+                            slotMaxTime={endTime}
+                            events={displayedAvailability}
+                            editable={true} // allows both resizing and dragging
+                            eventDurationEditable={true}
+                            eventResizableFromStart={true}
+                            eventDrop={handleEventDrop}
+                            eventResize={handleEventResize}
+                        />
+                    </calendar>
+                </div>
             </div>
-
-            <calendar>
-                <div class="square"></div>
-                <FullCalendar
-                    plugins={[dayGridPlugin, googleCalendarPlugin, timeGridPlugin, interactionPlugin]}
-                    initialView="timeGridWeek"
-                    allDaySlot={false}
-                    eventColor={'#378006'}
-                    googleCalendarApiKey={config.apiKey}
-                    // auto gets rid of need for scrolling for contentHeight
-                    //contentHeight="auto" 
-                    height={700}
-                    eventClick={handleEventClick}
-                    eventMouseEnter={handleMouseEnter}
-                    eventMouseLeave={handleMouseLeave}
-                    handleWindowResize={true}
-                    slotMinTime={minTime}
-                    slotMaxTime={endTime}
-                    events={displayedAvailability}
-                    editable={true} // allows both resizing and dragging
-                    eventDurationEditable={true}
-                    eventResizableFromStart={true}
-                    eventDrop={handleEventDrop}
-                    eventResize={handleEventResize}
-                />
-            </calendar>
-
         </React.Fragment>
     )
 }

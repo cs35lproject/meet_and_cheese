@@ -406,16 +406,24 @@ export default function Calendar() {
 
     const confirmButton = () => {
         if (eventsData) {
-            return <button className="newButton" onClick={confirmAvailability}>Confirm availability</button>
+            return <Button variant="contained" onClick={confirmAvailability} 
+                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                }}>Confirm Availability</Button>
         }
+    }
+
+    const revertChangesButton = () => {
+        return <Button variant="contained" onClick={revertChanges} 
+                style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto"
+                }}>Revert Changes</Button>
     }
 
     const loadTitle = () => {
         // Title when user hasn't signed in yet
         if (!eventsData)
             return (
-                <div>
-                    <p className="page-title">Click create meeting to start!</p>
+                <div className="all-members2">
+                    <p> Click create meeting to start!</p>
                 </div>
             )
     }
@@ -424,7 +432,7 @@ export default function Calendar() {
         // Description when user signed in & loaded calendar events
         if (eventsData)
             return (
-                <div>
+                <div className="all-members">
                     <p className="page-desc">Click on the highlighted time slots that accurately reflect your availability for meeting times</p>
                     <p className="page-desc">Drag the top/bottom of highlighted time slots to modify their times</p>
                 </div>
@@ -440,7 +448,8 @@ export default function Calendar() {
             <div className="flex-container">
                 <div className="left-column">
                     <div className="left-column-contents">
-                        {loadTitle()} {/* only load when NOT signed in */}
+                    {loadTitle()} 
+                        {/* only load when NOT signed in */}
                         {eventsData && (
                             <>
                                 <h4>Create Meeting</h4>
@@ -463,21 +472,10 @@ export default function Calendar() {
                                 </div>
                                 <div button>
                                     {loadDesc()} {/* returns instructions */}
+                                    <br/>
                                     {confirmButton()} {/* modify confirmButton function to style */}
-                                    <div className="revertButton">
-                                        <button className="newButton" onClick={revertChanges}>Revert changes</button>
-                                    </div>
-
-                                    { /* 
-                                    <Button
-                                        variant="contained"
-                                        onClick={confirmAvailability}
-                                        style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" }}
-                                    >
-                                        Confirm Availability
-                                    </Button>
-                                    */}
-
+                                    <br/>
+                                    {revertChangesButton()}
                                 </div>
                             </>
                         )}
