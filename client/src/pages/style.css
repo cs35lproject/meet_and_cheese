@@ -19,6 +19,8 @@ margin-top: auto;
 
 .meetings-header
 {
+justify-content: center;
+align-items: center;
 display: flex;
 text-align: left;
 margin-top: 3vh;

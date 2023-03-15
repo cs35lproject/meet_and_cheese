@@ -12,7 +12,7 @@ const Navbar = (props) => {
       setSigninStatus("SIGN IN")
     }
     else{
-      setSigninStatus("Sign In")
+      setSigninStatus("Create Meeting")
     }
   }, [])
 
