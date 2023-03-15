@@ -85,20 +85,27 @@ export default function Meeting() {
         <p>{userID}</p>
       </div>
 
-      <div id="meeting-wrapper">
-        <div className="meetings-list">
-          <p3>Created Meetings</p3>
-          {showCreatedMeetings()}
-        </div>
-
-        <div className="meetings-list">
-          <p3>Joined Meetings</p3>
-          {showJoinedMeetings()}
-        </div>
+      <div className="box-container2">
+          <div class="box2">
+            <div class="rectangle2">
+              <div id="meeting-wrapper">
+                  <div className="meetings-list">
+                      <p3>Created Meetings</p3>
+                      {showCreatedMeetings()}
+                  </div>
+              </div>
+              </div>
+          </div>
+      
+          <div class="box2">
+          <div class="rectangle2">
+            <div className="meetings-list">
+              <p3>Joined Meetings</p3>
+              {showJoinedMeetings()}
+            </div>
+          </div>
+          </div>
       </div>
-
-
-
     </React.Fragment>
   )
 }

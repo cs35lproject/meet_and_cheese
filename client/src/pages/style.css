@@ -85,6 +85,37 @@ justify-content: center;
 text-align: center;
 }
 
+.box-container2{
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    /* grid-template-columns: repeat(2,1fr);
+    grid-template-rows: 1fr; */
+    gap: 10vh;
+    padding-left: 10vh;
+    padding-right: 10vh;
+    padding-bottom: 10vh;
+    justify-content: center;
+  }
+
+  .box2 {
+    padding: 7px;
+    overflow: hidden;
+    padding-bottom: 30vh;
+    }
+
+    .rectangle2 {
+      position: relative;
+      /* background: white; */
+      background-image: linear-gradient(white, #e2d8d8);
+      height: 100%;
+      width: 60vh;
+      border-radius: 8px;
+      padding-top: 10px;
+      text-align: center;
+      /* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.2); */
+      }
+
 /* Calendar.js */
 
 .flex-container{
