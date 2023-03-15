@@ -1,10 +1,8 @@
 @font-face {
-  font-family: 'Poppins';
-  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
-}
-
-.list {
-  padding-right: 1vh;
+  font-family: 'Nobile';
+  font-family: 'Corben';
+  src: url('http://fonts.googleapis.com/css?family=Nobile');
+  src: url('http://fonts.googleapis.com/css?family=Corben:bold');
 }
 
 ul {
@@ -12,8 +10,8 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: white;
-    box-shadow: 3px 3px 7px rgb(117, 117, 117);
+    background-color: rgb(248, 230, 255);
+    /* box-shadow: 3px 3px 7px rgb(117, 117, 117); */
     
   }
   
@@ -22,36 +20,42 @@ ul {
   }
   
   .navbar li a {
-    font-family: 'Poppins', sans-serif;
     display: block;
-    color: black;
+    color: #4D368C;
     text-align: center;
-    padding: 14px 11px;
+    padding: 14px 16px;
     text-decoration: none;
     float: right;
+    font-weight: 550;
+    font-family: 'Nobile', Helvetica, Arial, sans-serif;
   }
 
   
   .navbar li a:hover {
-    font-family: 'Poppins', sans-serif;
-    background-color: rgb(235, 235, 235);
-    text-decoration: underline;
-    color: #4D368C;
+    background-color: rgb(243, 212, 255);
+    /* text-decoration: underline; */
+    color: #000000;
   }
   
   .navbar a.title {
-    font-family: 'Poppins', sans-serif;
     display: block;
-    color: black;
+    color: #4D368C;
     text-align: center;
     padding: 12px 12px;
     text-decoration: none;
     float: left;
     font-size: 1.25rem;
+    font-family: 'Nobile', Helvetica, Arial, sans-serif;
+    font-weight: 550;
+  }
+
+  .navbar a.title:hover {
+    background-color: rgb(243, 212, 255);
+    /* text-decoration: underline; */
+    color: #000000;
   }
 
   .navbar li a:active{
-    font-family: 'Poppins', sans-serif;
     background-color: rgb(235, 235, 235);
     text-decoration: underline;
     color: #8B78BF;

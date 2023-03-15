@@ -1,21 +1,27 @@
 @font-face {
-    font-family: 'Poppins';
-    src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
+  font-family: 'Poppins';
+  font-family: 'Corben';
+  font-family: 'Nobile';
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
+  src: url('http://fonts.googleapis.com/css?family=Corben:bold');
+  src: url('http://fonts.googleapis.com/css?family=Nobile');
 }
 /* MeetingList.js */
 
 h5 {
-  color: #000;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 550;
-  font-size: 4vh;
-  margin: 0;
-  margin-top: auto;
+color: #4D368C;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 550;
+font-size: 4vh;
+margin: 0;
+margin-top: auto;
 }
 
-.meetings-header
-{
+.meetings-header {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: left;
   margin-top: 3vh;
   padding-left: 3vh;
@@ -23,315 +29,241 @@ h5 {
 }
 
 .meetings-header p {
-  color:gray;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  font-size: 3vh;
+color:gray;
+font-family: 'Nobile', Helvetica, Arial, sans-serif;
+font-weight: 600;
+font-size: 15px;
+margin: 0;
+margin-top: 4px;
+margin-left: 15px;
+}
+
+p3 {
+  color:black;
+  font-family: 'Corben', Georgia, Times, serif;
+  font-weight: 600;
+  font-size: 20px;
   margin: 0;
   margin-top: 4px;
   margin-left: 15px;
 }
 
 .meeting-id {
-  color:white;
-  font-family: 'Poppins', sans-serif;
-  margin-left: 15px;
+color:white;
+font-family: 'Poppins', sans-serif;
+margin-left: 15px;
 }
 
 .left-column p1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 3vh;
-  font-weight: 500;
-  color: black;
-  display: flex;
-  justify-content: center; 
-  text-align: center;
-  margin-top: 10px;
+font-family: 'Poppins', sans-serif;
+font-size: 3vh;
+font-weight: 500;
+color: black;
+display: flex;
+justify-content: center; 
+text-align: center;
+margin-top: 10px;
 }
 
 .left-column p2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 3vh;
-  color: gray;
-  font-weight: 100;
-  display: flex;
-  justify-content: center; 
-  text-align: center;
+font-family: 'Poppins', sans-serif;
+font-size: 3vh;
+color: gray;
+font-weight: 100;
+display: flex;
+justify-content: center; 
+text-align: center;
 }
 
 /* Calendar.js */
 
 .flex-container{
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-  padding-left: 4vh;
-  padding-right: 4vh;
-  gap: 3vh;
+display: flex;
+flex-direction: row;
+height: 100%;
+width: 100%;
+padding-left: 4vh;
+padding-right: 4vh;
+gap: 3vh;
 }
 
 .left-column {
-  flex-basis: 20%;
+flex-basis: 20%;
 }
 
 .left-column-contents {
-  background-color: white;
-  padding-bottom: 7vh;
-  border-radius: 6%;
-  padding-left: 7px;
-  padding-right: 7px;
-   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+/* background-color: white; */
+/* background-image: linear-gradient(white, #f1e8e8); */
+padding-bottom: 7vh;
+border-radius: 6%;
+padding-left: 7px;
+padding-right: 7px;
+ /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
 
 }
 
 .left-column p {
-  font-family: 'Poppins', sans-serif;
-  font-size: 3vh;
-  color: black;
-  justify-content: center; 
-  text-align: center;
-  margin-top: 25px;
-  margin-bottom: 0;
+font-family: 'Nobile', Helvetica, Arial, sans-serif;
+font-size: 3vh;
+color: black;
+justify-content: center; 
+text-align: center;
+margin-top: 25px;
+margin-bottom: 0;
 }
 
 .left-column h4 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 4vh;
-  color: #4D368C;
-  font-weight: 600;
-  justify-content: center; 
-  text-align: center;
-  padding-top: 5vh;
-  margin-bottom: 0;
+font-family: 'Corben', Georgia, Times, serif;
+font-size: 4vh;
+color: #4D368C;
+font-weight: 600;
+justify-content: center; 
+text-align: center;
+padding-top: 5vh;
+margin-bottom: 0;
 }
 
 .right-column {
-  flex-grow: 1;
+flex-grow: 1;
 }
 
 calendar {
-  width: 90%;
-  box-sizing: border-box;
-  display: block;
-  color: black;
-  background-color: white;
-  margin-top: 2rem;
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 2rem;
-  border: 25px solid white;
-  border-radius: 2.5%;
-  /*box-shadow: 7px 7px 7px rgb(117, 117, 117);*/
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+width: 90%;
+display: block;
+color: black;
+background-color: white;
+margin-top: 2rem;
+margin-left: 0;
+margin-right: 0;
+margin-bottom: 2rem;
+border: 25px solid white;
+border-radius: 2.5%;
+/*box-shadow: 7px 7px 7px rgb(117, 117, 117);*/
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .times {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 35px;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-top: 20px;
+margin-bottom: 35px;
 }
 
 input {
-  background-color: #d3d3d3;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
+background-color: #d3d3d3;
+border-radius: 10px;
+font-family: 'Poppins', sans-serif;
 }
 
 /* Getting Started */
 
 .box-container{
-  display: grid;
-  height: 100vh;
-  grid-template-columns: repeat(3,1fr);
-  grid-template-rows: 1fr;
-  gap: 2vh;
-  padding-left: 10vh;
-  padding-right: 10vh;
-  padding-bottom: 10vh;
-  justify-content: center;
+display: grid;
+height: 100vh;
+grid-template-columns: repeat(3,1fr);
+grid-template-rows: 1fr;
+gap: 2vh;
+padding-left: 10vh;
+padding-right: 10vh;
+padding-bottom: 10vh;
+justify-content: center;
 }
 
 .box {
-  padding: 7px;
-  overflow: hidden;
-  padding-bottom: 30vh;
+padding: 7px;
+overflow: hidden;
+padding-bottom: 30vh;
 }
 
 .circle {
-  border-radius: 50%;
-  width: 12vh;
-  height: 12vh;
-  background: #FFD392;
-  border: 1px solid #FFD392;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+border-radius: 50%;
+width: 12vh;
+height: 12vh;
+/* background: #cdecff; */
+/* border: 1px solid #cdecff; */
+background-image: linear-gradient(#43b7ff, #cdecff);
+margin: 0 auto;
+position: relative;
+z-index: 1;
+display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .circle h2 {
-  color: #000;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 5vh;
+color: #4D368C;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 600;
+font-size: 5vh;
 }
 
 .rectangle {
-  position: relative;
-  background: white;
-  width: 100%;
-  height: 100%;
-  top: -11vh;
-  border-radius: 8px;
-  box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.2);
+position: relative;
+/* background: white; */
+background-image: linear-gradient(white, #e2d8d8);
+height: 100%;
+top: -11vh;
+border-radius: 8px;
+/* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.2); */
 }
 
 h3 {
-  color: #000;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 550;
-  font-size: 5vh;
-  text-align: center;
-  padding-top: 15vh;
+color: #000;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 550;
+font-size: 5vh;
+text-align: center;
+padding-top: 15vh;
 }
 
 .rectangle p {
-  color: black;
-  font-size: 3vh;
-  padding-left: 30px;
-  padding-right: 30px;
+color: black;
+font-family: 'Nobile', Helvetica, Arial, sans-serif;
+font-size: 3vh;
+padding-left: 30px;
+padding-right: 30px;
 }
 
 h1 {
-  text-align: center;
-  color: #4D368C;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 6vh;
-  padding-top: 2vh;
+text-align: center;
+color: #4D368C;
+font-family: 'Corben', Georgia, Times, serif;
+font-weight: 600;
+font-size: 6vh;
+padding-top: 2vh;
 }
 
 /* navigation options */
 
 getstarted p {
-    text-align: center;
+  text-align: center;
 }
 
 addpeople p {
-  text-align: center;
+text-align: center;
 }
 
 choosedt p {
-  text-align: center;
+text-align: center;
 }
 
 meeting p {
-  text-align: center;
+text-align: center;
 }
 
 signin{
-  display: block;
-  width: 200%;
-  padding-left: 100px;
+display: block;
+width: 200%;
+padding-left: 100px;
 }
 
 @media screen and (max-width: 600px) {
-    .column {
-      width: 100%;
-    }
+  .column {
+    width: 100%;
   }
+}
 
 .event_hover {
   cursor: pointer;
-}
-
-.page-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin: 0.8rem;
-  padding: 0;
-}
-
-.page-desc {
-  font-size: 1.2rem;
-  margin: 0.8rem;
-  padding: 0;
-}
-
-.revertButton {
-  margin-left: 2rem;
-}
-
-.newButton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 20px;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-  color: #000000;
-  cursor: pointer;
-  fill: currentcolor;
-  font-size: 15px;
-  height: 45px;
-  letter-spacing: 0.3px;
-  padding: 15px;
-}
-  
-.newButton:hover {
-  color: #8f5eb2;
-}
-  
-  
-.newButton:active {
-  color: #ac89c5;
-  background-color: whitesmoke;
-  box-shadow: #bd8edf 0px 10px 20px, #bd8edf 0px 6px 6px;
-}
-  
-
-/* Meeting.js */
-.all-members{
-  font-size: 30px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 3vh;
-  color: gray;
-  font-weight: 100;
-  display: flex;
-  justify-content: center; 
-  text-align: center;
-  list-style: none;
-  display: block;
-
-  overflow: auto;
-  width: 400px;
-  height: 275px;
-
-}
-
-.all-members li{
-  font-size: 25px;
-}
-
-.all-members2{
-  font-size: 10px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 3vh;
-  color: gray;
-  font-weight: 100;
-  display: flex;
-  justify-content: center; 
-  text-align: center;
-  list-style: none;
-  display: block;
-
-  width: 200px;
-  height: 5px;
-  align-items: center;
 }

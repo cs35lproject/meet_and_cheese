@@ -12,7 +12,7 @@ const Navbar = (props) => {
       setSigninStatus("SIGN IN")
     }
     else{
-      setSigninStatus("CREATE MEETING")
+      setSigninStatus("Sign In")
     }
   }, [])
 
@@ -29,7 +29,7 @@ const Navbar = (props) => {
 
   const chooseAuthentication = () => {
     console.log("signinStatus", signinStatus)
-    if (signinStatus === "CREATE MEETING") {
+    if (signinStatus === "Sign In") {
       return <li> <a onClick={loadCalendar} className="click">{signinStatus}</a></li>
     }
     else if (signinStatus === "SIGN IN") {
@@ -43,9 +43,9 @@ const Navbar = (props) => {
   return (
     <ul class = "navbar"> 
     <a href = "/" class = "title">Meet & Cheese</a>
+    <li> <a href="/getstarted">About</a></li>
+    <li> <a href="/list-meetings">Meetings List</a></li>
     {chooseAuthentication()}
-    <li> <a href="/list-meetings">LIST MEETINGS</a></li>
-    <li> <a href="/getstarted">GET STARTED</a></li>
     </ul>
   )
 }

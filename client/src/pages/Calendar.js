@@ -441,46 +441,72 @@ export default function Calendar() {
 
     return (
         <React.Fragment>
-            <div>
-                <Navbar handleAuthClick={handleAuthClick} userID={userID} callback={updateCalendars} status={eventsData} />
-            </div>
+        <div>
+            <Navbar handleAuthClick={handleAuthClick} userID={userID} callback={updateCalendars} status={eventsData} />
+        </div>
+        <div className="flex-container">
+            <div className="left-column">
+                <div className="left-column-contents">
+                    {eventsData ? (
+                        <>
+                            <h4>Create Meeting</h4>
+                            <p>Click and drag the time slots to select your availability.</p>
+                            <div className="times">
+                                <label htmlFor="start-time-input"></label>
+                                <input
+                                    id="start-time-input"
+                                    type="time"
+                                    value={minTime}
+                                    onChange={handleStartChange}
+                                />
+                                <label htmlFor="end-time-input"></label>
+                                <input
+                                    id="end-time-input"
+                                    type="time"
+                                    value={endTime}
+                                    onChange={handleEndChange}
+                                />
+                            </div>
+                            <div button>
+                                <Button
+                                    variant="contained"
+                                    onClick={confirmAvailability}
+                                    style={{ backgroundColor: "#4D368C", color: "white", display: "flex", justifyContent: "center", margin: "0 auto" }}
+                                >
+                                    Confirm Availability
+                                </Button>
+                            </div>
+                        </>
+                    ) : (
+                        <h4>Please sign in to create a meeting</h4>
+                    )}
 
-            <div className="flex-container">
-                <div className="left-column">
-                    <div className="left-column-contents">
-                    {loadTitle()} 
-                        {/* only load when NOT signed in */}
-                        {eventsData && (
-                            <>
-                                <h4>Create Meeting</h4>
-                                <p>Click and drag the time slots to select your availability.</p>
-                                <div className="times">
-                                    <label htmlFor="start-time-input"></label>
-                                    <input
-                                        id="start-time-input"
-                                        type="time"
-                                        value={minTime}
-                                        onChange={handleStartChange}
-                                    />
-                                    <label htmlFor="end-time-input"></label>
-                                    <input
-                                        id="end-time-input"
-                                        type="time"
-                                        value={endTime}
-                                        onChange={handleEndChange}
-                                    />
-                                </div>
-                                <div button>
-                                    {loadDesc()} {/* returns instructions */}
-                                    <br/>
-                                    {confirmButton()} {/* modify confirmButton function to style */}
-                                    <br/>
-                                    {revertChangesButton()}
-                                </div>
-                            </>
-                        )}
+                        <div button>
+                        <Button
+                        variant="contained"
+                        onClick={handleAuthClick}
+                        style={{
+                            background: "linear-gradient(to bottom, #43b7ff, #cdecff)",
+                            color: "#4D368C",
+                            fontFamily: "'Nobile', Helvetica, Arial, sans-serif",
+                            fontWeight: 600,
+                            display: "flex",
+                            justifyContent: "center",
+                            margin: "0 auto",
+                            marginTop: "20px",
+                            boxShadow: "none",
+                            // borderRadius: "50%",
+                            width: "100px",
+                            height: "35px",
+                            textTransform: "none",
+                            transition: "background-color 0.2s ease-in-out",
+                        }}
+                        >
+                        Sign In
+                    </Button>
                     </div>
                 </div>
+            </div>
 
                 <div class="right-column">
                     <calendar id="calendar-element">

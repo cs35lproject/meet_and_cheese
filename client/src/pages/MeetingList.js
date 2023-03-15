@@ -87,12 +87,12 @@ export default function Meeting() {
 
       <div id="meeting-wrapper">
         <div className="meetings-list">
-          <p>Created Meetings</p>
+          <p3>Created Meetings</p3>
           {showCreatedMeetings()}
         </div>
 
         <div className="meetings-list">
-          <p>Joined Meetings</p>
+          <p3>Joined Meetings</p3>
           {showJoinedMeetings()}
         </div>
       </div>
