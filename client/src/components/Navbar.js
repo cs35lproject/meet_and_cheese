@@ -42,7 +42,7 @@ const Navbar = (props) => {
 
   return (
     <ul class = "navbar"> 
-    <a href = "/" class = "title">Meet & Cheese</a>
+    <a href = "/" class = "title">🧀 Meet & Cheese</a>
     <li> <a href="/getstarted">About</a></li>
     <li> <a href="/list-meetings">Meetings List</a></li>
     {chooseAuthentication()}
