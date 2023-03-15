@@ -1,7 +1,5 @@
 # <a name="title" /> Meet & Cheese Frontend
 
-# <a name="title" /> Sorting Visualizer
-
 ## Introduction
 Tired of comparing availability all the time? Meet & Cheese simplifies the process of finding the mutual availability times in a group trying to schedule a meeting time. Beyond seeing multiple group member's availability in one screen (pulled directly from their Google Calendars), Meet & Cheese also allows meeting organizers to select a final meeting time & send Google Calendar invitations to all meeting members.
 
