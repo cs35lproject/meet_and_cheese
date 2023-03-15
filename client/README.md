@@ -54,7 +54,8 @@ if (gapi) {
 
 This loops through every calendar which is sent back from the Google Calendar API (given by `gapi.client.calendar.calendarList.list()`), creates a new JavaScript object with only the Calendar's name and ID (since the original calendar object contains excessive information), adds the object to a list of such objects and pushes it to a list of all calendars. It then calls setEvents which does something similar for every event in the calendar and adds it to the new curCalendar object. This list is passed into a callback function called calendarsData which exists in Calendar.js, which then passes that calendar data to the intersectionFind component.
 
-The intersectionFind component assists in ... (Yassin, actually read where we use this in the frontend & write about it)
+#### IntersectionFind
+The IntersectionFind module contains functions that find the union and intersection between two sets of intervals and a function that finds the 
 
 The loadValues function / FullCalendar object which is being rendered / savedEvents flow / any of the cool FullCalendar features Juan made, talk about it a bit in the same format as I did.
 
