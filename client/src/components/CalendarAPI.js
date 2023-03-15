@@ -128,8 +128,7 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     });
 };
 
-const formatEvent = async (savedEvents, meetingMemberIDs) => {
-    console.log("CalendarAPI, savedEvents:", savedEvents, meetingMemberIDs)
+const formatEvent = async (savedEvents, meetingMemberIDs, values) => {
     // Meeting times
     let start = "";
     let end = "";
@@ -152,8 +151,8 @@ const formatEvent = async (savedEvents, meetingMemberIDs) => {
     })
     
     const event = {
-        'summary': 'Meeting Title',
-        'description': 'Meeting description',
+        'summary': values[0],
+        'description': values[1],
         'start': {
           'dateTime': start,
           'timeZone': 'America/Los_Angeles'

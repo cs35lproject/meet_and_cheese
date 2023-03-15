@@ -7,11 +7,6 @@
   src: url('http://fonts.googleapis.com/css?family=Nobile');
 }
 
-
-body {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🧀</text></svg>") 16 0, auto;
-}
-
 a {
   cursor: inherit;
 }
@@ -403,4 +398,21 @@ padding-left: 100px;
   padding-right: 7px;
   padding-left: 7px;
   font-size: 23px;
+}
+
+.invite-text {
+  display: flex;
+  font-size: 15px;
+}
+
+.invite-input {
+  margin: auto;
+}
+
+#invite-wrapper {
+  padding: 0 auto;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: "center";
 }

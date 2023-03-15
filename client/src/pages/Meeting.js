@@ -173,15 +173,27 @@ export default function Meeting() {
   }
 
   const confirmMeeting = () => {
-    if (!localStorage.getItem("meetingMemberIDs")) localStorage.setItem("meetingMemberIDs", JSON.stringify(meetingMemberIDs))
-    if (!localStorage.getItem("savedEvents")) localStorage.setItem("savedEvents", JSON.stringify(savedEvents))
+    let inputs = document.getElementsByClassName("invite-input");
+    let values = []
+    for (let element of inputs) {
+      values.push(element.value)
+    }
+    
+    if (!localStorage.getItem("values"))
+      localStorage.setItem("values", JSON.stringify(values))
+    if (!localStorage.getItem("meetingMemberIDs"))
+      localStorage.setItem("meetingMemberIDs", JSON.stringify(meetingMemberIDs))
+    if (!localStorage.getItem("savedEvents")) 
+      localStorage.setItem("savedEvents", JSON.stringify(savedEvents))
     handleAuthClick();
   }
 
   const setupCalendarEvent = async () => {
-    await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")))
+    await formatEvent(JSON.parse(localStorage.getItem("savedEvents")), JSON.parse(localStorage.getItem("meetingMemberIDs")), JSON.parse(localStorage.getItem("values")))
+
     if (localStorage.getItem("savedEvents")) localStorage.removeItem("savedEvents")
     if (localStorage.getItem("meetingMemberIDs")) localStorage.removeItem("meetingMemberIDs")
+    if (localStorage.getItem("values")) localStorage.removeItem("values")
     navigate(`/`,
       { state: {  }
     })
@@ -206,19 +218,26 @@ export default function Meeting() {
       }
     }
     return displayMembers;
-    return (
-      <div>
-        <p className="page-desc">Meeting Members: {membersElements}</p>
-      </div>
-    )
   }
 
   const loadConfirmMeeting = () => {
-    if (userID === meetingOrganizer) {
+    if (userID === meetingOrganizer && savedEvents && savedEvents.length > 0) {
       return (
-        <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
-        display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
-        }}>confirm meeting</Button>
+        <div>
+          <div id="invite-wrapper">
+            <div className="invite-text">
+              <p>Invite Title: </p>
+              <input className="invite-input"></input>
+            </div>
+            <div className="invite-text">
+              <p>Invite Desc: </p>
+              <input className="invite-input"></input>
+            </div>
+          </div>
+          <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
+          display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
+          }}>confirm meeting</Button>
+        </div>
       )
     }
   }
