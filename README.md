@@ -9,7 +9,7 @@ Tired of comparing availability all the time? Meet & Cheese simplifies the proce
 
 1 - Clone the master repository (```git clone https://github.com/cs35lproject/cs35l_project.git```) <br>
 2 - Install Node.js [here](https://nodejs.org/en/download/) <br>
-3 - Open two terminals and navigate to the frontend & backend directories, install all dependencies, and run the frontend & backend with the following commands: 
+3 - Open two terminals and navigate to the frontend & backend directories, install all dependencies, and run the frontend & backend with the following commands:  <br>
 Terminal 1 (install & start backend): <br>
 ```cd cs35l_project/backend``` <br>
 ```npm install``` <br>
