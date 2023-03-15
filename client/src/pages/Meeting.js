@@ -46,6 +46,11 @@ export default function Meeting() {
     }, []);
 
   const handleSelect = (arg) => {
+    if (!(meetingOrganizer === userID)) {
+      console.log("not organizer");
+      return;
+    };
+
     let temp_events = [];
     let temp_saved =[];
     for (let e of eventsArray) {
@@ -187,12 +192,12 @@ export default function Meeting() {
     })
   }
 
+
   const loadMeetingMembers = () => {
     let membersElements = ""
     let uniqueMembers = []
     let displayMembers = []
     for (let member in meetingMemberIDs) {
-      console.log(meetingMemberIDs[member]);
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
         if (member == meetingMemberIDs.length - 1)
           membersElements += (`${meetingMemberIDs[member]}`)
@@ -222,7 +227,6 @@ export default function Meeting() {
       )
     }
   }
-
   
   return (
     <React.Fragment>
@@ -288,7 +292,7 @@ export default function Meeting() {
             slotMaxTime={endTime}
             events ={eventsArray}
             eventDidMount = {handleEventMount}
-            selectable = {true}
+            selectable = {userID === meetingOrganizer}
             select = {handleSelect}
             selectOverlap = {true}
             eventTimeFormat= {{
