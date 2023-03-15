@@ -1,19 +1,51 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import React, { useState, useEffect } from 'react';
-import { handleClientLoad, handleAuthClick } from '../components/CalendarAPI';
 import './Navbar.css'
 
 const Navbar = (props) => {
+  const navigate = useNavigate()
+  const [signinStatus, setSigninStatus] = useState(null);
+
+  useEffect(() => {
+    console.log("Navbar pathname:", window.location.pathname)
+    if (window.location.pathname === "/join-meeting") {
+      setSigninStatus("SIGN IN")
+    }
+    else{
+      setSigninStatus("CREATE MEETING")
+    }
+  }, [])
+
+  const loadCalendar = () => {
+    console.log("loadCalendar", window.location.pathname)
+    if (window.location.pathname === "/") {
+      props.handleAuthClick();
+    }
+    else {
+      navigate("/",
+      { state : {doAuthClick : true} })
+    }
+  }
+
+  const chooseAuthentication = () => {
+    console.log("signinStatus", signinStatus)
+    if (signinStatus === "CREATE MEETING") {
+      return <li> <a onClick={loadCalendar} className="click">{signinStatus}</a></li>
+    }
+    else if (signinStatus === "SIGN IN") {
+      return <li> <a onClick={props.handleAuthClick} className="click">{signinStatus}</a></li>
+    }
+    else {
+      return <p>none</p>
+    }
+  }
+
   return (
-    <ul class="navbar">
-      <a href="/" class="title"  >
-        Meet & Cheese
-      </a>
-      <div className="list">
-        <li> <a onClick={props.handleAuthClick} className="click">{props.status ? "Create Meeting" : "Sign In"}</a></li>
-        <li> <a href="/list-meetings">List Meetings</a></li>
-        <li> <a href="/getstarted">Get Started</a></li>
-      </div>
+    <ul class = "navbar"> 
+    <a href = "/" class = "title">Meet & Cheese</a>
+    {chooseAuthentication()}
+    <li> <a href="/list-meetings">LIST MEETINGS</a></li>
+    <li> <a href="/getstarted">GET STARTED</a></li>
     </ul>
   )
 }
