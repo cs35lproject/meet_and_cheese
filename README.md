@@ -20,7 +20,9 @@ Tired of comparing availability with every member for a group project or meeting
 
 #### Testing Phase
 
-Until Meet & Cheese is considered an [officially verified](https://support.google.com/cloud/answer/7454865) app by Google, users will have to send the email corresponding to the calendar they want to use (send to ```sebastian01cevallos@gmail.com```) in order to be included in the testing phase.
+Until Meet & Cheese is considered an [officially verified](https://support.google.com/cloud/answer/7454865) app by Google, users will have to send the email corresponding to the calendar they want to use (send to ```sebastian01cevallos@gmail.com```) in order to be included in the testing phase. <br>
+
+Additionally, if the website was hosted the .env file would be on that server but while in testing phase, please reach out to ```sebastian01cevallos@gmail.com``` to get a .env file which is up to date.
 
 ## Launch
 Node.js v18.14.0 <br>
