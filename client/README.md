@@ -58,7 +58,7 @@ This loops through every calendar which is sent back from the Google Calendar AP
 The IntersectionFind module contains functions that find the union and intersection between two sets of intervals and a function that finds the intersection of the compliment of a set of time intervals with a second set of time intervals. The latter implements the former two and is the module's sole export. 
 
 ##### Implementation
-```
+```js
 const intersectionFind = (events, intersections) => {
 
     //events is an nx2 array of the form [[start, end],.....]
