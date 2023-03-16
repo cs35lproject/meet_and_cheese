@@ -171,7 +171,7 @@ export default function JoinMeeting() {
                 };
                 if (e.saved) {
                     delete saved_temp[e.id];
-                    saved_temp[e.id] = [new_start, e.end];
+                    saved_temp[e.id] = [new Date(new_start), new Date(e.end)];
                 };
                 displayed_temp.push(new_e);
             }
@@ -211,7 +211,7 @@ export default function JoinMeeting() {
                 };
                 if (e.saved) {
                     delete saved_temp[e.id];
-                    saved_temp[e.id] = [new_e.start, new_e.end];
+                    saved_temp[e.id] = [new Date(new_e.start), new Date(new_e.end)];
                 }
                 displayed_temp.push(new_e);
             }
@@ -244,10 +244,9 @@ export default function JoinMeeting() {
         if (tempAvailability) {
             let _events = [];
             let _ogevents = [];
-            const timeNow = Date.now();
+            let timeNow = new Date();
+            timeNow = new Date(timeNow.getFullYear(), timeNow.getMonth(), timeNow.getDate(), 0, 0, 0);
             for (const start_end of tempAvailability) {
-
-                if (start_end[0] < timeNow) continue;
 
                 if (!isOneDay(start_end)) {
                     let s = new Date(start_end[0]); // temp start
@@ -269,8 +268,10 @@ export default function JoinMeeting() {
                                 saved: false,
                                 backgroundColor: "green"
                             };
-                            _events.push(_event);
-                            _ogevents.push({ ..._event });
+                            if (s >= timeNow) {
+                                _events.push(_event);
+                                _ogevents.push({ ..._event });
+                            };
                             s = new Date(s.getFullYear(), s.getMonth(), s.getDate() + 1, 0, 0, 0)
                         }
                         else { // e >= end
@@ -282,8 +283,10 @@ export default function JoinMeeting() {
                                 saved: false,
                                 backgroundColor: "green"
                             };
-                            _events.push(_event);
-                            _ogevents.push({ ..._event });
+                            if (s >= timeNow) {
+                                _events.push(_event);
+                                _ogevents.push({ ..._event });
+                            };
                             break;
                         }
                     }
@@ -298,8 +301,10 @@ export default function JoinMeeting() {
                         saved: false,
                         backgroundColor: "green"
                     };
-                    _events.push(_event);
-                    _ogevents.push({ ..._event });
+                    if (start_end[0] >= timeNow) {
+                        _events.push(_event);
+                        _ogevents.push({ ..._event });
+                    };
                 };
             }
             setDisplayedAvailability(_events);

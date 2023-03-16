@@ -78,9 +78,6 @@ export default function Meeting() {
 
     // check which events overlapping
     for (const e of eventsArray) {
-      // info.event.start >= e.start && info.event.end <= e.end
-      // info.event.start >= e.start && info.event.start <= e.end
-      // info.event.start <= e.start && info.event.end >= e.end
       if (info.event.start >= e.start && info.event.end <= e.end ||
         info.event.start >= e.start && info.event.start <= e.end ||
         info.event.start <= e.start && info.event.end >= e.end) {
@@ -94,6 +91,7 @@ export default function Meeting() {
 
     if (info.event.title === "Meeting") {
       msg = "Meeting";
+      return;
     };
 
     tippy(info.el, {
@@ -147,9 +145,7 @@ export default function Meeting() {
     await new Promise(r => setTimeout(r, 100));
     if (intersections) {
       let _events = [];
-      const timeNow = Date.now();
       for (const start_end of intersections) {
-        if (start_end[0] < timeNow) continue;
         const _event = {
           title: start_end[2],
           start: start_end[0],
@@ -195,21 +191,11 @@ export default function Meeting() {
 
 
   const loadMeetingMembers = () => {
-    let membersElements = ""
-    let uniqueMembers = []
     let displayMembers = []
     for (let member in meetingMemberIDs) {
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
-        if (member == meetingMemberIDs.length - 1)
-          membersElements += (`${meetingMemberIDs[member]}`)
-        else
-          membersElements += (`${meetingMemberIDs[member]},`)
-        
-        if (!uniqueMembers.includes(meetingMemberIDs[member])) {
-          displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>)
-          uniqueMembers.push(meetingMemberIDs[member]);
-        }
-      }
+        displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>);
+      };
     }
     return displayMembers;
   }
@@ -253,7 +239,7 @@ export default function Meeting() {
               className = {`meeting-buttons ${(userID === meetingOrganizer 
                 && savedEvents && savedEvents.length > 0) ? "expanded" : ""}`}
             >
-            <h4>Your Meeting.</h4>
+            <h4>Your Meeting:</h4>
                 Time to finalize your meeting.
               <h4 className="meet-h4">Organizer: </h4>
               {meetingOrganizer}

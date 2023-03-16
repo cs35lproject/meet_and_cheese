@@ -125,26 +125,23 @@ export default function Calendar() {
         if (tempAvailability) {
             let _events = [];
             let _ogevents = [];
-            const timeNow = Date.now();
+            let timeNow = new Date();
+            timeNow = new Date(timeNow.getFullYear(), timeNow.getMonth(), timeNow.getDate(), 0, 0, 0);
             for (const start_end of tempAvailability) {
-                // testing: will show all availability before too
-                // if (start_end[1] < timeNow) continue; // this gets every availability before current day
-                if (start_end[0] < timeNow) continue; // this is not accurate, does not get some availability
-
                 // if event spans multiple days
                 if (!isOneDay(start_end)) {
-                    let s = new Date(start_end[0]); // temp start
-                    const end = new Date(start_end[1]); // end
+                    let s = new Date(start_end[0]); // temp start, set to current event's start
+                    const end = new Date(start_end[1]); // set end to current event's end
 
-                    // iterate until reach end
+                    // iterate until last end time of availability reached
                     while (s < end) {
 
-                        const e = new Date(s); // temp end
+                        const e = new Date(s); // temp end, set to date of s , @ 23:59:59
                         e.setHours(23);
                         e.setMinutes(59);
                         e.setSeconds(59);
 
-                        if (e < end) {
+                        if (e < end) { // if date of s @ 23:59:59 < end, set _event.end = e
                             const _event = {
                                 title: "Available",
                                 start: s,
@@ -153,11 +150,15 @@ export default function Calendar() {
                                 saved: false,
                                 backgroundColor: "green"
                             };
-                            _events.push(_event);
-                            _ogevents.push({ ..._event });
-                            s = new Date(s.getFullYear(), s.getMonth(), s.getDate() + 1, 0, 0, 0)
+                            if (s >= timeNow){ // if the start of this event @ least the time now
+                                /* may need to truncate startdate time */
+                                _events.push(_event);
+                                _ogevents.push({ ..._event });
+                            };
+                            // set s to the day after s, @ 00:00:00
+                            s = new Date(s.getFullYear(), s.getMonth(), s.getDate() + 1, 0, 0, 0) 
                         }
-                        else { // e >= end
+                        else { // e >= end , set _event.end = start_end[1]. reached actual end time
                             const _event = {
                                 title: "Available",
                                 start: s,
@@ -166,14 +167,16 @@ export default function Calendar() {
                                 saved: false,
                                 backgroundColor: "green"
                             };
-                            _events.push(_event);
-                            _ogevents.push({ ..._event });
+                            if (s >= timeNow) {
+                                _events.push(_event);
+                                _ogevents.push({ ..._event });
+                            };
                             break;
                         }
                     }
                 }
 
-                else {
+                else { // else, event does not span multiple days
                     const _event = {
                         title: "Available",
                         start: start_end[0],
@@ -182,8 +185,10 @@ export default function Calendar() {
                         saved: false,
                         backgroundColor: "green"
                     };
-                    _events.push(_event);
-                    _ogevents.push({ ..._event });
+                    if (start_end[0] >= timeNow) {
+                        _events.push(_event);
+                        _ogevents.push({ ..._event });
+                    };
                 };
             }
             setDisplayedAvailability(_events);
@@ -312,7 +317,7 @@ export default function Calendar() {
                 };
                 if (e.saved) {
                     delete saved_temp[e.id];
-                    saved_temp[e.id] = [new_start, e.end];
+                    saved_temp[e.id] = [new Date(new_start), new Date(e.end)];
                 };
                 displayed_temp.push(new_e);
             }
@@ -352,7 +357,7 @@ export default function Calendar() {
                 };
                 if (e.saved) {
                     delete saved_temp[e.id];
-                    saved_temp[e.id] = [new_e.start, new_e.end];
+                    saved_temp[e.id] = [new Date(new_e.start), new Date(new_e.end)];
                 }
                 displayed_temp.push(new_e);
             }
