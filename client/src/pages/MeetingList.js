@@ -142,15 +142,16 @@ export default function Meeting() {
         <Navbar />
       </div>
 
-      <div className="meetings-header">
-      <h>Search for Users</h>
-        <SearchBar userID={userID}></SearchBar>
-      </div>
 
       <div className="meetings-header">
         <h>All Meetings</h>
         <p>{userID}</p>
       </div>
+
+    <div className="search-container">
+      <h3>Search for Users</h3>
+      <SearchBar userID={userID}></SearchBar>
+    </div>
 
       <div className="preview">
         <div className="tabs-box">
