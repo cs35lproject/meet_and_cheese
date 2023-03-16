@@ -456,7 +456,7 @@ export default function Calendar() {
                             </div>
                         </>
                     ) : (
-                        <h4>Please sign in to create a meeting</h4>
+                        <h4>Please sign in to create a meeting.</h4>
                     )}
                     {!eventsData && 
                         <div>

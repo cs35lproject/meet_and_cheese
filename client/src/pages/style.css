@@ -359,6 +359,26 @@ padding-left: 100px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; 
 }
 
+.meeting-buttons.expanded {
+  font-family: 'Nobile', Helvetica, Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 300 !important;
+  margin-top: 35px;
+  padding-top: 0px;
+  color: black;
+  font-weight: 100;
+  display: flex;
+  justify-content: center; 
+  text-align: center;
+  display: block;
+  background-color: white;
+  letter-spacing: -1px;
+  width: 380px;
+  height: 700px;
+  border-radius: 25px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; 
+}
+
 .meeting-buttons h4 {
   margin-bottom: 5px;
 }
@@ -412,6 +432,15 @@ padding-left: 100px;
 
 .invite-input {
   margin: auto;
+  border: none;
+  margin-top: 20px;
+  margin-right: 40px;
+  padding-right: 10px;
+  padding-left: 10px;
+  height: 30px;
+  width: 165px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 550;
 }
 
 #invite-wrapper {
@@ -420,6 +449,20 @@ padding-left: 100px;
   display: flex;
   flex-direction: column;
   justify-content: "center";
+}
+
+.invite-text h4 {
+  padding-left: 40px;
+  padding-top: 30px !important;
+}
+
+#invite-wrapper h4 {
+  margin-top: -15px;
+  padding-top: 20px;
+}
+
+.meeting-confirm {
+  margin-top: 15px;
 }
 
 /* MeetingList meetings format */
