@@ -45,6 +45,11 @@ export default function Meeting() {
     }, []);
 
   const handleSelect = (arg) => {
+    if (!(meetingOrganizer === userID)) {
+      console.log("not organizer");
+      return;
+    };
+
     let temp_events = [];
     let temp_saved =[];
     for (let e of eventsArray) {
@@ -188,6 +193,7 @@ export default function Meeting() {
     })
   }
 
+
   const loadMeetingMembers = () => {
     let membersElements = ""
     let uniqueMembers = []
@@ -214,22 +220,23 @@ export default function Meeting() {
         <div>
           <div id="invite-wrapper">
             <div className="invite-text">
-              <p>Invite Title: </p>
+              <h4 className="meet-h4">Title:</h4>
               <input className="invite-input"></input>
             </div>
             <div className="invite-text">
-              <p>Invite Desc: </p>
+              <h4 className="meet-h4">Desc:</h4>
               <input className="invite-input"></input>
             </div>
           </div>
+          <div className="meeting-confirm">
           <Button onClick={confirmMeeting} variant="contained" style={{ backgroundColor: "#4D368C", color: "white", 
           display: "flex", justifyContent: "center", margin: "0 auto", marginTop: "10px"
           }}>confirm meeting</Button>
+          </div>
         </div>
       )
     }
   }
-
   
   return (
     <React.Fragment>
@@ -241,7 +248,11 @@ export default function Meeting() {
         <div className="left-column">
           <div className="left-column-contents">
 
-          <div className='meeting-buttons'>
+          {/*<div className='meeting-buttons' > */}
+            <div 
+              className = {`meeting-buttons ${(userID === meetingOrganizer 
+                && savedEvents && savedEvents.length > 0) ? "expanded" : ""}`}
+            >
             <h4>Your Meeting.</h4>
                 Time to finalize your meeting.
               <h4 className="meet-h4">Organizer: </h4>
@@ -295,7 +306,7 @@ export default function Meeting() {
             slotMaxTime={endTime}
             events ={eventsArray}
             eventDidMount = {handleEventMount}
-            selectable = {true}
+            selectable = {userID === meetingOrganizer}
             select = {handleSelect}
             selectOverlap = {true}
             eventTimeFormat= {{

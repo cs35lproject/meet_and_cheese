@@ -89,6 +89,10 @@ async function detachMeeting(req, res) {
         let created = user.toJSON().createdMeetingIDs
         let created_ = created.filter(e => e !== meetingID)
 
+        let res_ = "";
+        console.log(created_)
+        console.log(created)
+        
         // If the user didn't create the meeting
         if (created_.length === created.length) {
             await meetingController.removeUser(req, res);
