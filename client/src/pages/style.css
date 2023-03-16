@@ -354,7 +354,7 @@ padding-left: 100px;
   background-color: white;
   letter-spacing: -1px;
   width: 380px;
-  height: 560px;
+  height: 505px;
   border-radius: 25px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; 
 }
@@ -374,7 +374,7 @@ padding-left: 100px;
   background-color: white;
   letter-spacing: -1px;
   width: 380px;
-  height: 700px;
+  height: 690px;
   border-radius: 25px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; 
 }
@@ -397,7 +397,7 @@ padding-left: 100px;
 
 .meeting-members-list {
   overflow: auto;
-  width: 350px;
+  width: 320px !important;
   position:relative;
   display: inline-block;  
   list-style: none;
@@ -406,7 +406,9 @@ padding-left: 100px;
   margin: auto;
   height: 150px;
   padding: 0;
-  box-shadow: none !important;
+  border: 1px solid black;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
   margin-bottom: -15px
 }
 
@@ -439,6 +441,9 @@ padding-left: 100px;
   padding-left: 10px;
   height: 30px;
   width: 165px;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   font-family: 'Poppins', sans-serif;
   font-weight: 550;
 }
