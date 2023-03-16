@@ -58,39 +58,23 @@ const intersection = (intervals1, intervals2) => {
   return intersection;
 }
 
-// events & intersections both 2d arrays [start,end]
-// find intersection of all users by calling itself on every user's events
-// events: 
-// intersections: 
+// Events & intersections both 2d arrays [start,end], find intersection of all users by calling itself on every user's events
 const intersectionFind = (events, intersections) => {
+  // Assume evenStarts and eventEnds are all relative to Unix epoch, i.e. no time zones etc. Assume that all the events are in the relevant search area. If not, the algorithm will still work but will be slow (find intersections that aren't relevant)
 
-  //events is an nx2 array of the form [[start, end],.....]
-  //intersections is an nx2 array of the form [[start, end],.....]
-
-  //Assume evenStarts and eventEnds are all relative to Unix epoch
-  //I.e. no time zones etc
-
-  //Assume that all the events are in the relevant search area
-  //If not, the algorithm will still work but will be slow
-  //I.e. will find intersections that aren't relevant
-
-  //Merge intervals
-  //Handle the case where some events overlap eachother
+  //Merge intervals. Handle the case where some events overlap eachother
   events = union(events);
 
-  //Find the new available times
-  //Simply find the intervals in between the event intervals
+  //Find the new available times. Simply find the intervals in between the event intervals
   let myintersections = []
   for (let i=0; i<events.length - 1; i++){
       myintersections.push([events[i][1], events[i+1][0]]);
   }
 
-  //Intersect intersections
-  //Find the intersection between current and previous free times
+  //Intersect intersections. Find the intersection between current and previous free times
   intersections = intersection(intersections, myintersections);
 
-  //Merge intersections
-  //Handle the case where some intersections overlap eachother
+  //Merge intersections. Handle the case where some intersections overlap eachother
   intersections = union(intersections);
 
   return intersections;

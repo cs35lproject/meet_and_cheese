@@ -23,68 +23,18 @@ async function updateMeeting(req, res) {
         ]
     )
     .then(() => {
-        return res.send({ success: true, meeting : {intersections : availabilities, meetingMemberIDs : members, meetingID : req.body.meetingID}})
+        return res.send({ success: true, meeting: meeting });
     })
     .catch((e) => {
         console.log(e)
-        return res.send({ success: false, meeting : {intersections : availabilities, meetingMemberIDs : members, meetingID : req.body.meetingID}})
+        return res.send({ success: false, meeting: meeting });
     })
-}
-
-// route PUT /api/meeting/removeUser
-async function removeUser(req, res) {
-    let userID = req.body.userID;
-    let meetingID = req.body.meetingID;
-    if (!userID || !meetingID) {
-        return res.send({success : false, "error" : "Must specify userID & meetingID"})
-    }
-    let meeting = await Meeting.findOne({meetingID : meetingID})
-        if (!meeting)
-            return res.status(404).send({ success: false, error: `Meeting ${meetingID} does not exist` })
-
-    meeting = meeting.toJSON()
-    let members = meeting.meetingMemberIDs
-    members = members.filter(e => e !== userID)
-    let new_intersections = []
-    for (let avail of meeting.intersections) {
-        if (avail[2] !== userID) {
-            new_intersections.push(avail);
-        }
-    }
-    await Meeting.updateMany({
-        "meetingID" : meetingID}, 
-        [
-            {$set : {"meetingMemberIDs" : members}},
-            {$set : {"intersections" : new_intersections}}
-        ]
-    )
-    .then(() => {
-        res.send({ success: true, meeting})
-    })
-    .catch((e) => {
-        res.send({ success: false, meeting : meeting })
-    })
-}
-
-// route DELETE /api/meeting/
-async function deleteMeeting(req, res) {
-    let meetingID = req.query.id || req.body.meetingID
-    if (meetingID !== null) {
-        let meeting = await Meeting.findOne({meetingID : meetingID})
-        if (!meeting)
-            return res.status(404).send({ success: false, error: `Meeting ${userID} does not exist` })
-        await meeting.remove()
-        return res.send({ success: true })
-    }
-    else {
-        return res.send({ success: false, error: "Need to specify query id"})
-    }
 }
 
 // route POST /api/meeting/createMeeting
 async function createMeeting(req, res) {
     if (req.body.userID === undefined || req.body.availability === undefined) {
-        res.send({success : false, "error" : "Invalid meeting format"})
+        return res.send({success : false, error : "Invalid meeting format"})
     }
     let meetingID = crypto.randomBytes(8).toString('hex')
     let meeting = new Meeting({
@@ -105,12 +55,12 @@ async function createMeeting(req, res) {
 
 // route GET /api/meeting/getMeeting
 async function getMeeting(req, res) {
-    let userID = req.query.id || req.body.userID
-    if (userID !== null) {
-        //res.send({ success: false, error: "Disabled for testing"})
-        let meeting = await Meeting.findOne({meetingID : userID})
-        if (!meeting)
+    let meetingID = req.query.id || req.body.meetingID
+    if (meetingID !== null) {
+        let meeting = await Meeting.findOne({meetingID : meetingID})
+        if (!meeting) {
             return res.status(404).send({ success: false, error: `Meeting ${userID} does not exist` })
+        }
         return res.send({ success: true, meeting: meeting })
     }
     else {
@@ -118,4 +68,4 @@ async function getMeeting(req, res) {
     }
 }
 
-module.exports = { createMeeting, getMeeting, updateMeeting, removeUser, deleteMeeting };
+module.exports = { createMeeting, getMeeting, updateMeeting };

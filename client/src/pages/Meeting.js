@@ -31,18 +31,18 @@ export default function Meeting() {
     loadValues()
   }, [intersections])
 
-    useEffect(() => {
-      if (!userID && localStorage.getItem("userID")) setUserID(localStorage.getItem("userID"))
-      handleClientLoad(setupCalendarEvent)
-      // If users came from Calendar page, intersections Hook would have availability
-      if (intersections === null || !meetingOrganizer) {
-          findMeeting()
-      } 
-      // Otherwise, need to pull from backend to find meeting availability data
-      else {
-          loadValues()
-      }
-    }, []);
+  useEffect(() => {
+    if (!userID && localStorage.getItem("userID")) setUserID(localStorage.getItem("userID"))
+    handleClientLoad(setupCalendarEvent)
+    // If users came from Calendar page, intersections Hook would have availability
+    if (state && state.justCreated) {
+      loadValues();
+    }
+    // Otherwise, need to pull from backend to find meeting availability data
+    else {
+        findMeeting()
+    } 
+  }, []);
 
   const handleSelect = (arg) => {
     if (!(meetingOrganizer === userID)) {
@@ -123,6 +123,10 @@ export default function Meeting() {
       const data = await response.json()
       console.log(data)
       if (data.meeting !== undefined) {
+        setMeetingID(data.meeting.meetingID);
+        setMeetingOrganizer(data.meeting.organizer);
+        setIntersections(data.meeting.intersections);
+        setMeetingMemberIDs(data.meeting.meetingMemberIDs);
         if (userID && data.meeting.meetingMemberIDs && data.meeting.meetingMemberIDs.includes(userID)) {
         }
         else {
@@ -131,10 +135,6 @@ export default function Meeting() {
               state: { meetingID: meetingID, availability: data.meeting.intersections, meetingMemberIDs: data.meeting.meetingMemberIDs }
             })
         }
-        setMeetingID(data.meeting.meetingID);
-        setMeetingOrganizer(data.meeting.organizer);
-        setIntersections(data.meeting.intersections);
-        setMeetingMemberIDs(data.meeting.meetingMemberIDs);
       }
     } catch (e) {
       console.log(e);
@@ -145,7 +145,9 @@ export default function Meeting() {
     await new Promise(r => setTimeout(r, 100));
     if (intersections) {
       let _events = [];
+      const timeNow = Date.now();
       for (const start_end of intersections) {
+        if (start_end[0] < timeNow) continue;
         const _event = {
           title: start_end[2],
           start: start_end[0],
@@ -191,11 +193,21 @@ export default function Meeting() {
 
 
   const loadMeetingMembers = () => {
+    let membersElements = ""
+    let uniqueMembers = []
     let displayMembers = []
     for (let member in meetingMemberIDs) {
       if (meetingMemberIDs[member] !== meetingOrganizer) {      
-        displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>);
-      };
+        if (member == meetingMemberIDs.length - 1)
+          membersElements += (`${meetingMemberIDs[member]}`)
+        else
+          membersElements += (`${meetingMemberIDs[member]},`)
+        
+        if (!uniqueMembers.includes(meetingMemberIDs[member])) {
+          displayMembers.push(<div><li>{meetingMemberIDs[member]}</li></div>)
+          uniqueMembers.push(meetingMemberIDs[member]);
+        }
+      }
     }
     return displayMembers;
   }
@@ -239,7 +251,7 @@ export default function Meeting() {
               className = {`meeting-buttons ${(userID === meetingOrganizer 
                 && savedEvents && savedEvents.length > 0) ? "expanded" : ""}`}
             >
-            <h4>Your Meeting:</h4>
+            <h4>Your Meeting.</h4>
                 Time to finalize your meeting.
               <h4 className="meet-h4">Organizer: </h4>
               {meetingOrganizer}

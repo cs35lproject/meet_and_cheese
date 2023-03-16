@@ -10,8 +10,10 @@ import { Tabs, Tab, Box, Paper, Stack, styled } from '@mui/material';
 export default function Meeting() {
   const { state } = useLocation();
   const [userID, setUserID] = useState(state ? state.userID : null);
+  const [meetingMemberIDs, setMeetingMemberIDs] = useState(null);
   const [userMeetings, setUserMeetings] = useState();
   const [createdMeetings, setCreatedMeetings] = useState();
+  const [trashMeetingID, setTrashMeetingID] = useState();
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,6 +27,11 @@ export default function Meeting() {
   const [value, setValue] = useState('one');
 
   useEffect(() => {
+    if (trashMeetingID) 
+      trashMeeting(trashMeetingID)
+  }, [meetingMemberIDs])
+
+  useEffect(() => {
     if (localStorage.getItem("userID")) {
       setUserID(localStorage.getItem("userID"))
     }
@@ -36,6 +43,7 @@ export default function Meeting() {
 
   // Get user from backend and update userMeetings hook
   const getUser = async () => {
+    console.log("getUser()")
     if (userID !== null) {
       await new Promise(r => setTimeout(r, 400));
       if (userID !== undefined) {
@@ -59,28 +67,53 @@ export default function Meeting() {
     let meetings = []
     let link = ""
     for (let meetingKey in createdMeetings) {
-      console.log("Created Meeting:", userMeetings[meetingKey]);
-      link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`;
+      link = `${window.location.origin}/meeting?id=${createdMeetings[meetingKey]}`;
       meetings.push(<div className="buttons-and-trash"><a href={link} key={meetingKey}>{link}</a>
-                    <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey], true)}>🗑</p>
+                    <p style={{cursor: 'pointer'}}onClick={() => getMeeting(createdMeetings[meetingKey])}>🗑</p>
                     </div>);
     };
     return meetings
   }
 
-  const trashMeeting = async (meetingKey, isCreator) => {
-    let url = `${process.env.REACT_APP_BACKEND}/user/detachMeeting`
-    let body = { "userID": userID, "meetingID": meetingKey}
-    let metadata = {
-      method: "DELETE", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
-  }
+  const getMeeting = async (meetingID) => {
+    setTrashMeetingID(meetingID)
+    let url = `${process.env.REACT_APP_BACKEND}/meeting/getMeeting?id=${meetingID}`
+    let metadata = { method: "GET" }
+    console.log(url, metadata)
     try {
       const response = await fetch(url, metadata)
-      console.log(response)
-    } catch (error) {
-      console.log(error);
+      const data = await response.json()
+      if (data.meeting !== undefined) {
+        setMeetingMemberIDs(data.meeting.meetingMemberIDs)
+      }
+    } catch (e) {
+      console.log(e);
     }
-    window.location.reload();
+  }
+
+  // MAY NEED TO CALL GETMEETING INSTEAD & MAKE TRASHMEETING DEPENDENCY IN USEEFFECT FOR meetingMemberIDs
+  const trashMeeting = async (meetingKey) => {
+    console.log("trashMeeting()")
+    console.log(meetingMemberIDs)
+    let url = "", body = "", metadata = {};
+
+    url = `${process.env.REACT_APP_BACKEND}/user/detachMeeting`
+    body = { "userID": userID, "meetingID": meetingKey}
+    metadata = {
+      method: "DELETE", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
+    }
+    try {
+      const response = await fetch(url, metadata)
+      console.log("detach response:")
+      console.log(response)
+      if (response && response.meeting && response.meeting.meetingMemberIDs) {
+        setMeetingMemberIDs(response.user.meetingIDs);
+        setCreatedMeetings(response.user.createdMeetingIDs);
+        getUser();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const showJoinedMeetings = () => {
@@ -90,7 +123,7 @@ export default function Meeting() {
       if (createdMeetings && !createdMeetings.includes(userMeetings[meetingKey])) {
         link = `${window.location.origin}/meeting?id=${userMeetings[meetingKey]}`;
         meetings.push(<div className="buttons-and-trash"><a href={link} key={meetingKey}>{link}</a>
-                      <p style={{cursor: 'pointer'}}onClick={() => trashMeeting(userMeetings[meetingKey], false)}>🗑</p>
+                      <p style={{cursor: 'pointer'}}onClick={() => getMeeting(userMeetings[meetingKey])}>🗑</p>
                       </div>);
       };
     }

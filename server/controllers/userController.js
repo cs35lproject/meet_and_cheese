@@ -40,7 +40,7 @@ async function updateUserMeetings(req, res) {
     await User.updateOne({
         "userID" : req.body.userID}, {$set : {"meetingIDs" : meetings}})
     .then(() => {
-        return res.send({ success: true, user : {userID : user.userID, meetingIDs : meetings}})
+        return res.send({ success: true, user : user})
     })
     .catch((e) => {
         console.log(e)
@@ -89,18 +89,18 @@ async function detachMeeting(req, res) {
         let created = user.toJSON().createdMeetingIDs
         let created_ = created.filter(e => e !== meetingID)
 
-        let res_ = "";
-        console.log(created_)
-        console.log(created)
-        
-        // If the user didn't create the meeting
-        if (created_.length === created.length) {
-            await meetingController.removeUser(req, res);
+        let response = ""
+        // If user is meeting member
+        if (meeting.toJSON().organizer !== userID) {
+            response = await removeUser(userID, meetingID);
+            console.log("removeUser() res:", response)
         }
-        // If the user did create the meeting
+        // If user is meeting creator
         else {
-            await meetingController.deleteMeeting(req, res)
+            response = await deleteMeeting(meetingID);
+            console.log("deleteMeeting() res:", response)
         }
+        console.log("Starting updateMany")
 
         await User.updateMany(
             {"userID" : userID}, 
@@ -109,10 +109,80 @@ async function detachMeeting(req, res) {
                 {$set : {"createdMeetingIDs" : created_}}
             ]
         )
-        // remove user from meeting if not organizer, else delete meeting
+        .then(() => {
+            console.log("HERE");
+            res.send({ success: true, user: user} );
+        })
+        .catch((e) => {
+            console.log(e);
+        })
     }
     else {
         res.send({ success: false, error: "Need to specify query user"})
+    }
+}
+
+async function removeUser(userID, meetingID) {
+    if (!userID || !meetingID) {
+        return false;
+    }
+    let meeting = await Meeting.findOne({meetingID : meetingID});
+    if (!meeting) {
+        return { success: false, error: `Meeting ${meetingID} does not exist` };
+    }
+    
+    let members = meeting.toJSON().meetingMemberIDs;
+    let members_ = members.filter(e => e !== userID);
+    let new_intersections = [];
+    for (let avail of meeting.toJSON().intersections) {
+        if (avail[2] !== userID) {
+            new_intersections.push(avail);
+        }
+    }
+
+    console.log(members, new_intersections);
+
+    await Meeting.updateMany({
+        "meetingID" : meetingID}, 
+        [
+            {$set : {"meetingMemberIDs" : members_}},
+            {$set : {"intersections" : new_intersections}}
+        ]
+    )
+    .then()
+    .catch((e) => {
+        return { success: false, meeting: meeting };
+    })
+    console.log(meeting)
+    return ({ success: true, meeting: {intersection: new_intersections, meetingMemberIDs: members_} });
+}
+
+// route DELETE /api/meeting/deleteMeeting
+async function deleteMeeting(meetingID) {
+    if (meetingID !== null) {
+        let meeting = await Meeting.findOne({meetingID : meetingID});
+        if (!meeting) {
+            return false;
+        }
+        let intersections = meeting.toJSON().intersections;
+        for (let intersection of intersections) {
+            let user = await User.findOne({userID : intersection[2]})
+            user = user.toJSON()
+            let userMeetings = user.meetingIDs;
+            let userMeetings_ = userMeetings.filter(e => e !== meetingID);
+            await User.updateOne({"userID" : intersection[2]}, 
+                {$set : {"meetingIDs" : userMeetings_}})
+            .then()
+            .catch((e) => {
+                console.log(e)
+                return { success: false, user: user };
+            })
+        }
+        await meeting.remove();
+        return true;
+    }
+    else {
+        return false;
     }
 }
 

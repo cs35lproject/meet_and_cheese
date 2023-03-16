@@ -334,7 +334,8 @@ export default function JoinMeeting() {
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
-            setMeetingMemberIDs(data.meeting.meetingMemberIDs)
+            console.log(data);
+            setMeetingMemberIDs(data.user.meetingIDs)
         } catch (e) {
             console.log(e);
         }
@@ -353,7 +354,9 @@ export default function JoinMeeting() {
         try {
             const response = await fetch(url, metadata)
             const data = await response.json()
+            console.log(data)
             setMeetingOrganizer(data.meeting.organizer)
+            console.log("setting org to:", data.meeting.organizer)
             setMeetingMemberIDs(data.meeting.meetingMemberIDs)
             setUpdated(data.meeting.intersections)
             setConfirmedAvailability(data.meeting.intersections)
