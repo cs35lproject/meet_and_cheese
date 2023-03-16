@@ -406,7 +406,7 @@ export default function JoinMeeting() {
                                         />
                                     </div>
                                 <div className="button-spacing">
-                                    {confirmButton()}
+                                    {Object.keys(savedAvailability).length > 0 && confirmButton()}
                                 </div>
                                 <div className="button-spacing">
                                     {revertChangesButton()}

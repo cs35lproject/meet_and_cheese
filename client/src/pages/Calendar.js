@@ -448,7 +448,7 @@ export default function Calendar() {
                                         />
                                     </div>
                                 <div className="button-spacing">
-                                    {confirmButton()}
+                                    {Object.keys(savedAvailability).length > 0 && confirmButton()}
                                 </div>
                                 <div className="button-spacing">
                                     {revertChangesButton()}
