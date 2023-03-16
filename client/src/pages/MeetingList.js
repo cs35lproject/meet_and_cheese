@@ -100,13 +100,13 @@ export default function Meeting() {
     url = `${process.env.REACT_APP_BACKEND}/user/detachMeeting`
     body = { "userID": userID, "meetingID": meetingKey}
     metadata = {
-      method: "DELETE", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
+      method: "PUT", body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' }
     }
     try {
       const response = await fetch(url, metadata)
       console.log("detach response:")
       console.log(response)
-      if (response && response.meeting && response.meeting.meetingMemberIDs) {
+      if (response && response.user && response.user.meetingIDs) {
         setMeetingMemberIDs(response.user.meetingIDs);
         setCreatedMeetings(response.user.createdMeetingIDs);
         getUser();

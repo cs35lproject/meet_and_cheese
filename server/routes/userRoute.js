@@ -16,6 +16,6 @@ router
 
 router
     .route('/detachMeeting')
-    .delete(userController.detachMeeting);
+    .put(userController.detachMeeting);
 
 module.exports = router;

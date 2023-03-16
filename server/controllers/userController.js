@@ -74,7 +74,7 @@ async function getUserMeetings(req, res) {
     }
 }
 
-// route DELETE /api/users/detachMeeting
+// route PUT /api/users/detachMeeting
 async function detachMeeting(req, res) {
     let userID = req.body.userID;
     let meetingID = req.body.meetingID;
@@ -100,7 +100,6 @@ async function detachMeeting(req, res) {
             response = await deleteMeeting(meetingID);
             console.log("deleteMeeting() res:", response)
         }
-        console.log("Starting updateMany")
 
         await User.updateMany(
             {"userID" : userID}, 
@@ -109,13 +108,13 @@ async function detachMeeting(req, res) {
                 {$set : {"createdMeetingIDs" : created_}}
             ]
         )
-        .then(() => {
-            console.log("HERE");
-            res.send({ success: true, user: user} );
-        })
+        .then()
         .catch((e) => {
             console.log(e);
+            return res.send({ success: false, error: e})
         })
+        console.log("finished updateMany")
+        return res.send({ success: true, user: { meetingIDs: meetings_, createdMeetingIDs: created_ }} );
     }
     else {
         res.send({ success: false, error: "Need to specify query user"})
@@ -142,8 +141,8 @@ async function removeUser(userID, meetingID) {
 
     console.log(members, new_intersections);
 
-    await Meeting.updateMany({
-        "meetingID" : meetingID}, 
+    await Meeting.updateMany(
+        {"meetingID" : meetingID}, 
         [
             {$set : {"meetingMemberIDs" : members_}},
             {$set : {"intersections" : new_intersections}}
