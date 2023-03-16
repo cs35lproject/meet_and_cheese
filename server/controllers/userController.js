@@ -2,6 +2,64 @@ const User = require("../models/userModel");
 const Meeting = require("../models/meetingModel")
 const meetingController = require("./meetingController")
 
+// route GET /api/users/searchUser
+async function searchUsers(req, res) {
+
+    console.log("searching users");
+    console.log("UID",req.query.userID);
+
+    // get the user object
+    let requester = await User.find({userID : req.query.userID})
+        .then(user => user[0])
+        .then(user => {
+            if (user === undefined) {
+                res.send({success : false, error : "User not found"});
+                return;
+            }
+            return user;
+        })
+        .catch(err => {
+            console.log(err);
+            res.send({success : false, error : err});
+            return;
+        });
+    
+    let searchResults = [];
+    for (const meetingID of requester.meetingIDs) {
+        //get the meeting
+        let meeting = await Meeting.find({meetingID : meetingID})
+            .then(meeting => meeting[0])
+            .then(meeting => {
+                if (meeting === undefined) {
+                    res.send({success : false, error : "Meeting not found"});
+                    return;
+                }
+                return meeting;
+            }).catch(err => {   
+                console.log(err);
+                res.send({success : false, error : err});
+                return;
+            });
+        // get the meeting members that match the regex and are in meeting
+        let regex = new RegExp(req.query.query, "i");
+        for (const memberID of meeting.meetingMemberIDs) {
+            if (regex.test(memberID)) {
+                // get the user object and push
+                let myuser = await User.find({userID : memberID})
+                    .then(user => user[0])
+                    .then(user => searchResults.push(user))
+                    .catch(err => {
+                        console.log(err);
+                        res.send({success : false, error : err});
+                        return;
+                    });
+            }
+        }
+    }
+
+    res.send({success : true, users : searchResults});
+}
+
 // route POST /api/users/createUser
 async function createUser(req, res) {
     let existingUser = await User.findOne({userID : req.body.userID})
@@ -185,4 +243,4 @@ async function deleteMeeting(meetingID) {
     }
 }
 
-module.exports = { createUser, getUserMeetings, updateUserMeetings, detachMeeting };
+module.exports = { createUser, getUserMeetings, updateUserMeetings, detachMeeting, searchUsers };

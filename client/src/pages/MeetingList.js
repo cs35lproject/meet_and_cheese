@@ -7,6 +7,8 @@ import './MeetingList.css'
 
 import { Tabs, Tab, Box, Paper, Stack, styled } from '@mui/material';
 
+import SearchBar from '../components/SearchBar';
+
 export default function Meeting() {
   const { state } = useLocation();
   const [userID, setUserID] = useState(state ? state.userID : null);
@@ -138,6 +140,11 @@ export default function Meeting() {
     <React.Fragment>
       <div>
         <Navbar />
+      </div>
+
+      <div className="meetings-header">
+      <h>Search for Users</h>
+        <SearchBar userID={userID}></SearchBar>
       </div>
 
       <div className="meetings-header">

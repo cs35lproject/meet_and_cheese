@@ -25,6 +25,8 @@ export default function JoinMeeting() {
     const [meetingMemberIDs, setMeetingMemberIDs] = useState(state ? state.meetingMemberIDs : null);
     const [meetingOrganizer, setMeetingOrganizer] = useState(null);
 
+    console.log(userID)
+
     const [ogAvail, setOgAvail] = useState([]);
 
     const [minTime, setMinTime] = useState('00:00');

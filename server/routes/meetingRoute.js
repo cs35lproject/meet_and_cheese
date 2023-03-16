@@ -13,5 +13,9 @@ router
 router
     .route('/updateMeeting')
     .put(meetingController.updateMeeting)
+
+router
+    .route('/searchMeetings')
+    .get(meetingController.searchMeetings)
     
 module.exports = router;

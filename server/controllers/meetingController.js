@@ -1,6 +1,21 @@
 const crypto = require('crypto');
 const Meeting = require("../models/meetingModel");
 
+// route GET /api/users/searchUser
+async function searchMeetings(req, res) {
+    // create a case insensitive regex with the search query
+    console.log("searching meetings");
+
+    const regex = new RegExp(req.query.query, "i");
+
+    await Meeting.find({meetingName : regex})
+    .then(meetings => res.send({success : true, meetings : meetings}))
+    .catch(err => {
+        console.log(err);
+        res.send({success : false, error : err});
+    });
+}
+
 // route PUT /api/meeting/updateMeeting
 async function updateMeeting(req, res) {
     if (req.body.userID === undefined || req.body.availability === undefined || req.body.meetingID === undefined || req.body.meetingMemberIDs === undefined) {
@@ -68,4 +83,4 @@ async function getMeeting(req, res) {
     }
 }
 
-module.exports = { createMeeting, getMeeting, updateMeeting };
+module.exports = { createMeeting, getMeeting, updateMeeting, searchMeetings };
