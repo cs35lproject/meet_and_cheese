@@ -151,7 +151,7 @@ export default function Meeting() {
 
 
       <div className="meetings-header">
-        <h>All Meetings</h>
+        <h>Meetings</h>
         <p>{userID}</p>
       </div>
 

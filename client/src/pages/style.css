@@ -39,6 +39,10 @@ margin-top: 4px;
 margin-left: 15px;
 }
 
+.meetings-header h {
+  padding-right: 17px !important;
+}
+
 p3 {
   color:black;
   font-family: 'Corben', Georgia, Times, serif;
