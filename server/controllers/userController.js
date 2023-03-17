@@ -5,9 +5,6 @@ const meetingController = require("./meetingController")
 // route GET /api/users/searchUser
 async function searchUsers(req, res) {
 
-    console.log("searching users");
-    console.log("UID",req.query.userID);
-
     // Find all the users that have ids that match the regex
     // The user must have meetings in common with the user making the request
     // Only events that both parties have in common will be returned

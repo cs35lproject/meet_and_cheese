@@ -4,8 +4,6 @@ const Meeting = require("../models/meetingModel");
 // route GET /api/users/searchUser
 async function searchMeetings(req, res) {
     // create a case insensitive regex with the search query
-    console.log("searching meetings");
-    console.log("UID",req.query.userID);
 
     const regex = new RegExp(req.query.query, "i");
 
