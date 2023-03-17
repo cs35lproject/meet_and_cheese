@@ -18,17 +18,20 @@ const SearchBar = (props) => {
     };
 
     useEffect(() => {
+        if (searchResults && searchResults.length > 0) {
+            props.setValue("three");
+            props.setSearchMeetings(searchResults);
+        }
+    }, [searchResults])
+
+    useEffect(() => {
         let url = `${process.env.REACT_APP_BACKEND}/user/searchUsers?query=${searchTerm}&userID=${String(userID)}`
         let metadata = { method: "GET" }
-        console.log("backend url",process.env.REACT_APP_BACKEND);
-        console.log("url", url);
         const results = fetch(url, metadata)
             .then(res => res.json())
             .then(json => {
                 console.log(json);
-                setSearchResults(Array.from(json.users).map(user =>(
-                    console.log(user)
-                )));
+                setSearchResults(json.users.meetings);
             })
             .catch((err) => {
                 console.log(err);
@@ -36,7 +39,7 @@ const SearchBar = (props) => {
     }, [searchTerm]);
 
     return (
-        <>
+        <React.Fragment>
         <div className="search">
             <Form>
                 <input
@@ -47,8 +50,7 @@ const SearchBar = (props) => {
                 />
             </Form>
         </div>
-        {searchResults}
-        </>
+        </React.Fragment>
     );
 }
 
