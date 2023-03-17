@@ -42,9 +42,9 @@ const SearchBar = (props) => {
         <React.Fragment>
         <div className="search">
             <Form>
-                <input
+                <input className ="search-input"
                     type="text"
-                    placeholder="Search"
+                    placeholder="🔎 Search"
                     value={searchTerm}
                     onChange={handleChange}
                 />
