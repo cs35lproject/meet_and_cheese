@@ -96,8 +96,8 @@ const setCalendars = (calendarsData, daysAhead, maxResults) => {
 }
 
 const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
-    let daysAhead = givenDaysAhead ? givenDaysAhead : 10;
-    let maxResults = givenMaxResults ? givenMaxResults : 30;
+    let daysAhead = givenDaysAhead ? givenDaysAhead : 31;
+    let maxResults = givenMaxResults ? givenMaxResults : 60;
 
     let minDate = new Date();
     let maxDate = new Date();
