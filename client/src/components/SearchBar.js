@@ -27,10 +27,7 @@ const SearchBar = (props) => {
             .then(json => {
                 console.log(json);
                 setSearchResults(Array.from(json.users).map(user =>(
-                    <li key={user._id}>
-                        <p>{user.userID}</p>
-                        <p>{user.meetingIDs.map(id => <p>{id}</p>)}</p>
-                    </li>
+                    console.log(user)
                 )));
             })
             .catch((err) => {

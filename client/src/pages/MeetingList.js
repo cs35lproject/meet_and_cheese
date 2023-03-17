@@ -149,7 +149,6 @@ export default function Meeting() {
       </div>
 
     <div className="search-container">
-      <h3>Search for Users</h3>
       <SearchBar userID={userID}></SearchBar>
     </div>
 
