@@ -35,9 +35,13 @@ export default function Meeting() {
     if (!userID && localStorage.getItem("userID")) setUserID(localStorage.getItem("userID"))
     handleClientLoad(setupCalendarEvent)
     // If users came from Calendar page, intersections Hook would have availability
-    findMeeting()
-    loadValues();
-
+    if (state && state.justCreated) {
+      loadValues();
+    }
+    // Otherwise, need to pull from backend to find meeting availability data
+    else {
+        findMeeting()
+    } 
   }, []);
 
   const handleSelect = (arg) => {
