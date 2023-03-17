@@ -39,6 +39,10 @@ margin-top: 4px;
 margin-left: 15px;
 }
 
+.meetings-header h {
+  padding-right: 17px !important;
+}
+
 p3 {
   color:black;
   font-family: 'Corben', Georgia, Times, serif;
@@ -190,13 +194,12 @@ font-family: 'Poppins', sans-serif;
 
 .box-container{
 display: grid;
-height: 100vh;
+height: 680px;
 grid-template-columns: repeat(3,1fr);
 grid-template-rows: 1fr;
 gap: 2vh;
 padding-left: 10vh;
 padding-right: 10vh;
-padding-bottom: 0;
 margin-top: -10px;
 margin-bottom: -100px;
 justify-content: center;
@@ -240,6 +243,11 @@ top: -11vh;
 border-radius: 8px;
 /* box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.2); */
 font-family: 'Poppins', sans-serif !important;
+}
+
+.rectangle h3 {
+  font-size: 31px;
+  padding-top: 100px;
 }
 
 h3 {

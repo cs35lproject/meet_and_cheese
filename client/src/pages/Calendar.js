@@ -50,7 +50,7 @@ export default function Calendar() {
                 search: createSearchParams({ id: meetingID }).toString()
             },
                 {
-                    state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs, organizer: userID }
+                    state: { meetingID: meetingID, availability: confirmedAvailability, meetingMemberIDs: meetingMemberIDs, organizer: userID, justCreated: true }
                 })
         }
     }, [meetingID])
@@ -76,9 +76,7 @@ export default function Calendar() {
         setCalendarsData(calendars)
         setUserID(primaryEmail)
         setEventsData(events)
-        if (!localStorage.getItem("userID")) {
-            localStorage.setItem("userID", primaryEmail)
-        }
+        localStorage.setItem("userID", primaryEmail)
     }
 
     // Save new user with userID & meetingID to backend

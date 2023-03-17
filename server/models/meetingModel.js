@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const meetingSchema = new mongoose.Schema({
+    meetingName : {
+        type: String,
+        default: "Unititled Meeting"
+    },
     meetingID : {
         type: String,
         required: true

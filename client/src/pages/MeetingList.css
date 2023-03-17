@@ -1,4 +1,6 @@
-
+.search-container {
+    margin: auto;
+}
 .meetings-header {
     display: flex;
     flex-direction: column;

@@ -10,28 +10,32 @@ class GetStarted extends React.Component {
           <Navbar /> {/* TODO: add api call to login from this page */}
         </div>
         <getstarted>
-            <h1>Let's get cheesin'</h1>
+            <h1>It's cheesing time.</h1>
 
             <div className="box-container">
                 <div class="box">
                     <div className="circle"><h2>1</h2></div>
                     <div className="rectangle">
-                      <h3>Create a <br/>Meeting</h3>
-                      <p>Click "Create Meeting” in the top right corner to get started. </p>
+                      <h3>Create & Join <br/>a Meeting</h3>
+                      <p>Click "Create Meeting” to create your own meeting!</p>
+                      <p>Or join an existing meeting with a URL!</p>
                     </div>
                 </div>
                 <div className="box">
                     <div className="circle"><h2>2</h2></div>
                     <div className="rectangle">
-                      <h3>Join a<br/>Meeting</h3>
-                      <p>Join a meeting link shared with you.</p>
+                      <h3>Confirm & Share<br/>Meeting</h3>
+                      <p>Modify and confirm your availability!</p>
+                      <p>You can then share the invite link to whoever you'd like.</p>
                     </div>
                 </div>
                 <div className="box">
                     <div className="circle"><h2>3</h2></div>
                     <div className="rectangle">
-                      <h3>Share with Others</h3>
-                      <p>Share your meeting link with others to find overlapping availability.</p>
+                      <h3>Send Calendar Invites</h3>
+                      <p>Meeting organizer will confirm the meeting. </p>
+                      <p> You will see the meeting invite in your Google Calendar!
+                      </p>
                     </div>
                 </div>
                 
