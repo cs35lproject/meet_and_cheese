@@ -156,7 +156,7 @@ export default function Meeting() {
       </div>
 
     <div className="search-container">
-      <SearchBar userID={userID} searchMeetings={searchMeetings} setSearchMeetings={setSearchMeetings} setValue={setValue}></SearchBar>
+      <SearchBar userID={userID} setSearchMeetings={setSearchMeetings} setValue={setValue} userMeetings={userMeetings}></SearchBar>
     </div>
 
       <div className="preview">

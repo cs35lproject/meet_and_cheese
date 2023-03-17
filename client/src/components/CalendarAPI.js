@@ -99,9 +99,7 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
     let daysAhead = givenDaysAhead ? givenDaysAhead : 10;
     let maxResults = givenMaxResults ? givenMaxResults : 30;
 
-    // let minDate = new Date(); 
-    let minDate = new Date();  // set minDate to yesterday, starting at 00:00:00, to get more accurate avail
-    minDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate() - 1, 0, 0, 0);
+    let minDate = new Date();
     let maxDate = new Date();
 
     minDate.setDate(minDate.getDate());
@@ -112,7 +110,7 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
         calendarId: calendar.id,
         timeMin: minDate.toISOString(),
         timeMax: maxDate.toISOString(),
-        showDeleted: false,
+        showDeleted: true,
         singleEvents: true,
         maxResults: maxResults,
         orderBy: "startTime",
