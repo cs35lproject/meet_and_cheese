@@ -10,7 +10,8 @@ Tired of comparing availability with every member for a group project or meeting
 
 1 - Clone the master repository <br>```git clone https://github.com/cs35lproject/cs35l_project.git``` <br>
 2 - Install Node.js [here](https://nodejs.org/en/download/) <br>
-3 - Open two terminals and navigate to the cloned repository, each will install the dependencies and run the corresponding code. <br>
+3 - See [Testing Phase](#testing-phase) to get client and server .env files, which contain private keys for the Google Calendar API and other private information necessary for the website to run <br>
+4 - Open two terminals and navigate to the cloned repository, each will install the dependencies and run the corresponding code <br>
 
 | server terminal  | client terminal |
 | :-------------: |:-------------:|
@@ -18,7 +19,7 @@ Tired of comparing availability with every member for a group project or meeting
 | ``` npm install ``` | ``` npm install ``` |
 | ``` npm run dev ``` | ``` npm start ``` |
 
-4 - If your client side code doesn't run successfully, read "Potential Installation Issues" below, and be sure your version of Node is up to date.
+5 - If your client side code doesn't run successfully, read "Potential Installation Issues" below, and be sure your version of Node is up to date
 
 #### Potential Installation Issues
 
@@ -36,7 +37,7 @@ This can be fixed by simply setting the start script back to <br>
 ```"start": "react-scripts start"``` <br>
 
 
-#### Testing Phase
+#### Testing-Phase
 
 Until Meet & Cheese is considered an [officially verified](https://support.google.com/cloud/answer/7454865) app by Google, users will have to send the email corresponding to the calendar they want to use (send to ```sebastian01cevallos@gmail.com```) in order to be included in the testing phase. <br>
 
