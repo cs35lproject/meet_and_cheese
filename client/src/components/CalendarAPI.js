@@ -110,7 +110,7 @@ const setEvents = (calendar, events, givenDaysAhead, givenMaxResults) => {
         calendarId: calendar.id,
         timeMin: minDate.toISOString(),
         timeMax: maxDate.toISOString(),
-        showDeleted: true,
+        showDeleted: false,
         singleEvents: true,
         maxResults: maxResults,
         orderBy: "startTime",
