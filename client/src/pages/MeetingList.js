@@ -1,9 +1,9 @@
 import { json, useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
 import './style.css';
-import './MeetingList.css'
+import './MeetingList.css';
 
 import { Tabs, Tab, Box, Paper, Stack, styled } from '@mui/material';
 

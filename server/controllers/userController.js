@@ -27,7 +27,7 @@ async function searchUsers(req, res) {
             return;
         });
     
-    let searchResults = [];
+    let searchResults = {uid:"", meetings:[]};
     for (const meetingID of requester.meetingIDs) {
         //get the meeting
         let meeting = await Meeting.find({meetingID : meetingID})
@@ -52,14 +52,14 @@ async function searchUsers(req, res) {
                     .then(user => user[0])
                     .then(user => {
                         // remove all the events that are not shared with requester
+                        searchResults.uid = user.userID;
                         let visibleEvents = [];
                         for (const event of user.meetingIDs) {
                             if (requester.meetingIDs.includes(event)) {
                                 visibleEvents.push(event);
                             }
                         }
-                        user.meetingIDs = visibleEvents;
-                        searchResults.push(user)
+                        searchResults.meetings.push(visibleEvents)
                     })
                     .catch(err => {
                         console.log(err);
