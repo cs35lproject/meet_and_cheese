@@ -18,15 +18,9 @@ const SearchBar = (props) => {
     };
 
     useEffect(() => {
-        console.log(`term: |${searchTerm}|`)
-        console.log(typeof searchTerm)
-        console.log(searchTerm === "")
-        if (searchTerm === "") {
-            props.setSearchMeetings(props.userMeetings)
-        }
-        else if (searchResults && searchResults.length > 0) {
+        if (searchResults && searchResults.length > 0) {
             props.setValue("three");
-            props.setSearchMeetings(searchResults);
+            props.setSearchMeetings(searchResults[0]);
         }
     }, [searchResults])
 
