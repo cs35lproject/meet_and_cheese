@@ -246,6 +246,10 @@ border-radius: 8px;
 font-family: 'Poppins', sans-serif !important;
 }
 
+.rectangle h3 {
+  font-size: 31px;
+}
+
 h3 {
 color: #000;
 font-family: 'Poppins', sans-serif !important;
