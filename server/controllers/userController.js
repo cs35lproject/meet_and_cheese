@@ -8,7 +8,10 @@ async function searchUsers(req, res) {
     console.log("searching users");
     console.log("UID",req.query.userID);
 
-    // get the user object
+    // Find all the users that have ids that match the regex
+    // The user must have meetings in common with the user making the request
+    // Only events that both parties have in common will be returned
+
     let requester = await User.find({userID : req.query.userID})
         .then(user => user[0])
         .then(user => {
@@ -47,7 +50,17 @@ async function searchUsers(req, res) {
                 // get the user object and push
                 let myuser = await User.find({userID : memberID})
                     .then(user => user[0])
-                    .then(user => searchResults.push(user))
+                    .then(user => {
+                        // remove all the events that are not shared with requester
+                        let visibleEvents = [];
+                        for (const event of user.meetingIDs) {
+                            if (requester.meetingIDs.includes(event)) {
+                                visibleEvents.push(event);
+                            }
+                        }
+                        user.meetingIDs = visibleEvents;
+                        searchResults.push(user)
+                    })
                     .catch(err => {
                         console.log(err);
                         res.send({success : false, error : err});
@@ -55,6 +68,7 @@ async function searchUsers(req, res) {
                     });
             }
         }
+
     }
 
     res.send({success : true, users : searchResults});

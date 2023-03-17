@@ -5,15 +5,32 @@ const Meeting = require("../models/meetingModel");
 async function searchMeetings(req, res) {
     // create a case insensitive regex with the search query
     console.log("searching meetings");
+    console.log("UID",req.query.userID);
 
     const regex = new RegExp(req.query.query, "i");
 
-    await Meeting.find({meetingName : regex})
-    .then(meetings => res.send({success : true, meetings : meetings}))
-    .catch(err => {
-        console.log(err);
-        res.send({success : false, error : err});
-    });
+   // find all the meetings the user is in with names that match the regex
+    let meetings = await Meeting.find({meetingMemberIDs : req.query.userID})
+        .then(meetings => {
+            if (meetings === undefined) {
+                res.send({success : false, error : "User not found"});
+                return;
+            }
+            return meetings;
+        }).catch(err => {
+            console.log(err);
+            res.send({success : false, error : err});
+            return;
+        });
+    
+    let searchResults = [];
+    for (const meeting of meetings) {
+        if (regex.test(meeting.meetingName)) {
+            searchResults.push(meeting)
+        }
+    }
+
+    res.send({success : true, meetings : searchResults});
 }
 
 // route PUT /api/meeting/updateMeeting
@@ -30,11 +47,14 @@ async function updateMeeting(req, res) {
     let availabilities = meeting.intersections
     Array.prototype.push.apply(availabilities, req.body.availability)
 
+    let meetingName = req.body.meetingName !== undefined ? req.body.meetingName : meeting.meetingName;
+
     await Meeting.updateMany({
         "meetingID" : req.body.meetingID}, 
         [
             {$set : {"intersections" : availabilities}},
-            {$set : {"meetingMemberIDs" : members}}
+            {$set : {"meetingMemberIDs" : members}},
+            {$set : {"meetingName" : meetingName}}
         ]
     )
     .then(() => {
@@ -57,6 +77,7 @@ async function createMeeting(req, res) {
         organizer : req.body.userID,
         meetingMemberIDs : [req.body.userID],
         intersections : req.body.availability,
+        meetingName : req.body.meetingName !== undefined ? req.body.meetingName : "Untitled Meeting"
     })
     await meeting.save()
     .then(() => {
