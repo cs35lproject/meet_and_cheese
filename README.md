@@ -18,6 +18,24 @@ Tired of comparing availability with every member for a group project or meeting
 | ``` npm install ``` | ``` npm install ``` |
 | ``` npm run dev ``` | ``` npm start ``` |
 
+4 - If your client side code doesn't run successfully, read "Potential Installation Issues" below, and be sure your version of Node is up to date.
+
+#### Potential Installation Issues
+
+A common error which occured was titled <br>
+```Error message "error:0308010C:digital envelope routines::unsupported"``` <br>
+Which was fixed by changing the the client side package.json run script to <br>
+```"start": "react-scripts --openssl-legacy-provider start"``` <br>
+from <br>
+```"start": "react-scripts start"``` <br>
+This is the default for our project, and should work if your version of node is up to date. <br>
+
+However, the following error message occurs with older versions of node: <br>
+```npm ERR! react-router-v6-example@0.1.0 start: `react-scripts --openssl-legacy-provider start```<br>
+This can be fixed by simply setting the start script back to <br>
+```"start": "react-scripts start"``` <br>
+
+
 #### Testing Phase
 
 Until Meet & Cheese is considered an [officially verified](https://support.google.com/cloud/answer/7454865) app by Google, users will have to send the email corresponding to the calendar they want to use (send to ```sebastian01cevallos@gmail.com```) in order to be included in the testing phase. <br>
